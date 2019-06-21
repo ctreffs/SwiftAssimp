@@ -9,7 +9,7 @@ import CAssimp
 
 public struct AiMesh {
 
-    fileprivate let _mesh: aiMesh
+    private let _mesh: aiMesh
 
     public init(_ aiMesh: aiMesh) {
         _mesh = aiMesh

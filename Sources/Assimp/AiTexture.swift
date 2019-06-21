@@ -14,7 +14,18 @@ public struct AiTexture {
         _texture = aiTexture
     }
 
-    var width: Int { return Int(_texture.mWidth) }
-    var height: Int { return Int(_texture.mHeight) }
+    var width: Int {
+        return Int(_texture.mWidth)
+    }
+
+    var height: Int {
+        return Int(_texture.mHeight)
+    }
+
+    var pcData: [aiTexel] {
+        return [aiTexel](UnsafeMutableBufferPointer<aiTexel>(start: _texture.pcData,
+                                                             count: width * height))
+
+    }
 
 }

@@ -21,6 +21,5 @@ public struct AiMaterial {
     public var properties: [aiMaterialProperty] {
         [aiMaterialProperty](UnsafeMutableBufferPointer<aiMaterialProperty>(start: _material.mProperties?.pointee,
                                                                             count: numProperties))
-
     }
 }

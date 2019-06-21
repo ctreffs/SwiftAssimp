@@ -35,7 +35,7 @@ final class AssimpTests: XCTestCase {
         let fileURL = try! Resource.load(.box_obj)
 
         var scene: AiScene!
-        XCTAssertNoThrow(scene = try AiScene(file: fileURL.path))
+        XCTAssertNoThrow(scene = try AiScene(file: fileURL.path, flags: [.GenSmoothNormals]))
         XCTAssertEqual(scene.numMeshes, 1)
         XCTAssertEqual(scene.numTextures, 0)
         XCTAssertEqual(scene.numMaterials, 2)
@@ -44,6 +44,8 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].name, "1")
         XCTAssertEqual(scene.meshes[0].numVertices, 8 * 3)
         XCTAssertEqual(scene.meshes[0].numFaces, 6)
+
+        XCTAssertFalse(scene.meshes[0].normals.isEmpty)
 
     }
 
