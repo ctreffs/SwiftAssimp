@@ -10,5 +10,23 @@
 			<integer>0</integer>
 		</dict>
 	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>Assimp</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>AssimpTests</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CAssimp</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
 </dict>
 </plist>

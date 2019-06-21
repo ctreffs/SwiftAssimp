@@ -1,0 +1,5 @@
+module CAssimp [system][extern_c] {
+  header "shims.h"
+  link "assimp"
+  export *
+}

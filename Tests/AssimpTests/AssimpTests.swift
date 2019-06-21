@@ -1,15 +1,13 @@
 import XCTest
-@testable import Assimp
+import Assimp
 
 final class AssimpTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(Assimp().text, "Hello, World!")
+    static var allTests = [
+        ("testFailingInitializer", testFailingInitializer)
+    ]
+
+    func testFailingInitializer() {
+        XCTAssertThrowsError(try AiScene(file: "<no useful path>"))
     }
 
-    static var allTests = [
-        ("testExample", testExample),
-    ]
 }
