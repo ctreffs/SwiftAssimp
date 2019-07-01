@@ -19,25 +19,23 @@ enum Resource: String {
         case invalidURL(String)
     }
 
-    static func tmpDir() -> URL {
-        let tmpDir: URL
-        if #available(OSX 10.12, *) {
-            tmpDir = fm.temporaryDirectory
-        } else {
-            fatalError("needs temp dir")
+    static func resourcesDir() -> URL {
+        guard let resourcesURL: URL = Bundle.allBundles.first(where: { $0.bundlePath.contains(".xctest") })?.bundleURL else {
+            fatalError("no test bundle found")
         }
-        return tmpDir
-    }
 
+        return resourcesURL
+    }
     static func load(_ resource: Resource) throws -> URL {
         guard let remoteURL: URL = URL(string: resource.rawValue) else {
             throw Error.invalidURL(resource.rawValue)
         }
 
-        let localFile: URL = tmpDir().appendingPathComponent(remoteURL.lastPathComponent)
+        let localFile: URL = resourcesDir().appendingPathComponent(remoteURL.lastPathComponent)
         if !fm.fileExists(atPath: localFile.path) {
             let data = try Data(contentsOf: remoteURL)
             try data.write(to: localFile, options: .atomicWrite)
+            print("⬇ Downloaded '\(localFile.path)' ⬇")
         }
 
         return localFile
