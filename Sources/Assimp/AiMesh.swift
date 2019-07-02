@@ -10,6 +10,19 @@ import FirebladeMath
 
 public struct AiMesh {
 
+    public struct PrimitiveType: OptionSet {
+        public let rawValue: UInt32
+
+        public init(rawValue: UInt32) {
+            self.rawValue = rawValue
+        }
+
+        public static let point = PrimitiveType(rawValue: aiPrimitiveType_POINT.rawValue)
+        public static let line = PrimitiveType(rawValue: aiPrimitiveType_LINE.rawValue)
+        public static let triangle = PrimitiveType(rawValue: aiPrimitiveType_TRIANGLE.rawValue)
+        public static let polygon = PrimitiveType(rawValue: aiPrimitiveType_POLYGON.rawValue)
+    }
+
     let _mesh: aiMesh
 
     public init(_ aiMesh: aiMesh) {
@@ -21,8 +34,8 @@ public struct AiMesh {
     /// This specifies which types of primitives are present in the mesh.
     ///
     /// The "SortByPrimitiveType"-Step can be used to make sure the output meshes consist of one primitive type each.
-    public var primitiveTypes: aiPrimitiveType {
-        return aiPrimitiveType(_mesh.mPrimitiveTypes)
+    public var primitiveTypes: PrimitiveType {
+        return PrimitiveType(rawValue: _mesh.mPrimitiveTypes)
     }
 
     /// The number of vertices in this mesh. This is also the size of all of the per-vertex data arrays.

@@ -9,9 +9,13 @@ import Foundation
 
 enum Resource: String {
     case bunny_obj = "https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj"
-
     case duck_dae = "https://raw.githubusercontent.com/assimp/assimp/master/test/models/Collada/duck.dae"
     case box_obj = "https://raw.githubusercontent.com/assimp/assimp/master/test/models/OBJ/box.obj"
+    case nier_gltf = "https://gitlab.com/ctreffs/assets/raw/master/models/nier/scene.gltf"
+    case busterDrone_gltf = "https://gitlab.com/ctreffs/assets/raw/master/models/buster_drone/scene.gltf"
+    case airplane_usdz = "https://developer.apple.com/augmented-reality/quick-look/models/biplane/toy_biplane.usdz"
+    case boxTextured_gltf = "https://raw.githubusercontent.com/assimp/assimp/master/test/models/glTF2/BoxTextured-glTF/BoxTextured.gltf"
+    case cubeDiffuseTextured_3ds = "https://github.com/assimp/assimp/raw/master/test/models/3DS/cube_with_diffuse_texture.3DS"
 
     private static let fm = FileManager.default
 
@@ -20,10 +24,11 @@ enum Resource: String {
     }
 
     static func resourcesDir() -> URL {
-        guard let resourcesURL: URL = Bundle.allBundles.first(where: { $0.bundlePath.contains(".xctest") })?.bundleURL else {
+        guard var resourcesURL: URL = Bundle.allBundles.first(where: { $0.bundlePath.contains(".xctest") })?.bundleURL else {
             fatalError("no test bundle found")
         }
 
+        resourcesURL.deleteLastPathComponent()
         return resourcesURL
     }
     static func load(_ resource: Resource) throws -> URL {
@@ -31,7 +36,11 @@ enum Resource: String {
             throw Error.invalidURL(resource.rawValue)
         }
 
-        let localFile: URL = resourcesDir().appendingPathComponent(remoteURL.lastPathComponent)
+        var name: String = remoteURL.pathComponents.reversed().prefix(3).reversed().joined(separator: "_")
+        name.append(".")
+        name.append(remoteURL.lastPathComponent)
+
+        let localFile: URL = resourcesDir().appendingPathComponent(name)
         if !fm.fileExists(atPath: localFile.path) {
             let data = try Data(contentsOf: remoteURL)
             try data.write(to: localFile, options: .atomicWrite)

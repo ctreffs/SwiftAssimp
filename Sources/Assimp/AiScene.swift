@@ -32,7 +32,7 @@ public class AiScene {
 
     public init(file filePath: String, flags: AiPostProcessStep = []) throws {
         guard let scenePtr = aiImportFile(filePath, flags.rawValue) else {
-            throw Error.importFailed(filePath)
+            throw Error.importFailed(String(cString: aiGetErrorString()))
         }
 
         _scene = scenePtr.pointee
