@@ -80,7 +80,6 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.numMeshes, 4)
         XCTAssertEqual(scene.numMaterials, 5)
 
-        print(scene.meshes.enumerated().compactMap { ($0, $1.name) })
     }
 
 }
