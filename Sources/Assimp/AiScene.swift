@@ -31,7 +31,10 @@ public class AiScene {
     }
 
     public var meshes: [AiMesh] {
-        return [aiMesh](UnsafeBufferPointer<aiMesh>(start: _scene.mMeshes?.pointee,
+        guard numMeshes > 0, let ptr = _scene.mMeshes?.pointee else {
+            return []
+        }
+        return [aiMesh](UnsafeBufferPointer<aiMesh>(start: ptr,
                                                     count: numMeshes)).map { AiMesh($0) }
     }
 
@@ -40,7 +43,10 @@ public class AiScene {
     }
 
     public var materials: [AiMaterial] {
-        [aiMaterial](UnsafeBufferPointer<aiMaterial>.init(start: _scene.mMaterials?.pointee,
+        guard numMaterials > 0, let ptr = _scene.mMaterials?.pointee else {
+            return []
+        }
+        return [aiMaterial](UnsafeBufferPointer<aiMaterial>.init(start: ptr,
                                                           count: numMaterials)).map { AiMaterial($0) }
     }
 
@@ -49,7 +55,10 @@ public class AiScene {
     }
 
     public var textures: [AiTexture] {
-        return [aiTexture](UnsafeBufferPointer<aiTexture>(start: _scene.mTextures?.pointee,
+        guard numTextures > 0, let ptr = _scene.mTextures?.pointee else {
+            return []
+        }
+        return [aiTexture](UnsafeBufferPointer<aiTexture>(start: ptr,
                                                           count: numTextures)).map { AiTexture($0) }
 
     }
@@ -59,7 +68,10 @@ public class AiScene {
     }
 
     public var lights: [AiLight] {
-        return [aiLight](UnsafeBufferPointer<aiLight>(start: _scene.mLights?.pointee,
+        guard numLights > 0, let ptr = _scene.mLights?.pointee else {
+            return []
+        }
+        return [aiLight](UnsafeBufferPointer<aiLight>(start: ptr,
                                                       count: numLights)).map { AiLight($0) }
     }
 }
