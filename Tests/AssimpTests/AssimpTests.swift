@@ -1,5 +1,5 @@
 import XCTest
-@testable import Assimp
+import Assimp
 import CAssimp
 import FirebladeMath
 
@@ -31,20 +31,32 @@ final class AssimpTests: XCTestCase {
 
         var scene: AiScene!
         XCTAssertNoThrow(scene = try AiScene(file: fileURL.path))
+
+        XCTAssertEqual(scene.flags, [])
         XCTAssertEqual(scene.numMeshes, 1)
         XCTAssertEqual(scene.numTextures, 0)
         XCTAssertEqual(scene.numMaterials, 1)
+        XCTAssertEqual(scene.numAnimations, 0)
         XCTAssertEqual(scene.numLights, 1)
+        XCTAssertEqual(scene.numCameras, 1)
+
+        // Mesh
 
         XCTAssertEqual(scene.meshes[0].name, "LOD3spShape")
         XCTAssertEqual(scene.meshes[0].numVertices, 8500)
         XCTAssertEqual(scene.meshes[0].numFaces, 2144)
+        XCTAssertEqual(scene.meshes[0].numBones, 0)
+        XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
 
-        XCTAssertEqual(scene.lights[0].name, "directionalLight1")
+        // Textures
+
         XCTAssertEqual(scene.meshes[0].numUVComponents, [2])
         XCTAssertEqual(scene.meshes[0].textureCoords.count, 1)
         XCTAssertEqual(scene.meshes[0].textureCoords[0].count, 8500)
-        print(scene.meshes[0]._mesh)
+
+        // Lights
+
+        XCTAssertEqual(scene.lights[0].name, "directionalLight1")
 
     }
 
