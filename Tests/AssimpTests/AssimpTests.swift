@@ -48,6 +48,13 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].numBones, 0)
         XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
 
+        // Faces
+
+        XCTAssertEqual(scene.meshes[0].numFaces, 2144)
+        XCTAssertEqual(scene.meshes[0].faces.count, 2144)
+        XCTAssertEqual(scene.meshes[0].faces[0].numIndices, 4)
+        XCTAssertEqual(scene.meshes[0].faces[0].indices, [0, 1, 2, 3])
+
         // Textures
 
         XCTAssertEqual(scene.meshes[0].numUVComponents, [2])

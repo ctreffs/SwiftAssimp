@@ -152,12 +152,12 @@ public struct AiMesh {
     /// This array is always present in a mesh, its size is given in mNumFaces.
     ///
     /// If the #AI_SCENE_FLAGS_NON_VERBOSE_FORMAT is NOT set each face references an unique set of vertices.
-    public var faces: [aiFace] {
+    public var faces: [AiFace] {
         guard numFaces > 0, let ptr = _mesh.mFaces else {
             return []
         }
         return [aiFace](UnsafeMutableBufferPointer<aiFace>(start: ptr,
-                                                           count: numFaces))
+                                                           count: numFaces)).map { AiFace($0) }
 
     }
 
