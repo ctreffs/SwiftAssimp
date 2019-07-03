@@ -73,11 +73,13 @@ public class AiScene {
     ///
     /// If the AI_SCENE_FLAGS_INCOMPLETE flag is not set there will always be at least ONE material.
     public var meshes: [AiMesh] {
-        guard numMeshes > 0, let ptr = _scene.mMeshes?.pointee else {
+        guard numMeshes > 0 else {
             return []
         }
-        return [aiMesh](UnsafeBufferPointer<aiMesh>(start: ptr,
-                                                    count: numMeshes)).map { AiMesh($0) }
+
+        return (0..<numMeshes)
+                .compactMap { _scene.mMeshes[$0] }
+                .map { AiMesh($0.pointee) }
     }
 
     /// The number of materials in the scene.

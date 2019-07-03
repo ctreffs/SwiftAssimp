@@ -53,8 +53,8 @@ public struct AiMaterialProperty {
         return Int(_property.mIndex)
     }
 
-    public var semantic: aiTextureType {
-        return aiTextureType(_property.mSemantic)
+    public var semantic: AiTextureType {
+        return AiTextureType(rawValue: _property.mSemantic)
     }
 
     public var type: TypeInfo {

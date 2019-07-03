@@ -30,7 +30,7 @@ final class AssimpTests: XCTestCase {
         let fileURL = try! Resource.load(.duck_dae)
 
         var scene: AiScene!
-        XCTAssertNoThrow(scene = try AiScene(file: fileURL.path))
+        XCTAssertNoThrow(scene = try AiScene(file: fileURL.path, flags: [.RemoveRedundantMaterials, .GenSmoothNormals]))
 
         XCTAssertEqual(scene.flags, [])
         XCTAssertEqual(scene.numMeshes, 1)
@@ -63,7 +63,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.materials[0].numAllocated, 20)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
 
-        //scene.materials.forEach { $0.properties.forEach { print($0) } }
+        scene.materials.forEach { $0.properties.forEach { print($0) } }
 
         // Textures
 
