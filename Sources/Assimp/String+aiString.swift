@@ -10,6 +10,9 @@ import CAssimp
 public extension String {
     init?(aiString: aiString) {
         let cStringBuffer: UnsafePointer<CChar>? = withUnsafeBytes(of: aiString.data) { bytesPtr ->  UnsafePointer<CChar>? in
+            if aiString.length <= 0 {
+                return nil
+            }
             guard let boundMemory: UnsafePointer<CChar> = bytesPtr.baseAddress?.bindMemory(to: CChar.self,
                                                                                            capacity: aiString.length) else {
                 return nil
