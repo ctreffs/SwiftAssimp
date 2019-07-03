@@ -45,26 +45,43 @@ public struct AiMaterialProperty {
         _property = aiMaterialProperty
     }
 
-    public var key: String? {
-        return String(aiString: _property.mKey)
+    /// Specifies the name of the property (key) Keys are generally case insensitive.
+    public var key: String {
+        return String(aiString: _property.mKey) ?? ""
     }
 
+    /// Textures: Specifies the index of the texture.
+    /// For non-texture properties, this member is always 0.
     public var index: Int {
         return Int(_property.mIndex)
     }
 
+    /// Textures: Specifies their exact usage semantic.
+    /// For non-texture properties, this member is always 0 (or, better-said, #aiTextureType_NONE).
     public var semantic: AiTextureType {
         return AiTextureType(rawValue: _property.mSemantic)
     }
 
+    /// Type information for the property.
+    ///
+    /// Defines the data layout inside the data buffer. This is used
+    /// by the library internally to perform debug checks and to
+    /// utilize proper type conversions.
+    ///
+    /// (It's probably a hacky solution, but it works.)
     public var type: TypeInfo {
         return TypeInfo(rawValue: _property.mType.rawValue)
     }
 
+    /// Size of the buffer mData is pointing to, in bytes.
+    ///
+    /// This value may not be 0.
     var dataLength: Int {
         return Int(_property.mDataLength)
     }
 
+    /// Binary buffer to hold the property's value.
+    /// The size of the buffer is always mDataLength.
     var dataBuffer: UnsafeBufferPointer<Int8> {
         return UnsafeBufferPointer<Int8>(start: _property.mData, count: dataLength)
     }
@@ -76,7 +93,7 @@ extension AiMaterialProperty: CustomDebugStringConvertible {
         return """
         <AiMaterialProperty
          - index: \(index)
-         - key: \(key ?? "nil")
+         - key: \(key)
          - semantic: \(semantic)
          - type: \(type)
          - dataLength: \(dataLength)
