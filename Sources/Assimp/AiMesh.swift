@@ -130,7 +130,11 @@ public struct AiMesh {
                 return nil
             }
 
-            return [aiColor4D](UnsafeBufferPointer<aiColor4D>(start: ptr, count: numVertices))
+            let _colors = (0..<numVertices)
+                .compactMap { ptr[$0] }
+                .map { $0 }
+
+            return _colors
         }
         return colors
     }
@@ -148,7 +152,11 @@ public struct AiMesh {
                 return nil
             }
 
-            return [aiVector3D](UnsafeBufferPointer<aiVector3D>(start: ptr, count: numVertices)).map { $0.vector }
+            let _texCoors = (0..<numVertices)
+                .compactMap { ptr[$0] }
+                .map { $0.vector }
+
+            return _texCoors
         }
 
         return coords

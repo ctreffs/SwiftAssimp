@@ -25,10 +25,16 @@ public struct AiFace {
     /// Pointer to the indices array.
     /// Size of the array is given in numIndices.
     public var indices: [UInt32] {
-        guard numIndices > 0, let ptr = _face.mIndices else {
+        guard numIndices > 0 else {
             return []
         }
-        return [UInt32](UnsafeBufferPointer<UInt32>(start: ptr,
-                                                    count: numIndices))
+
+        let _indices = (0..<numIndices)
+            .compactMap { _face.mIndices[$0] }
+            .map { $0 }
+
+        assert(_indices.count == numIndices)
+
+        return _indices
     }
 }
