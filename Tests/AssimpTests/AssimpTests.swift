@@ -60,6 +60,10 @@ final class AssimpTests: XCTestCase {
         // Materials
 
         XCTAssertEqual(scene.materials[0].numProperties, 19)
+        XCTAssertEqual(scene.materials[0].numAllocated, 20)
+        XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
+
+        //scene.materials.forEach { $0.properties.forEach { print($0) } }
 
         // Textures
 
@@ -83,7 +87,7 @@ final class AssimpTests: XCTestCase {
 
         let fileURL = try! Resource.load(.box_obj)
 
-        let scene: AiScene = try! AiScene(file: fileURL.path, flags: [.GenNormals, .SortByPType])
+        let scene: AiScene = try! AiScene(file: fileURL.path)
 
         XCTAssertEqual(scene.flags, [])
         XCTAssertEqual(scene.numMeshes, 1)
@@ -113,6 +117,10 @@ final class AssimpTests: XCTestCase {
         // Materials
 
         XCTAssertEqual(scene.materials[0].numProperties, 10)
+        XCTAssertEqual(scene.materials[0].numAllocated, 10)
+        XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
+
+        //scene.materials.forEach { $0.properties.forEach { print($0) } }
 
         // Textures
 
@@ -162,6 +170,10 @@ final class AssimpTests: XCTestCase {
         // Materials
 
         XCTAssertEqual(scene.materials[0].numProperties, 13)
+        XCTAssertEqual(scene.materials[0].numAllocated, 20)
+        XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
+
+        //scene.materials.forEach { $0.properties.forEach { print($0) } }
 
         // Textures
 

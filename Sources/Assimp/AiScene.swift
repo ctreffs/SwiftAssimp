@@ -90,12 +90,20 @@ public class AiScene {
     /// The array is mNumMaterials in size.
     ///
     /// If the AI_SCENE_FLAGS_INCOMPLETE flag is not set there will always be at least ONE material.
+    ///
+    /// <http://assimp.sourceforge.net/lib_html/materials.html>
     public var materials: [AiMaterial] {
-        guard numMaterials > 0, let ptr = _scene.mMaterials?.pointee else {
+        guard numMaterials > 0 else {
             return []
         }
-        return [aiMaterial](UnsafeBufferPointer<aiMaterial>.init(start: ptr,
-                                                                 count: numMaterials)).map { AiMaterial($0) }
+
+        let _materials = (0..<numMaterials)
+            .compactMap { _scene.mMaterials[$0] }
+            .map { AiMaterial($0.pointee) }
+
+        assert(_materials.count == numMaterials)
+
+        return _materials
     }
 
     /// The number of animations in the scene.
