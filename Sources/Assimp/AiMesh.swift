@@ -54,12 +54,15 @@ public struct AiMesh {
     /// Vertex positions. This array is always present in a mesh.
     /// The array is mNumVertices in size.
     public var vertices: [Vec3f] {
-        guard numVertices > 0, let ptr = _mesh.mVertices else {
+        guard numVertices > 0 else {
             return []
         }
-        return [aiVector3D](UnsafeMutableBufferPointer<aiVector3D>(start: ptr,
-                                                                   count: numVertices)).map { $0.vector }
+        let _vertices = (0..<numVertices)
+            .compactMap { _mesh.mVertices[$0] }
+            .map { $0.vector }
 
+        assert(_vertices.count == numVertices)
+        return _vertices
     }
 
     /// Vertex normals.
@@ -72,12 +75,12 @@ public struct AiMesh {
     /// but the normals for vertices that are only referenced by point or line primitives
     /// are undefined and set to QNaN (WARN: qNaN compares to inequal to *everything*, even to qNaN itself.
     public var normals: [Vec3f] {
-        guard let ptr = _mesh.mNormals else {
-            return []
-        }
-        return [aiVector3D](UnsafeMutableBufferPointer<aiVector3D>(start: ptr,
-                                                                   count: numVertices)).map { $0.vector }
+        let _normals = (0..<numVertices)
+            .compactMap { _mesh.mNormals[$0] }
+            .map { $0.vector }
 
+        assert(_normals.count == numVertices)
+        return _normals
     }
 
     /// Vertex tangents.
@@ -91,12 +94,13 @@ public struct AiMesh {
     /// are undefined and set to qNaN.
     /// See the #mNormals member for a detailed discussion of qNaNs.
     public var tangents: [Vec3f] {
-        guard let ptr = _mesh.mTangents else {
-            return []
-        }
-        return [aiVector3D](UnsafeMutableBufferPointer<aiVector3D>(start: ptr,
-                                                                   count: numVertices)).map { $0.vector }
+        let _tangents = (0..<numVertices)
+            .compactMap { _mesh.mTangents[$0] }
+            .map { $0.vector }
 
+        assert(_tangents.count == numVertices)
+
+        return _tangents
     }
 
     /// Vertex bitangents.
@@ -104,13 +108,13 @@ public struct AiMesh {
     /// The array contains normalized vectors, NULL if not present.
     /// The array is mNumVertices in size.
     public var bitangents: [Vec3f] {
-        guard let ptr = _mesh.mBitangents else {
-            return []
-        }
+        let _bitangents = (0..<numVertices)
+            .compactMap { _mesh.mBitangents[$0] }
+            .map { $0.vector }
 
-        return [aiVector3D](UnsafeMutableBufferPointer<aiVector3D>(start: ptr,
-                                                                   count: numVertices)).map { $0.vector }
+        assert(_bitangents.count == numVertices)
 
+        return _bitangents
     }
 
     /// Vertex color sets.
@@ -166,12 +170,17 @@ public struct AiMesh {
     ///
     /// If the #AI_SCENE_FLAGS_NON_VERBOSE_FORMAT is NOT set each face references an unique set of vertices.
     public var faces: [AiFace] {
-        guard numFaces > 0, let ptr = _mesh.mFaces else {
+        guard numFaces > 0 else {
             return []
         }
-        return [aiFace](UnsafeMutableBufferPointer<aiFace>(start: ptr,
-                                                           count: numFaces)).map { AiFace($0) }
 
+        let _faces = (0..<numFaces)
+                    .compactMap { _mesh.mFaces[$0] }
+                    .map { AiFace($0) }
+
+        assert(_faces.count == numFaces)
+
+        return _faces
     }
 
     /// The number of bones this mesh contains.
