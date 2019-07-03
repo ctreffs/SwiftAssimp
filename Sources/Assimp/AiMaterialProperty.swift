@@ -9,7 +9,7 @@ import CAssimp
 
 public struct AiMaterialProperty {
 
-    public struct TypeInfo: RawRepresentable, CustomDebugStringConvertible {
+    public struct TypeInfo: RawRepresentable, Equatable, CustomDebugStringConvertible {
         public let rawValue: UInt32
         public init(rawValue: UInt32) {
             self.rawValue = rawValue
@@ -21,16 +21,16 @@ public struct AiMaterialProperty {
         public static let buffer = TypeInfo(rawValue: aiPTI_Buffer.rawValue)
 
         public var debugDescription: String {
-            switch self.rawValue {
-            case TypeInfo.float.rawValue:
+            switch self {
+            case .float:
                 return "float"
-            case TypeInfo.double.rawValue:
+            case .double:
                 return "double"
-            case TypeInfo.string.rawValue:
+            case .string:
                 return "string"
-            case TypeInfo.int.rawValue:
+            case .int:
                 return "int"
-            case TypeInfo.buffer.rawValue:
+            case .buffer:
                 return "buffer"
             default:
                 return "unknown: \(rawValue)"
@@ -83,7 +83,8 @@ public struct AiMaterialProperty {
     /// Binary buffer to hold the property's value.
     /// The size of the buffer is always mDataLength.
     var dataBuffer: UnsafeBufferPointer<Int8> {
-        return UnsafeBufferPointer<Int8>(start: _property.mData, count: dataLength)
+        return UnsafeBufferPointer<Int8>(start: _property.mData,
+                                         count: dataLength)
     }
 
 }
