@@ -96,3 +96,11 @@ public struct AiNode {
         return _meta
     }
 }
+
+extension AiNode: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return """
+        <AiNode '\(name)' meshes:\(meshes) children:\(numChildren)>\n\(children.map { "\t" + $0.debugDescription }.joined())
+        """
+    }
+}
