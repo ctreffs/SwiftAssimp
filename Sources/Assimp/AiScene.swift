@@ -58,8 +58,12 @@ public class AiScene {
     ///
     /// There will always be at least the root node if the import was successful (and no special flags have been set).
     /// Presence of further nodes depends on the format and content of the imported file.
-    public var rootNode: aiNode? {
-        return _scene.mRootNode?.pointee
+    public var rootNode: AiNode {
+        guard let _node = _scene.mRootNode?.pointee else {
+            fatalError("There will always be at least the root node if the import was successful (and no special flags have been set)")
+        }
+
+        return AiNode(_node)
     }
 
     /// The number of meshes in the scene.

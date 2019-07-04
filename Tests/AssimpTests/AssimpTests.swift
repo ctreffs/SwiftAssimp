@@ -40,6 +40,26 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.numLights, 1)
         XCTAssertEqual(scene.numTextures, 0)
 
+        // Scene Graph
+
+        XCTAssertEqual(scene.rootNode.numMeshes, 0)
+        XCTAssertEqual(scene.rootNode.meshes.count, 0)
+        XCTAssertEqual(scene.rootNode.numChildren, 3)
+        XCTAssertEqual(scene.rootNode.children.count, 3)
+        XCTAssertEqual(scene.rootNode.name, "VisualSceneNode")
+        XCTAssertEqual(scene.rootNode.children[0].name, "LOD3sp")
+        XCTAssertEqual(scene.rootNode.children[0].meshes, [0])
+        XCTAssertEqual(scene.rootNode.children[0].numMeshes, 1)
+        XCTAssertEqual(scene.rootNode.children[0].numChildren, 0)
+        XCTAssertEqual(scene.rootNode.children[1].name, "camera1")
+        XCTAssertEqual(scene.rootNode.children[1].meshes, [])
+        XCTAssertEqual(scene.rootNode.children[1].numMeshes, 0)
+        XCTAssertEqual(scene.rootNode.children[1].numChildren, 0)
+        XCTAssertEqual(scene.rootNode.children[2].name, "directionalLight1")
+        XCTAssertEqual(scene.rootNode.children[2].meshes, [])
+        XCTAssertEqual(scene.rootNode.children[2].numMeshes, 0)
+        XCTAssertEqual(scene.rootNode.children[2].numChildren, 0)
+
         // Mesh
 
         XCTAssertEqual(scene.meshes[0].name, "LOD3spShape")
@@ -97,6 +117,18 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.numLights, 0)
         XCTAssertEqual(scene.numTextures, 0)
 
+        // Scene Graph
+
+        XCTAssertEqual(scene.rootNode.numMeshes, 0)
+        XCTAssertEqual(scene.rootNode.meshes.count, 0)
+        XCTAssertEqual(scene.rootNode.numChildren, 1)
+        XCTAssertEqual(scene.rootNode.children.count, 1)
+        XCTAssertEqual(scene.rootNode.name, "models_OBJ_box.obj.box.obj")
+        XCTAssertEqual(scene.rootNode.children[0].name, "1")
+        XCTAssertEqual(scene.rootNode.children[0].meshes, [0])
+        XCTAssertEqual(scene.rootNode.children[0].numMeshes, 1)
+        XCTAssertEqual(scene.rootNode.children[0].numChildren, 0)
+
         // Mesh
 
         XCTAssertEqual(scene.meshes[0].name, "1")
@@ -149,6 +181,18 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.numCameras, 0)
         XCTAssertEqual(scene.numLights, 0)
         XCTAssertEqual(scene.numTextures, 0)
+
+        // Scene Graph
+
+        XCTAssertEqual(scene.rootNode.numMeshes, 0)
+        XCTAssertEqual(scene.rootNode.meshes.count, 0)
+        XCTAssertEqual(scene.rootNode.numChildren, 1)
+        XCTAssertEqual(scene.rootNode.children.count, 1)
+        XCTAssertEqual(scene.rootNode.name, "<3DSRoot>")
+        XCTAssertEqual(scene.rootNode.children[0].name, "Quader01")
+        XCTAssertEqual(scene.rootNode.children[0].meshes, [0])
+        XCTAssertEqual(scene.rootNode.children[0].numMeshes, 1)
+        XCTAssertEqual(scene.rootNode.children[0].numChildren, 0)
 
         // Mesh
 
