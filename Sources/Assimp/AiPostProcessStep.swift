@@ -10,6 +10,10 @@ import CAssimp
 public struct AiPostProcessStep: OptionSet {
     public var rawValue: UInt32
 
+    public init(rawValue: UInt32) {
+        self.rawValue = rawValue
+    }
+
     /// Calculates the tangents and bitangents for the imported meshes.
     ///
     /// Does nothing if a mesh does not have normals.
@@ -313,8 +317,4 @@ public struct AiPostProcessStep: OptionSet {
     /// This post-processing step is not time-consuming.
     /// Its use is not compulsory, but recommended.
     public static let validateDataStructure = AiPostProcessStep(rawValue: aiProcess_ValidateDataStructure.rawValue)
-
-    public init(rawValue: UInt32) {
-        self.rawValue = rawValue
-    }
 }
