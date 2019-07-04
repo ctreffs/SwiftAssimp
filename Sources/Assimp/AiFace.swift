@@ -7,6 +7,7 @@
 
 import CAssimp
 
+/// The default face winding order is counter clockwise (CCW).
 public struct AiFace {
 
     let _face: aiFace
