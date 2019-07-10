@@ -94,6 +94,10 @@ public struct AiMesh {
     /// are undefined and set to qNaN.
     /// See the #mNormals member for a detailed discussion of qNaNs.
     public var tangents: [Vec3f] {
+        guard _mesh.mTangents != nil else {
+            return []
+        }
+
         let _tangents = (0..<numVertices)
             .compactMap { _mesh.mTangents[$0] }
             .map { $0.vector }
@@ -108,6 +112,10 @@ public struct AiMesh {
     /// The array contains normalized vectors, NULL if not present.
     /// The array is mNumVertices in size.
     public var bitangents: [Vec3f] {
+        guard _mesh.mBitangents != nil else {
+            return []
+        }
+
         let _bitangents = (0..<numVertices)
             .compactMap { _mesh.mBitangents[$0] }
             .map { $0.vector }

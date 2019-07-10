@@ -115,3 +115,12 @@ extension AiMaterial: CustomDebugStringConvertible {
         """
     }
 }
+
+extension AiMaterial: Equatable {
+    public static func == (lhs: AiMaterial, rhs: AiMaterial) -> Bool {
+        return lhs.numAllocated == rhs.numAllocated &&
+        lhs.numProperties == rhs.numProperties &&
+        lhs.properties == rhs.properties
+    }
+
+}

@@ -181,6 +181,17 @@ extension AiMaterialProperty: CustomDebugStringConvertible {
     }
 }
 
+extension AiMaterialProperty: Equatable {
+    public static func == (lhs: AiMaterialProperty, rhs: AiMaterialProperty) -> Bool {
+        return lhs.key == rhs.key &&
+            lhs.index == rhs.index &&
+            lhs.semantic == rhs.semantic &&
+            lhs.type == rhs.type &&
+            lhs.dataLength == rhs.dataLength
+    }
+
+}
+
 public struct AiMaterialPropertyString: AiMaterialPropertyIdentifiable, CustomDebugStringConvertible {
     public let key: String
     public let index: Int
