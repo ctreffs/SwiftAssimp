@@ -86,7 +86,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.materials[0].numAllocated, 20)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
 
-        //scene.materials.forEach { $0.properties.forEach { print($0) } }
+        scene.materials[0].typedProperties.map { print($0) }
 
         // Textures
 
@@ -157,7 +157,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.materials[0].numAllocated, 10)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
 
-        //scene.materials.forEach { $0.properties.forEach { print($0) } }
+        scene.materials[0].typedProperties.map { print($0) }
 
         // Textures
 
@@ -224,7 +224,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.materials[0].numAllocated, 20)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
 
-        //scene.materials.forEach { $0.properties.forEach { print($0) } }
+        scene.materials[0].typedProperties.map { print($0) }
 
         // Textures
 

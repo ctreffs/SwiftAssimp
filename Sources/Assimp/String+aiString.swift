@@ -30,4 +30,40 @@ public extension String {
 
         self.init(cString: cStringBufferStart)
     }
+
+    init?(bytes: UnsafeMutablePointer<Int8>, length: Int) {
+        let bufferPtr = UnsafeMutableBufferPointer(start: bytes,
+                                                   count: length)
+
+        let codeUnits: [UTF8.CodeUnit] = bufferPtr
+            //.map { $0 > 0 ? $0 : Int8(0x20) } // this replaces all invalid characters with blank space
+            .map { UTF8.CodeUnit($0) }
+
+        self.init(decoding: codeUnits, as: UTF8.self)
+    }
+
+    /*
+ 
+    init?(bytes: UnsafeMutablePointer<Int8>, length: Int) {
+        
+        let maybeString: String? = bytes.withMemoryRebound(to: UInt8.self, capacity: length) { start -> String? in
+            let ptr = UnsafeBufferPointer<UInt8>.init(start: start, count: length)
+            guard let (string, _) = String.decodeCString(ptr.baseAddress!,
+                                                         as: UTF8.self,
+                                                         repairingInvalidCodeUnits: true) else {
+                return nil
+            }
+            return string
+        }
+        
+        
+        
+        guard let string = maybeString else {
+            return nil
+        }
+        
+        self = string
+        
+    }
+ */
 }

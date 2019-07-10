@@ -93,7 +93,7 @@ public struct AiPostProcessStep: OptionSet {
     /// You'll probably want to consider this flag if you use Direct3D for rendering.
     /// The #aiProcess_ConvertToLeftHanded flag supersedes this setting and bundles
     /// all conversions typically required for D3D-based applications.
-    public static let FlipUVs = AiPostProcessStep(rawValue: aiProcess_FlipUVs.rawValue)
+    public static let flipUVs = AiPostProcessStep(rawValue: aiProcess_FlipUVs.rawValue)
 
     /// This step adjusts the output face winding order to be CW.
     ///

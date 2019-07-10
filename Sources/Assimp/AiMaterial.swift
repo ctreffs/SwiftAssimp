@@ -39,6 +39,25 @@ public struct AiMaterial {
         return _properties
     }
 
+    public var typedProperties: [AiMaterialPropertyIdentifiable] {
+        return properties.compactMap { prop -> AiMaterialPropertyIdentifiable? in
+            switch (prop.type, prop.semantic) {
+            case (.string, _):
+                return AiMaterialPropertyString(prop)
+            case (.float, _):
+                return AiMaterialPropertyFloat(prop)
+            case (.int, _):
+                return AiMaterialPropertyInt(prop)
+            case (.buffer, _):
+                return AiMaterialPropertyBuffer(prop)
+            case (.double, _):
+                return AiMaterialPropertyDouble(prop)
+            default:
+                return nil
+            }
+        }
+    }
+
     /*
      * @param pMat Pointer to the input material. May not be NULL
      * @param pKey Key to search for. One of the AI_MATKEY_XXX constants.
