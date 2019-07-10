@@ -231,3 +231,49 @@ public struct AiMesh {
     }
 
 }
+
+// MARK: - Equatable
+extension AiMesh: Equatable {
+    public static func == (lhs: AiMesh, rhs: AiMesh) -> Bool {
+        return lhs.name == rhs.name &&
+            lhs.materialIndex == rhs.materialIndex &&
+            lhs.bitangents == rhs.bitangents &&
+            lhs.faces == rhs.faces &&
+            lhs.method == rhs.method &&
+            lhs.normals == rhs.normals &&
+            lhs.numAnimMeshes == rhs.numAnimMeshes &&
+            lhs.numBones == rhs.numBones &&
+            lhs.numFaces == rhs.numFaces &&
+            lhs.numUVComponents == rhs.numUVComponents &&
+            lhs.numVertices == rhs.numVertices &&
+            lhs.primitiveTypes == rhs.primitiveTypes &&
+            lhs.tangents == rhs.tangents &&
+            lhs.textureCoords == rhs.textureCoords &&
+            lhs.vertices == rhs.vertices
+
+        //FIXME: lhs.colors == rhs.colors &&
+
+    }
+}
+
+// MARK: - Hashable
+extension AiMesh: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(materialIndex)
+        hasher.combine(bitangents)
+        hasher.combine(faces)
+        hasher.combine(method)
+        hasher.combine(normals)
+        hasher.combine(numAnimMeshes)
+        hasher.combine(numBones)
+        hasher.combine(numFaces)
+        hasher.combine(numUVComponents)
+        hasher.combine(numVertices)
+        hasher.combine(primitiveTypes.rawValue)
+        hasher.combine(tangents)
+        hasher.combine(textureCoords)
+        hasher.combine(vertices)
+        // FIXME: hasher.combine(colors)
+    }
+}

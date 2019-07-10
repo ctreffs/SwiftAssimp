@@ -39,3 +39,17 @@ public struct AiFace {
         return _indices
     }
 }
+
+extension AiFace: Equatable {
+    public static func == (lhs: AiFace, rhs: AiFace) -> Bool {
+        return lhs.indices == rhs.indices &&
+        lhs.numIndices == rhs.numIndices
+    }
+}
+
+extension AiFace: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(indices)
+        hasher.combine(numIndices)
+    }
+}

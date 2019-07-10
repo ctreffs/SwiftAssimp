@@ -41,29 +41,4 @@ public extension String {
 
         self.init(decoding: codeUnits, as: UTF8.self)
     }
-
-    /*
- 
-    init?(bytes: UnsafeMutablePointer<Int8>, length: Int) {
-        
-        let maybeString: String? = bytes.withMemoryRebound(to: UInt8.self, capacity: length) { start -> String? in
-            let ptr = UnsafeBufferPointer<UInt8>.init(start: start, count: length)
-            guard let (string, _) = String.decodeCString(ptr.baseAddress!,
-                                                         as: UTF8.self,
-                                                         repairingInvalidCodeUnits: true) else {
-                return nil
-            }
-            return string
-        }
-        
-        
-        
-        guard let string = maybeString else {
-            return nil
-        }
-        
-        self = string
-        
-    }
- */
 }
