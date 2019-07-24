@@ -1,7 +1,6 @@
 import XCTest
 import Assimp
 import CAssimp
-import FirebladeMath
 
 final class AssimpTests: XCTestCase {
 
@@ -15,14 +14,14 @@ final class AssimpTests: XCTestCase {
 
     func testVec3fFromAiVector3D() {
         let vec3f = aiVector3D(x: 1.2, y: 3.4, z: 5.6).vector
-        XCTAssertEqual(vec3f, Vec3f(1.2, 3.4, 5.6))
-        XCTAssertEqual(Vec3f(aiVector3D(x: 5.6, y: 3.4, z: 1.2)), Vec3f(5.6, 3.4, 1.2))
+        XCTAssertEqual(vec3f, SIMD3<Float>(1.2, 3.4, 5.6))
+        XCTAssertEqual(SIMD3<Float>(aiVector3D(x: 5.6, y: 3.4, z: 1.2)), SIMD3<Float>(5.6, 3.4, 1.2))
     }
 
     func testVec2fFromAiVector2D() {
         let vec2f = aiVector2D(x: 1.2, y: 3.4).vector
-        XCTAssertEqual(vec2f, Vec2f(1.2, 3.4))
-        XCTAssertEqual(Vec2f(aiVector2D(x: 5.6, y: 3.4)), Vec2f(5.6, 3.4))
+        XCTAssertEqual(vec2f, SIMD2<Float>(1.2, 3.4))
+        XCTAssertEqual(SIMD2<Float>(aiVector2D(x: 5.6, y: 3.4)), SIMD2<Float>(5.6, 3.4))
     }
 
     func testLoadAiSceneDAE() {
@@ -86,7 +85,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.materials[0].numAllocated, 20)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
 
-        scene.materials[0].typedProperties.map { print($0) }
+        scene.materials[0].typedProperties.forEach { print($0) }
 
         // Textures
 
@@ -157,7 +156,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.materials[0].numAllocated, 10)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
 
-        scene.materials[0].typedProperties.map { print($0) }
+        scene.materials[0].typedProperties.forEach { print($0) }
 
         // Textures
 
@@ -224,7 +223,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.materials[0].numAllocated, 20)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
 
-        scene.materials[0].typedProperties.map { print($0) }
+        scene.materials[0].typedProperties.forEach { print($0) }
 
         // Textures
 

@@ -10,12 +10,11 @@ let package = Package(
             targets: ["Assimp"])
     ],
     dependencies: [
-        .package(url: "https://gitlab.com/fireblade/math.git", from: "0.2.1")
     ],
     targets: [
         .target(
             name: "Assimp",
-            dependencies: ["CAssimp", "FirebladeMath"]),
+            dependencies: ["CAssimp"]),
         .testTarget(
             name: "AssimpTests",
             dependencies: ["Assimp"]),

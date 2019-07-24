@@ -6,7 +6,6 @@
 //
 
 import CAssimp
-import FirebladeMath
 
 public struct AiMesh {
 
@@ -53,7 +52,7 @@ public struct AiMesh {
 
     /// Vertex positions. This array is always present in a mesh.
     /// The array is mNumVertices in size.
-    public var vertices: [Vec3f] {
+    public var vertices: [SIMD3<Float>] {
         guard numVertices > 0 else {
             return []
         }
@@ -74,7 +73,7 @@ public struct AiMesh {
     /// Meshes with mixed primitive types (i.e. lines and triangles) may have normals,
     /// but the normals for vertices that are only referenced by point or line primitives
     /// are undefined and set to QNaN (WARN: qNaN compares to inequal to *everything*, even to qNaN itself.
-    public var normals: [Vec3f] {
+    public var normals: [SIMD3<Float>] {
         let _normals = (0..<numVertices)
             .compactMap { _mesh.mNormals[$0] }
             .map { $0.vector }
@@ -93,7 +92,7 @@ public struct AiMesh {
     /// but the normals for vertices that are only referenced by point or line primitives
     /// are undefined and set to qNaN.
     /// See the #mNormals member for a detailed discussion of qNaNs.
-    public var tangents: [Vec3f] {
+    public var tangents: [SIMD3<Float>] {
         guard _mesh.mTangents != nil else {
             return []
         }
@@ -111,7 +110,7 @@ public struct AiMesh {
     /// The bitangent of a vertex points in the direction of the positive Y texture axis.
     /// The array contains normalized vectors, NULL if not present.
     /// The array is mNumVertices in size.
-    public var bitangents: [Vec3f] {
+    public var bitangents: [SIMD3<Float>] {
         guard _mesh.mBitangents != nil else {
             return []
         }
@@ -152,10 +151,10 @@ public struct AiMesh {
     /// A mesh may contain 0 to AI_MAX_NUMBER_OF_TEXTURECOORDS per vertex.
     /// NULL if not present.
     /// The array is mNumVertices in size.
-    public var textureCoords: [[Vec3f]] {
+    public var textureCoords: [[SIMD3<Float>]] {
         let channels = [UnsafeMutablePointer<aiVector3D>?](withUnsafeBytes(of: _mesh.mTextureCoords) { ptr in ptr.bindMemory(to: UnsafeMutablePointer<aiVector3D>?.self) })
 
-        let coords: [[Vec3f]] = channels.compactMap { (optPtr: UnsafeMutablePointer<aiVector3D>?) -> [Vec3f]? in
+        let coords: [[SIMD3<Float>]] = channels.compactMap { (optPtr: UnsafeMutablePointer<aiVector3D>?) -> [SIMD3<Float>]? in
             guard let ptr = optPtr else {
                 return nil
             }
