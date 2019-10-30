@@ -28,7 +28,7 @@ enum Resource: String {
         // linux does not have .allBundles yet.
         let bundle = Bundle.main
         #else
-        guard let bundle = Bundle.allBundles.first(where: { ($0.bundleIdentifier?.contains("Tests") ?? false) }) else {
+        guard let bundle = Bundle.allBundles.first(where: { $0.bundlePath.contains("Tests") }) else {
             fatalError("no test bundle found")
         }
         #endif
