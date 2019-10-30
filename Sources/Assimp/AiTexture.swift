@@ -8,22 +8,22 @@
 import CAssimp
 
 public struct AiTexture {
-    fileprivate let _texture: aiTexture
+    let texture: aiTexture
 
     public init(_ aiTexture: aiTexture) {
-        _texture = aiTexture
+        texture = aiTexture
     }
 
     var width: Int {
-        return Int(_texture.mWidth)
+        return Int(texture.mWidth)
     }
 
     var height: Int {
-        return Int(_texture.mHeight)
+        return Int(texture.mHeight)
     }
 
     var pcData: [aiTexel] {
-        return [aiTexel](UnsafeMutableBufferPointer<aiTexel>(start: _texture.pcData,
+        return [aiTexel](UnsafeMutableBufferPointer<aiTexel>(start: texture.pcData,
                                                              count: width * height))
     }
 }
