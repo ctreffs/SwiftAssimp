@@ -7,6 +7,9 @@ lint:
 	swiftlint autocorrect --format
 	swiftlint lint --quiet
 
+lintErrorOnly:
+	@swiftlint lint --quiet | grep error
+
 genLinuxTests:
 	swift test --generate-linuxmain
 	swiftlint autocorrect --format --path Tests/
