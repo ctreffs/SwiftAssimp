@@ -215,7 +215,8 @@ public class AiScene {
 }
 
 extension AiScene {
-    @inlinable public func meshes(for node: AiNode) -> [AiMesh] {
+    @inlinable
+    public func meshes(for node: AiNode) -> [AiMesh] {
         return node.meshes.map { meshes[$0] }
     }
 }

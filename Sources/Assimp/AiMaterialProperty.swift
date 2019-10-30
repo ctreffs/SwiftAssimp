@@ -34,9 +34,11 @@ public protocol AiMaterialPropertyIdentifiable {
 public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
     public struct TypeInfo: RawRepresentable, Equatable, CustomDebugStringConvertible {
         public let rawValue: UInt32
+
         public init(rawValue: UInt32) {
             self.rawValue = rawValue
         }
+
         public static let float = TypeInfo(rawValue: aiPTI_Float.rawValue)
         public static let double = TypeInfo(rawValue: aiPTI_Double.rawValue)
         public static let string = TypeInfo(rawValue: aiPTI_String.rawValue)
@@ -118,9 +120,9 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
             return nil
         }
         // FIXME: we cut out the array length field and the terminating NULL of the aiString - this is not nice!
-        let p2 = ptr.advanced(by: MemoryLayout<Int32>.stride)
+        let bytes = ptr.advanced(by: MemoryLayout<Int32>.stride)
 
-        return String(bytes: p2, length: dataLength - 1 - MemoryLayout<Int32>.stride)
+        return String(bytes: bytes, length: dataLength - 1 - MemoryLayout<Int32>.stride)
     }
 
     internal func getString(pMat: UnsafePointer<aiMaterial>) -> String? {
@@ -199,7 +201,7 @@ public struct AiMaterialPropertyString: AiMaterialPropertyIdentifiable, CustomDe
         index = property.index
         semantic = property.semantic
         type = property.type
-        string = property.string!
+        string = property.string ?? ""
     }
 
     public var debugDescription: String {
@@ -267,7 +269,7 @@ public struct AiMaterialPropertyDouble: AiMaterialPropertyIdentifiable, CustomDe
         - key: \(key)
         - semantic: \(semantic)
         - type: \(type)
-        - double: \(doubles.map { $0 })
+        - double: \(doubles)
         >
         """
     }
@@ -295,7 +297,7 @@ public struct AiMaterialPropertyFloat: AiMaterialPropertyIdentifiable, CustomDeb
         - key: \(key)
         - semantic: \(semantic)
         - type: \(type)
-        - float: \(floats.map { $0 })
+        - float: \(floats)
         >
         """
     }
@@ -323,7 +325,7 @@ public struct AiMaterialPropertyInt: AiMaterialPropertyIdentifiable, CustomDebug
         - key: \(key)
         - semantic: \(semantic)
         - type: \(type)
-        - int: \(ints.map { $0 })
+        - int: \(ints)
         >
         """
     }

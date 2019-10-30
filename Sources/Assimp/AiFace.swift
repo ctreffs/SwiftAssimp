@@ -29,9 +29,7 @@ public struct AiFace {
             return []
         }
 
-        let indices = (0..<numIndices)
-            .compactMap { face.mIndices[$0] }
-            .map { $0 }
+        let indices = [UInt32]((0..<numIndices).compactMap { face.mIndices[$0] })
 
         assert(indices.count == numIndices)
 

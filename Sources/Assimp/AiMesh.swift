@@ -135,9 +135,7 @@ public struct AiMesh {
                 return nil
             }
 
-            let colors = (0..<numVertices)
-                .compactMap { ptr[$0] }
-                .map { $0 }
+            let colors = [aiColor4D]((0..<numVertices).compactMap { ptr[$0] })
 
             return colors
         }
