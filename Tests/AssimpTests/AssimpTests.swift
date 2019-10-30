@@ -62,8 +62,6 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.rootNode.children[2].numMeshes, 0)
         XCTAssertEqual(scene.rootNode.children[2].numChildren, 0)
 
-        print(scene.rootNode)
-
         // Mesh
 
         XCTAssertEqual(scene.meshes[0].name, "LOD3spShape")
@@ -86,8 +84,6 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.materials[0].numProperties, 19)
         XCTAssertEqual(scene.materials[0].numAllocated, 20)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
-
-        scene.materials[0].typedProperties.forEach { print($0) }
 
         // Textures
 
@@ -133,8 +129,6 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.rootNode.children[0].numMeshes, 1)
         XCTAssertEqual(scene.rootNode.children[0].numChildren, 0)
 
-        print(scene.rootNode)
-
         // Mesh
 
         XCTAssertEqual(scene.meshes[0].name, "1")
@@ -157,8 +151,6 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.materials[0].numProperties, 10)
         XCTAssertEqual(scene.materials[0].numAllocated, 10)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
-
-        scene.materials[0].typedProperties.forEach { print($0) }
 
         // Textures
 
@@ -200,8 +192,6 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.rootNode.children[0].numMeshes, 1)
         XCTAssertEqual(scene.rootNode.children[0].numChildren, 0)
 
-        print(scene.rootNode)
-
         // Mesh
 
         XCTAssertEqual(scene.meshes[0].name, "0")
@@ -224,8 +214,6 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.materials[0].numProperties, 13)
         XCTAssertEqual(scene.materials[0].numAllocated, 20)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
-
-        scene.materials[0].typedProperties.forEach { print($0) }
 
         // Textures
 
