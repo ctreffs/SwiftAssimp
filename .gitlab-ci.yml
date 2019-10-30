@@ -8,7 +8,7 @@ before_script:
   - echo -e "machine gitlab.com\nlogin gitlab-ci-token\npassword ${CI_JOB_TOKEN}" > ~/.netrc
   - apt-get update -qq 
   - apt-get install -y -qq pkg-config libassimp-dev
-  - pkg-config assimp --libs --cflags
+  - pkg-config assimp --cflags --libs --static
 
 stages: 
   - test

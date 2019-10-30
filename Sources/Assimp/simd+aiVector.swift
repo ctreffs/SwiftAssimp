@@ -6,7 +6,6 @@
 //
 
 import CAssimp
-import simd
 
 extension aiVector3D {
     @inlinable public var vector: SIMD3<Float> {
