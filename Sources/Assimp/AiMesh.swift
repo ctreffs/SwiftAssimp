@@ -1,6 +1,6 @@
 //
 //  AiMesh.swift
-//  
+//
 //
 //  Created by Christian Treffs on 21.06.19.
 //
@@ -8,7 +8,6 @@
 import CAssimp
 
 public struct AiMesh {
-
     public struct PrimitiveType: OptionSet {
         public let rawValue: UInt32
 
@@ -22,11 +21,10 @@ public struct AiMesh {
         public static let polygon = PrimitiveType(rawValue: aiPrimitiveType_POLYGON.rawValue)
     }
 
-    let _mesh: aiMesh
+    let mesh: aiMesh
 
     public init(_ aiMesh: aiMesh) {
-        _mesh = aiMesh
-
+        mesh = aiMesh
     }
 
     /// Bitwise combination of the members of the #aiPrimitiveType enum.
@@ -34,20 +32,20 @@ public struct AiMesh {
     ///
     /// The "SortByPrimitiveType"-Step can be used to make sure the output meshes consist of one primitive type each.
     public var primitiveTypes: PrimitiveType {
-        return PrimitiveType(rawValue: _mesh.mPrimitiveTypes)
+        return PrimitiveType(rawValue: mesh.mPrimitiveTypes)
     }
 
     /// The number of vertices in this mesh. This is also the size of all of the per-vertex data arrays.
     /// The maximum value for this member is #AI_MAX_VERTICES.
     public var numVertices: Int {
-        return Int(_mesh.mNumVertices)
+        return Int(mesh.mNumVertices)
     }
 
     /// The number of primitives (triangles, polygons, lines) in this mesh.
     /// This is also the size of the mFaces array.
     /// The maximum value for this member is #AI_MAX_FACES.
     public var numFaces: Int {
-        return Int(_mesh.mNumFaces)
+        return Int(mesh.mNumFaces)
     }
 
     /// Vertex positions. This array is always present in a mesh.
@@ -56,12 +54,12 @@ public struct AiMesh {
         guard numVertices > 0 else {
             return []
         }
-        let _vertices = (0..<numVertices)
-            .compactMap { _mesh.mVertices[$0] }
+        let vertices = (0..<numVertices)
+            .compactMap { mesh.mVertices[$0] }
             .map { $0.vector }
 
-        assert(_vertices.count == numVertices)
-        return _vertices
+        assert(vertices.count == numVertices)
+        return vertices
     }
 
     /// Vertex normals.
@@ -74,12 +72,12 @@ public struct AiMesh {
     /// but the normals for vertices that are only referenced by point or line primitives
     /// are undefined and set to QNaN (WARN: qNaN compares to inequal to *everything*, even to qNaN itself.
     public var normals: [SIMD3<Float>] {
-        let _normals = (0..<numVertices)
-            .compactMap { _mesh.mNormals[$0] }
+        let normals = (0..<numVertices)
+            .compactMap { mesh.mNormals[$0] }
             .map { $0.vector }
 
-        assert(_normals.count == numVertices)
-        return _normals
+        assert(normals.count == numVertices)
+        return normals
     }
 
     /// Vertex tangents.
@@ -93,17 +91,17 @@ public struct AiMesh {
     /// are undefined and set to qNaN.
     /// See the #mNormals member for a detailed discussion of qNaNs.
     public var tangents: [SIMD3<Float>] {
-        guard _mesh.mTangents != nil else {
+        guard mesh.mTangents != nil else {
             return []
         }
 
-        let _tangents = (0..<numVertices)
-            .compactMap { _mesh.mTangents[$0] }
+        let tangents = (0..<numVertices)
+            .compactMap { mesh.mTangents[$0] }
             .map { $0.vector }
 
-        assert(_tangents.count == numVertices)
+        assert(tangents.count == numVertices)
 
-        return _tangents
+        return tangents
     }
 
     /// Vertex bitangents.
@@ -111,17 +109,17 @@ public struct AiMesh {
     /// The array contains normalized vectors, NULL if not present.
     /// The array is mNumVertices in size.
     public var bitangents: [SIMD3<Float>] {
-        guard _mesh.mBitangents != nil else {
+        guard mesh.mBitangents != nil else {
             return []
         }
 
-        let _bitangents = (0..<numVertices)
-            .compactMap { _mesh.mBitangents[$0] }
+        let bitangents = (0..<numVertices)
+            .compactMap { mesh.mBitangents[$0] }
             .map { $0.vector }
 
-        assert(_bitangents.count == numVertices)
+        assert(bitangents.count == numVertices)
 
-        return _bitangents
+        return bitangents
     }
 
     /// Vertex color sets.
@@ -130,18 +128,18 @@ public struct AiMesh {
     /// NULL if not present.
     /// Each array is mNumVertices in size if present.
     public var colors: [[aiColor4D]] {
-        let sets = [UnsafeMutablePointer<aiColor4D>?](withUnsafeBytes(of: _mesh.mColors) { ptr in ptr.bindMemory(to: UnsafeMutablePointer<aiColor4D>?.self) })
+        let sets = [UnsafeMutablePointer<aiColor4D>?](withUnsafeBytes(of: mesh.mColors) { ptr in ptr.bindMemory(to: UnsafeMutablePointer<aiColor4D>?.self) })
 
         let colors: [[aiColor4D]] = sets.compactMap { (optPtr: UnsafeMutablePointer<aiColor4D>?) -> [aiColor4D]? in
             guard let ptr = optPtr else {
                 return nil
             }
 
-            let _colors = (0..<numVertices)
+            let colors = (0..<numVertices)
                 .compactMap { ptr[$0] }
                 .map { $0 }
 
-            return _colors
+            return colors
         }
         return colors
     }
@@ -152,18 +150,18 @@ public struct AiMesh {
     /// NULL if not present.
     /// The array is mNumVertices in size.
     public var textureCoords: [[SIMD3<Float>]] {
-        let channels = [UnsafeMutablePointer<aiVector3D>?](withUnsafeBytes(of: _mesh.mTextureCoords) { ptr in ptr.bindMemory(to: UnsafeMutablePointer<aiVector3D>?.self) })
+        let channels = [UnsafeMutablePointer<aiVector3D>?](withUnsafeBytes(of: mesh.mTextureCoords) { ptr in ptr.bindMemory(to: UnsafeMutablePointer<aiVector3D>?.self) })
 
         let coords: [[SIMD3<Float>]] = channels.compactMap { (optPtr: UnsafeMutablePointer<aiVector3D>?) -> [SIMD3<Float>]? in
             guard let ptr = optPtr else {
                 return nil
             }
 
-            let _texCoors = (0..<numVertices)
+            let texCoors = (0..<numVertices)
                 .compactMap { ptr[$0] }
                 .map { $0.vector }
 
-            return _texCoors
+            return texCoors
         }
 
         return coords
@@ -176,7 +174,7 @@ public struct AiMesh {
     /// If the value is 1 for a given channel, p.y is set to 0.0f, too.
     /// 4D coords are not supported
     public var numUVComponents: [Int] {
-        return [UInt32](withUnsafeBytes(of: _mesh.mNumUVComponents) { ptr in ptr.bindMemory(to: UInt32.self) }).map { Int($0) }.filter { $0 > 0 }
+        return [UInt32](withUnsafeBytes(of: mesh.mNumUVComponents) { ptr in ptr.bindMemory(to: UInt32.self) }).map { Int($0) }.filter { $0 > 0 }
     }
 
     /// The faces the mesh is constructed from.
@@ -189,19 +187,19 @@ public struct AiMesh {
             return []
         }
 
-        let _faces = (0..<numFaces)
-                    .compactMap { _mesh.mFaces[$0] }
-                    .map { AiFace($0) }
+        let faces = (0..<numFaces)
+            .compactMap { mesh.mFaces[$0] }
+            .map { AiFace($0) }
 
-        assert(_faces.count == numFaces)
+        assert(faces.count == numFaces)
 
-        return _faces
+        return faces
     }
 
     /// The number of bones this mesh contains.
     /// Can be 0, in which case the mBones array is NULL.
     public var numBones: Int {
-        return Int(_mesh.mNumBones)
+        return Int(mesh.mNumBones)
     }
 
     /// The material used by this mesh.
@@ -210,7 +208,7 @@ public struct AiMesh {
     /// If an imported model uses multiple materials, the import splits up the mesh.
     /// Use this value as index into the scene's material list.
     public var materialIndex: Int {
-        return Int(_mesh.mMaterialIndex)
+        return Int(mesh.mMaterialIndex)
     }
 
     /// Name of the mesh. Meshes can be named, but this is not a requirement and leaving this field empty is totally fine.
@@ -222,21 +220,20 @@ public struct AiMesh {
     ///    - Vertex animations refer to meshes by their names.
     ///
     public var name: String {
-        return String(aiString: _mesh.mName) ?? ""
+        return String(aiString: mesh.mName) ?? ""
     }
 
     /// The number of attachment meshes.
     ///
     /// **Note:** Currently only works with Collada loader.
     public var numAnimMeshes: Int {
-        return Int(_mesh.mNumAnimMeshes)
+        return Int(mesh.mNumAnimMeshes)
     }
 
     /// Method of morphing when animeshes are specified.
     public var method: UInt32 {
-        return _mesh.mMethod
+        return mesh.mMethod
     }
-
 }
 
 // MARK: - Equatable

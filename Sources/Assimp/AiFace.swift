@@ -1,6 +1,6 @@
 //
 //  AiFace.swift
-//  
+//
 //
 //  Created by Christian Treffs on 02.07.19.
 //
@@ -9,18 +9,17 @@ import CAssimp
 
 /// The default face winding order is counter clockwise (CCW).
 public struct AiFace {
-
-    let _face: aiFace
+    let face: aiFace
 
     init(_ aiFace: aiFace) {
-        _face = aiFace
+        face = aiFace
     }
 
     /// Number of indices defining this face.
     ///
     /// The maximum value for this member is #AI_MAX_FACE_INDICES.
     public var numIndices: Int {
-        return Int(_face.mNumIndices)
+        return Int(face.mNumIndices)
     }
 
     /// Pointer to the indices array.
@@ -30,20 +29,20 @@ public struct AiFace {
             return []
         }
 
-        let _indices = (0..<numIndices)
-            .compactMap { _face.mIndices[$0] }
+        let indices = (0..<numIndices)
+            .compactMap { face.mIndices[$0] }
             .map { $0 }
 
-        assert(_indices.count == numIndices)
+        assert(indices.count == numIndices)
 
-        return _indices
+        return indices
     }
 }
 
 extension AiFace: Equatable {
     public static func == (lhs: AiFace, rhs: AiFace) -> Bool {
         return lhs.indices == rhs.indices &&
-        lhs.numIndices == rhs.numIndices
+            lhs.numIndices == rhs.numIndices
     }
 }
 

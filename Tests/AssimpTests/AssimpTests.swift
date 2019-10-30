@@ -4,9 +4,11 @@ import CAssimp
 
 final class AssimpTests: XCTestCase {
 
-    static var allTests = [
-        ("testFailingInitializer", testFailingInitializer)
-    ]
+    func testVersion() {
+        XCTAssertEqual(aiGetVersionMajor(), 4)
+        XCTAssertEqual(aiGetVersionMinor(), 1)
+        XCTAssertEqual(aiGetVersionRevision(), 0)
+    }
 
     func testFailingInitializer() {
         XCTAssertThrowsError(try AiScene(file: "<no useful path>"))

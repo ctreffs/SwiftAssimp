@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Christian Treffs on 01.07.19.
 //
@@ -32,7 +32,6 @@ public protocol AiMaterialPropertyIdentifiable {
 }
 
 public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
-
     public struct TypeInfo: RawRepresentable, Equatable, CustomDebugStringConvertible {
         public let rawValue: UInt32
         public init(rawValue: UInt32) {
@@ -60,34 +59,33 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
                 return "unknown: \(rawValue)"
             }
         }
-
     }
 
-    var _property: aiMaterialProperty
+    var property: aiMaterialProperty
 
     init(_ aiMaterialProperty: aiMaterialProperty) {
-        _property = aiMaterialProperty
+        property = aiMaterialProperty
     }
 
     public init(_ property: AiMaterialProperty) {
-        self._property = property._property
+        self.property = property.property
     }
 
     /// Specifies the name of the property (key) Keys are generally case insensitive.
     public var key: String {
-        return String(aiString: _property.mKey) ?? ""
+        return String(aiString: property.mKey) ?? ""
     }
 
     /// Textures: Specifies the index of the texture.
     /// For non-texture properties, this member is always 0.
     public var index: Int {
-        return Int(_property.mIndex)
+        return Int(property.mIndex)
     }
 
     /// Textures: Specifies their exact usage semantic.
     /// For non-texture properties, this member is always 0 (or, better-said, #aiTextureType_NONE).
     public var semantic: AiTextureType {
-        return AiTextureType(rawValue: _property.mSemantic)
+        return AiTextureType(rawValue: property.mSemantic)
     }
 
     /// Type information for the property.
@@ -98,42 +96,41 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
     ///
     /// (It's probably a hacky solution, but it works.)
     public var type: TypeInfo {
-        return TypeInfo(rawValue: _property.mType.rawValue)
+        return TypeInfo(rawValue: property.mType.rawValue)
     }
 
     /// Size of the buffer mData is pointing to, in bytes.
     ///
     /// This value may not be 0.
     public var dataLength: Int {
-        return Int(_property.mDataLength)
+        return Int(property.mDataLength)
     }
 
     /// Binary buffer to hold the property's value.
     /// The size of the buffer is always mDataLength.
     public var dataBuffer: UnsafeBufferPointer<Int8> {
-        return UnsafeBufferPointer<Int8>(start: _property.mData,
+        return UnsafeBufferPointer<Int8>(start: property.mData,
                                          count: dataLength)
     }
 
     public var string: String? {
-        guard type == .string, dataLength > 0, let ptr = _property.mData else {
+        guard type == .string, dataLength > 0, let ptr = property.mData else {
             return nil
         }
         // FIXME: we cut out the array length field and the terminating NULL of the aiString - this is not nice!
         let p2 = ptr.advanced(by: MemoryLayout<Int32>.stride)
 
-        return String(bytes: p2, length: dataLength-1-MemoryLayout<Int32>.stride)
+        return String(bytes: p2, length: dataLength - 1 - MemoryLayout<Int32>.stride)
     }
 
     internal func getString(pMat: UnsafePointer<aiMaterial>) -> String? {
-
         var pOut = aiString()
 
         let result = aiGetMaterialString(pMat,
-                            key.withCString { $0 },
-                            _property.mType.rawValue,
-                            _property.mIndex,
-                            &pOut)
+                                         key.withCString { $0 },
+                                         property.mType.rawValue,
+                                         property.mIndex,
+                                         &pOut)
 
         guard result == aiReturn_SUCCESS else {
             return nil
@@ -142,7 +139,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
     }
 
     public var double: [Double] {
-        guard type == .double, dataLength > 0, let ptr = _property.mData else {
+        guard type == .double, dataLength > 0, let ptr = property.mData else {
             return []
         }
 
@@ -150,7 +147,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
     }
 
     public var float: [Float32] {
-        guard type == .float, dataLength > 0, let ptr = _property.mData else {
+        guard type == .float, dataLength > 0, let ptr = property.mData else {
             return []
         }
 
@@ -158,24 +155,23 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
     }
 
     public var int: [Int32] {
-        guard type == .int, dataLength > 0, let ptr = _property.mData else {
+        guard type == .int, dataLength > 0, let ptr = property.mData else {
             return []
         }
 
         return (0..<dataLength).map { Int32(ptr[$0]) }
     }
-
 }
 
 extension AiMaterialProperty: CustomDebugStringConvertible {
     public var debugDescription: String {
         return """
         <AiMaterialProperty
-         - index: \(index)
-         - key: \(key)
-         - semantic: \(semantic)
-         - type: \(type)
-         - dataLength: \(dataLength)
+        - index: \(index)
+        - key: \(key)
+        - semantic: \(semantic)
+        - type: \(type)
+        - dataLength: \(dataLength)
         >
         """
     }
@@ -189,7 +185,6 @@ extension AiMaterialProperty: Equatable {
             lhs.type == rhs.type &&
             lhs.dataLength == rhs.dataLength
     }
-
 }
 
 public struct AiMaterialPropertyString: AiMaterialPropertyIdentifiable, CustomDebugStringConvertible {
@@ -210,11 +205,11 @@ public struct AiMaterialPropertyString: AiMaterialPropertyIdentifiable, CustomDe
     public var debugDescription: String {
         return """
         <AiMaterialPropertyString
-         - index: \(index)
-         - key: \(key)
-         - semantic: \(semantic)
-         - type: \(type)
-         - string: \(string)
+        - index: \(index)
+        - key: \(key)
+        - semantic: \(semantic)
+        - type: \(type)
+        - string: \(string)
         >
         """
     }
@@ -240,11 +235,11 @@ public struct AiMaterialPropertyBuffer: AiMaterialPropertyIdentifiable, CustomDe
     public var debugDescription: String {
         return """
         <AiMaterialPropertyBuffer
-         - index: \(index)
-         - key: \(key)
-         - semantic: \(semantic)
-         - type: \(type)
-         - bufferLength: \(length)
+        - index: \(index)
+        - key: \(key)
+        - semantic: \(semantic)
+        - type: \(type)
+        - bufferLength: \(length)
         >
         """
     }
@@ -268,11 +263,11 @@ public struct AiMaterialPropertyDouble: AiMaterialPropertyIdentifiable, CustomDe
     public var debugDescription: String {
         return """
         <AiMaterialPropertyDouble
-         - index: \(index)
-         - key: \(key)
-         - semantic: \(semantic)
-         - type: \(type)
-         - double: \(doubles.map { $0 })
+        - index: \(index)
+        - key: \(key)
+        - semantic: \(semantic)
+        - type: \(type)
+        - double: \(doubles.map { $0 })
         >
         """
     }
@@ -296,11 +291,11 @@ public struct AiMaterialPropertyFloat: AiMaterialPropertyIdentifiable, CustomDeb
     public var debugDescription: String {
         return """
         <AiMaterialPropertyFloat
-         - index: \(index)
-         - key: \(key)
-         - semantic: \(semantic)
-         - type: \(type)
-         - float: \(floats.map { $0 })
+        - index: \(index)
+        - key: \(key)
+        - semantic: \(semantic)
+        - type: \(type)
+        - float: \(floats.map { $0 })
         >
         """
     }
@@ -324,11 +319,11 @@ public struct AiMaterialPropertyInt: AiMaterialPropertyIdentifiable, CustomDebug
     public var debugDescription: String {
         return """
         <AiMaterialPropertyInt
-         - index: \(index)
-         - key: \(key)
-         - semantic: \(semantic)
-         - type: \(type)
-         - int: \(ints.map { $0 })
+        - index: \(index)
+        - key: \(key)
+        - semantic: \(semantic)
+        - type: \(type)
+        - int: \(ints.map { $0 })
         >
         """
     }

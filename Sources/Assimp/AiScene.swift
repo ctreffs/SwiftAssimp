@@ -28,14 +28,14 @@ public class AiScene {
         public static let allowShared = Flags(rawValue: AI_SCENE_FLAGS_ALLOW_SHARED)
     }
 
-    fileprivate var _scene: aiScene
+    @usableFromInline var scene: aiScene
 
     public init(file filePath: String, flags: AiPostProcessStep = []) throws {
         guard let scenePtr = aiImportFile(filePath, flags.rawValue) else {
             throw Error.importFailed(String(cString: aiGetErrorString()))
         }
 
-        _scene = scenePtr.pointee
+        scene = scenePtr.pointee
 
         if self.flags.contains(.incomplete) {
             throw Error.importIncomplete(filePath)
@@ -43,7 +43,39 @@ public class AiScene {
     }
 
     deinit {
-        aiReleaseImport(&_scene)
+        aiReleaseImport(&scene)
+    }
+
+    /// Check whether the scene contains meshes
+    /// Unless no special scene flags are set this will always be true.
+    @inlinable public var hasMeshes: Bool {
+        return scene.mMeshes != nil && numMeshes > 0
+    }
+
+    /// Check whether the scene contains materials
+    /// Unless no special scene flags are set this will always be true.
+    @inlinable public var hasMaterials: Bool {
+        return scene.mMaterials != nil && numMaterials > 0
+    }
+
+    /// Check whether the scene contains lights
+    @inlinable public var hasLights: Bool {
+        return scene.mLights != nil && numLights > 0
+    }
+
+    /// Check whether the scene contains textures
+    @inlinable public var hasTextures: Bool {
+        return scene.mTextures != nil && numTextures > 0
+    }
+
+    /// Check whether the scene contains cameras
+    @inlinable public var hasCameras: Bool {
+        return scene.mCameras != nil && numCameras > 0
+    }
+
+    /// Check whether the scene contains animations
+    @inlinable public var hasAnimations: Bool {
+        return scene.mAnimations != nil && numAnimations > 0
     }
 
     /// Any combination of the AI_SCENE_FLAGS_XXX flags.
@@ -51,7 +83,7 @@ public class AiScene {
     /// By default this value is 0, no flags are set.
     /// Most applications will want to reject all scenes with the AI_SCENE_FLAGS_INCOMPLETE bit set.
     public var flags: Flags {
-        return Flags(rawValue: Int32(_scene.mFlags))
+        return Flags(rawValue: Int32(scene.mFlags))
     }
 
     /// The root node of the hierarchy.
@@ -59,16 +91,16 @@ public class AiScene {
     /// There will always be at least the root node if the import was successful (and no special flags have been set).
     /// Presence of further nodes depends on the format and content of the imported file.
     public var rootNode: AiNode {
-        guard let _node = _scene.mRootNode?.pointee else {
+        guard let node = scene.mRootNode?.pointee else {
             fatalError("There will always be at least the root node if the import was successful (and no special flags have been set)")
         }
 
-        return AiNode(_node)
+        return AiNode(node)
     }
 
     /// The number of meshes in the scene.
     public var numMeshes: Int {
-        return Int(_scene.mNumMeshes)
+        return Int(scene.mNumMeshes)
     }
 
     /// The array of meshes.
@@ -82,13 +114,13 @@ public class AiScene {
         }
 
         return (0..<numMeshes)
-                .compactMap { _scene.mMeshes[$0] }
-                .map { AiMesh($0.pointee) }
+            .compactMap { scene.mMeshes[$0] }
+            .map { AiMesh($0.pointee) }
     }
 
     /// The number of materials in the scene.
     public var numMaterials: Int {
-        return Int(_scene.mNumMaterials)
+        return Int(scene.mNumMaterials)
     }
 
     /// The array of materials.
@@ -103,35 +135,34 @@ public class AiScene {
             return []
         }
 
-        let _materials = (0..<numMaterials)
-            .compactMap { _scene.mMaterials[$0] }
+        let materials = (0..<numMaterials)
+            .compactMap { scene.mMaterials[$0] }
             .map { AiMaterial($0.pointee) }
 
-        assert(_materials.count == numMaterials)
+        assert(materials.count == numMaterials)
 
-        return _materials
+        return materials
     }
 
     /// The number of animations in the scene.
     public var numAnimations: Int {
-        return Int(_scene.mNumAnimations)
+        return Int(scene.mNumAnimations)
     }
 
     /// The array of animations.
     /// All animations imported from the given file are listed here.
     /// The array is mNumAnimations in size.
     public var animations: [aiAnimation] {
-        guard numAnimations > 0, let ptr = _scene.mAnimations?.pointee else {
+        guard numAnimations > 0, let ptr = scene.mAnimations?.pointee else {
             return []
         }
         return [aiAnimation](UnsafeMutableBufferPointer<aiAnimation>(start: ptr,
                                                                      count: numAnimations))
-
     }
 
     /// The number of textures embedded into the file
     public var numTextures: Int {
-        return Int(_scene.mNumTextures)
+        return Int(scene.mNumTextures)
     }
 
     /// The array of embedded textures.
@@ -139,25 +170,24 @@ public class AiScene {
     /// Not many file formats embed their textures into the file.
     /// An example is Quake's MDL format (which is also used by some GameStudio versions)
     public var textures: [AiTexture] {
-        guard numTextures > 0, let ptr = _scene.mTextures?.pointee else {
+        guard numTextures > 0, let ptr = scene.mTextures?.pointee else {
             return []
         }
         return [aiTexture](UnsafeMutableBufferPointer<aiTexture>(start: ptr,
                                                                  count: numTextures)).map { AiTexture($0) }
-
     }
 
     /// The number of light sources in the scene.
     /// Light sources are fully optional, in most cases this attribute will be 0.
     public var numLights: Int {
-        return Int(_scene.mNumLights)
+        return Int(scene.mNumLights)
     }
 
     /// The array of light sources.
     /// All light sources imported from the given file are listed here.
     /// The array is mNumLights in size.
     public var lights: [AiLight] {
-        guard numLights > 0, let ptr = _scene.mLights?.pointee else {
+        guard numLights > 0, let ptr = scene.mLights?.pointee else {
             return []
         }
         return [aiLight](UnsafeMutableBufferPointer<aiLight>(start: ptr,
@@ -167,7 +197,7 @@ public class AiScene {
     /// The number of cameras in the scene.
     /// Cameras are fully optional, in most cases this attribute will be 0.
     public var numCameras: Int {
-        return Int(_scene.mNumCameras)
+        return Int(scene.mNumCameras)
     }
 
     /// The array of cameras.
@@ -175,7 +205,7 @@ public class AiScene {
     /// The array is mNumCameras in size.
     /// The first camera in the array (if existing) is the default camera view into the scene.
     public var cameras: [aiCamera] {
-        guard numCameras > 0, let ptr = _scene.mCameras?.pointee else {
+        guard numCameras > 0, let ptr = scene.mCameras?.pointee else {
             return []
         }
 
@@ -188,5 +218,4 @@ extension AiScene {
     @inlinable public func meshes(for node: AiNode) -> [AiMesh] {
         return node.meshes.map { meshes[$0] }
     }
-
 }

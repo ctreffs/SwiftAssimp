@@ -1,6 +1,6 @@
 //
 //  AiTexture.swift
-//  
+//
 //
 //  Created by Christian Treffs on 21.06.19.
 //
@@ -25,9 +25,7 @@ public struct AiTexture {
     var pcData: [aiTexel] {
         return [aiTexel](UnsafeMutableBufferPointer<aiTexel>(start: _texture.pcData,
                                                              count: width * height))
-
     }
-
 }
 
 public struct AiTextureType: RawRepresentable, Equatable, CustomDebugStringConvertible {
