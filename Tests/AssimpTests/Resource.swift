@@ -24,7 +24,7 @@ enum Resource: String {
     }
 
     static func resourcesDir() -> URL {
-        guard var resourcesURL: URL = Bundle.allBundles.first(where: { $0.bundlePath.contains(".xctest") })?.bundleURL else {
+        guard var resourcesURL: URL = Bundle(identifier: "AssimpTests")?.bundleURL else {
             fatalError("no test bundle found")
         }
 
