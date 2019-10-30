@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AiMaterialProperty.swift
 //
 //
 //  Created by Christian Treffs on 01.07.19.
