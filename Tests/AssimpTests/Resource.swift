@@ -43,7 +43,7 @@ enum Resource: String {
         let localFile: URL = resourcesDir().appendingPathComponent(name)
         if !fm.fileExists(atPath: localFile.path) {
             let data = try Data(contentsOf: remoteURL)
-            try data.write(to: localFile, options: .atomicWrite)
+            try data.write(to: localFile)
             print("⬇ Downloaded '\(localFile.path)' ⬇")
         }
 
