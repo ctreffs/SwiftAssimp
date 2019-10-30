@@ -1,18 +1,17 @@
 # Swift Assimp
+
 [![Build Status](https://travis-ci.com/ctreffs/SwiftAssimp.svg?branch=master)](https://travis-ci.com/ctreffs/SwiftAssimp)
-[![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
+[![license](https://img.shields.io/badge/license-BSD3-brightgreen.svg)](LICENSE)
 [![swift version](https://img.shields.io/badge/swift-5.0+-brightgreen.svg)](https://swift.org/download)
-[![platforms](https://img.shields.io/badge/platforms-%20macOS%20|%20iOS%20|%20tvOS-brightgreen.svg)](#)
+[![platforms](https://img.shields.io/badge/platforms-%20macOS%20-brightgreen.svg)](#)
 [![platforms](https://img.shields.io/badge/platforms-linux-brightgreen.svg)](#)
 
-<p align="center">
-	<img src="docs/swiftimgui.gif" height="300" alt="swiftimgui-gif"/>
-</p>   
+This is a  **thin** Swift wrapper around the popular and excellent [**Open Asset Import Library**](http://assimp.org) library.  
+It provides a **swifty** and **typesafe** API. 
 
-This is a **lightweight**, **auto-generated** and **thin** Swift wrapper around the popular and excellent [**dear imgui**](https://github.com/ocornut/imgui) library.  
-It provides a **swifty** and -especially - **typesafe** API. It is easily maintainable and updatable, as well, since it relies heavily on automated code generation.
-
-There are working [demo examples](Sources/Demos/), too, provided as part of the library.
+> Open Asset Import Library (short name: Assimp) is a portable Open Source library to import various well-known 3D model formats in a uniform manner. The most recent version also knows how to export 3d files and is therefore suitable as a general-purpose 3D model converter.
+> Loads 40+ 3D file formats into one unified and clean data structure.    
+> ~ [www.assimp.org](http://www.assimp.org)
 
 ## 🚀 Getting Started
 
@@ -49,48 +48,41 @@ let package = Package(
 
 ```
 
+Since it's a system library wrapper you need to install the assimp library either via
+
+```sh
+brew install assimp
+```
+
+or 
+
+```sh
+apt-get install libassimp-dev
+```
+
+depending on you platform.
 
 ## 📝 Code Example
 
-A minimal example is located at [Sources/Demos/Minimal/main.swift](Sources/Demos/Minimal/main.swift).   
-This is an excerpt:
 
 ```swift
 import Assimp
 
-IMGUI_CHECKVERSION()
-let ctx = AssimpCreateContext(nil)
-let io = AssimpGetIO()!
+let scene: AiScene = try AiScene(file: <path/to/model/file.obj>, 
+                                 flags: [.removeRedundantMaterials, .genSmoothNormals]))
 
-/// Build font atlas
-var pixels: UnsafeMutablePointer<UInt8>?
-var width: Int32 = 0
-var height: Int32 = 0
-var bytesPerPixel: Int32 = 0
-ImFontAtlas_GetTexDataAsRGBA32(io.pointee.Fonts, &pixels, &width, &height, &bytesPerPixel)
+// get meshes
+let meshes: [AiMesh] = scene.meshes
 
-for n in 0..<20 {
-    io.pointee.DisplaySize = ImVec2(x: 1920, y: 1080)
-    io.pointee.DeltaTime = 1.0 / 60.0
-    AssimpNewFrame()
-    AssimpTextV("Hello, world!")
-    AssimpSliderFloat("float", &f, 0.0, 1.0, nil, 1)
-    AssimpShowDemoWindow(nil)
-    AssimpRender()
-}
+// get materials
+let matrials: [AiMaterial] = scene.materials
 
-AssimpDestroyContext(ctx)
+// get the root node of the scene graph
+let rootNode: [AiNode] = scene.rootNode
+
 ```
 
-## 🆕 Update SwiftAssimp
-
-SwiftAssimp uses a multi-stage process to update to the latest imgui version.   
-All necessary steps are provided in an automated fashion via a [`Makefile`](Makefile).   
-Run the following commands in the repository's root directory:
-
-1. `make buildCAssimp` - Update cimgui submodule && generate C interface
-2. `make wrapLibAssimp` - Update SwiftAssimp && auto-wrap C interface
-
+See the unit tests for more examples.
 
 ## 💁 Help needed
 
@@ -99,10 +91,8 @@ If you are interested in contributing, please feel free to do so!
 
 Things that need to be done are, among others:
 
-- [ ] Extend the AutoWrapper to wrap more cimgui functions (currently there are 55 'invalid' functions that will not be wrapped; 543 will be wrapped properly)
-- [ ] Some vector functions are not available via the c interface - see `Sources/AutoWrapper/Exceptions.swift`
-- [ ] Find a way to automate the remaining necessary manual adjustments in the cimgui generator template
-- [x] Support for [Cocoapods](https://cocoapods.org) packaging
+- [ ] Wrap more assimp functions and types
+- [ ] Support for [Cocoapods](https://cocoapods.org) packaging
 - [ ] Support for [Carthage](https://github.com/Carthage/Carthage) packaging
 - [ ] Write some additional tests to improve coverage
 
@@ -118,47 +108,24 @@ See also the list of [contributors](https://github.com/ctreffs/SwiftAssimp/contr
 
 ## 🔏 Licenses
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the 3-Clause BSD License - see the [LICENSE](LICENSE) file for details.
 
-* imgui licensed under [MIT License](https://github.com/ocornut/imgui/blob/master/LICENSE.txt)
-* CAssimp licensed under [MIT License](https://github.com/cimgui/cimgui/blob/master/LICENSE)
+* assimp licensed under [3-clause BSD license](https://github.com/assimp/assimp/blob/master/LICENSE)
+
 
 ## 🙏 Original code
 
-Since SwiftAssimp is merely a wrapper around [**imgui**](https://github.com/ocornut/imgui) it obviously depends on it.    
-It also makes use of the excellent c-api wrapper [**cimgui**](https://github.com/cimgui/cimgui).   
+Since Swift Assimp is merely a wrapper around [**assimp**](https://github.com/assimp/assimp) it obviously depends on it.       
 Support them if you can!
 
 ### imgui
 
-##### From [ocornut/imgui/docs/README.md](https://github.com/ocornut/imgui/blob/master/docs/README.md):
+##### From [assimp/assimp/Readme.md](https://github.com/assimp/assimp/blob/master/Readme.md):
 
-<sub>(This library is available under a free and permissive license, but needs financial support to sustain its continued improvements. In addition to maintenance and stability there are many desirable features yet to be added. If your company is using dear imgui, please consider reaching out. If you are an individual using dear imgui, please consider supporting the project via Patreon or PayPal.)</sub>
+A library to import and export various 3d-model-formats including scene-post-processing to generate missing render data.
 
-Businesses: support continued development via invoiced technical support, maintenance, sponsoring contracts:
-<br>&nbsp;&nbsp;_E-mail: contact @ dearimgui dot org_
-
-Individuals/hobbyists: support continued maintenance and development via the monthly Patreon:
-<br>&nbsp;&nbsp;[![Patreon](https://raw.githubusercontent.com/wiki/ocornut/imgui/web/patreon_02.png)](http://www.patreon.com/imgui)
-
-Individuals/hobbyists: support continued maintenance and development via PayPal:
-<br>&nbsp;&nbsp;[![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WGHNC6MBFLZ2S)
-
-----
-
-Dear Assimp is a **bloat-free graphical user interface library for C++**. It outputs optimized vertex buffers that you can render anytime in your 3D-pipeline enabled application. It is fast, portable, renderer agnostic and self-contained (no external dependencies).
-
-Dear Assimp is designed to **enable fast iterations** and to **empower programmers** to create **content creation tools and visualization / debug tools** (as opposed to UI for the average end-user). It favors simplicity and productivity toward this goal, and lacks certain features normally found in more high-level libraries.
-
-Dear Assimp is particularly suited to integration in games engine (for tooling), real-time 3D applications, fullscreen applications, embedded applications, or any applications on consoles platforms where operating system features are non-standard.
-
-
-### cimgui
-
-##### From [cimgui/cimgui/README.md](https://github.com/cimgui/cimgui/blob/master/README.md)
-
-CAssimp is a thin c-api wrapper programmatically generated for the excellent C++ immediate mode gui Dear Assimp. All imgui.h functions are programmatically wrapped. Generated files are: cimgui.cpp, cimgui.h for C compilation. Also for helping in bindings creation, definitions.lua with function definition information and structs_and_enums.lua. This library is intended as a intermediate layer to be able to use Dear Assimp from other languages that can interface with C (like D - see D-binding)
-
+One-off donations via PayPal:
+<br>[![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4JRJVPXC4QJM4)
 
 ## ☮️ Alternatives
 
