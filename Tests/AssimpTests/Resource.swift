@@ -24,10 +24,16 @@ enum Resource: String {
     }
 
     static func resourcesDir() -> URL {
-        guard var resourcesURL: URL = Bundle(identifier: "AssimpTests")?.bundleURL else {
+
+        #if os(Linux)
+        let bundle = Bundle.main
+        #else
+        guard let bundle = Bundle(identifier: "AssimpTests") else {
             fatalError("no test bundle found")
         }
+        #endif
 
+        var resourcesURL: URL = bundle.bundleURL
         resourcesURL.deleteLastPathComponent()
         return resourcesURL
     }
