@@ -98,7 +98,7 @@ Things that need to be done are, among others:
 
 ## 🏷️ Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](/releases). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/ctreffs/SwiftAssimp/tags). 
 
 ## ✍️ Authors
 
