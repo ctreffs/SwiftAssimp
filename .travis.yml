@@ -5,12 +5,16 @@ language: generic
 sudo: required
 dist: trusty
 osx_image: xcode11
+before_install:
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update; fi
+addons:
+  apt:
+    update: true
 install:
   - eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install assimp; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update -qq; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -y -qq pkg-config libassimp-dev; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -y pkg-config libassimp-dev; fi
   - pkg-config assimp --cflags --libs --static
   - ls -la /usr/include/assimp
 script:
