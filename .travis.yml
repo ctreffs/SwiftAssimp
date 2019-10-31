@@ -16,7 +16,7 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install assimp; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -y pkg-config libassimp-dev; fi
   - pkg-config assimp --cflags --libs --static
-  - ls -la /usr/include/assimp
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; apt-show-versions assimp; if
 script:
   - swift package reset
   - swift build

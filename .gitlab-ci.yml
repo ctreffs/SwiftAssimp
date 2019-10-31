@@ -9,7 +9,7 @@ before_script:
   - apt-get update -qq 
   - apt-get install -y -qq pkg-config libassimp-dev
   - pkg-config assimp --cflags --libs --static
-  - ls -la /usr/include/assimp
+  - apt-show-versions assimp
 
 stages: 
   - test
