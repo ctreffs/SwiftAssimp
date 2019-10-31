@@ -7,6 +7,7 @@ dist: trusty
 osx_image: xcode11
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B05F25D762E3157; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update --allow-unauthenticated; fi
 addons:
   apt:
