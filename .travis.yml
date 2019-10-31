@@ -14,7 +14,7 @@ addons:
     update: true
 install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install assimp; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get --reinstall install -y pkg-config libassimp-dev=4.1.0\*; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get --reinstall install -y pkg-config libassimp-dev; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-cache madison assimp; fi
   - pkg-config assimp --cflags --libs --static
   - eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
