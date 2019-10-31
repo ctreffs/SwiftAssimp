@@ -118,7 +118,7 @@ This project is licensed under the 3-Clause BSD License - see the [LICENSE](LICE
 Since Swift Assimp is merely a wrapper around [**assimp**](https://github.com/assimp/assimp) it obviously depends on it.       
 Support them if you can!
 
-### imgui
+### Open Asset Import Library (assimp)
 
 ##### From [assimp/assimp/Readme.md](https://github.com/assimp/assimp/blob/master/Readme.md):
 
