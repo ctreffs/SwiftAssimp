@@ -16,8 +16,8 @@ addons:
     packages:
       - pkg-config
       - assimp
-#install:
-  #- eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
+install:
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"; fi
 script:
   - swift package reset
   - swift build
