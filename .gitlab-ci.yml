@@ -1,15 +1,10 @@
 image: swift:5.0
 
-#variables:
-#  GIT_SUBMODULE_STRATEGY: recursive
-
 before_script:
   # use the Gitlab CI Job token to login for all git clones on the machine.
   - echo -e "machine gitlab.com\nlogin gitlab-ci-token\npassword ${CI_JOB_TOKEN}" > ~/.netrc
   - apt-get update -qq 
   - apt-get install -y -qq pkg-config libassimp-dev
-  - pkg-config assimp --cflags --libs --static
-  - apt-cache madison assimp
 
 stages: 
   - test
