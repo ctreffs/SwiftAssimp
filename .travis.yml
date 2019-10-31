@@ -3,7 +3,7 @@ os:
   - osx
 language: generic
 sudo: required
-#dist: trusty
+dist: bionic
 osx_image: xcode11
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update; fi
