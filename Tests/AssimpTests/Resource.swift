@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Resource.swift
+//
 //
 //  Created by Christian Treffs on 21.06.19.
 //
@@ -24,10 +24,15 @@ enum Resource: String {
     }
 
     static func resourcesDir() -> URL {
-        guard var resourcesURL: URL = Bundle.allBundles.first(where: { $0.bundlePath.contains(".xctest") })?.bundleURL else {
+        #if os(Linux)
+        // linux does not have .allBundles yet.
+        let bundle = Bundle.main
+        #else
+        guard let bundle = Bundle.allBundles.first(where: { $0.bundlePath.contains("Tests") }) else {
             fatalError("no test bundle found")
         }
-
+        #endif
+        var resourcesURL: URL = bundle.bundleURL
         resourcesURL.deleteLastPathComponent()
         return resourcesURL
     }
@@ -43,7 +48,7 @@ enum Resource: String {
         let localFile: URL = resourcesDir().appendingPathComponent(name)
         if !fm.fileExists(atPath: localFile.path) {
             let data = try Data(contentsOf: remoteURL)
-            try data.write(to: localFile, options: .atomicWrite)
+            try data.write(to: localFile)
             print("⬇ Downloaded '\(localFile.path)' ⬇")
         }
 

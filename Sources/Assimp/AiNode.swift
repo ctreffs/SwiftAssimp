@@ -1,6 +1,6 @@
 //
 //  AiNode.swift
-//  
+//
 //
 //  Created by Christian Treffs on 04.07.19.
 //
@@ -8,10 +8,10 @@
 import CAssimp
 
 public struct AiNode {
-    let _node: aiNode
+    let node: aiNode
 
     init(_ aiNode: aiNode) {
-        _node = aiNode
+        node = aiNode
     }
 
     /// The name of the node.
@@ -32,32 +32,32 @@ public struct AiNode {
     /// e.g.
     /// `<DummyRootNode>`
     public var name: String {
-        return String(aiString: _node.mName) ?? ""
+        return String(aiString: node.mName) ?? ""
     }
 
     /// The transformation relative to the node's parent.
     public var transformation: aiMatrix4x4 {
-        return _node.mTransformation
+        return node.mTransformation
     }
 
     /// Parent node.
     ///
     /// NULL if this node is the root node.
     public var parent: AiNode? {
-        guard let _parent = _node.mParent?.pointee else {
+        guard let parent = node.mParent?.pointee else {
             return nil
         }
-        return AiNode(_parent)
+        return AiNode(parent)
     }
 
     /// The number of meshes of this node.
     public var numMeshes: Int {
-        return Int(_node.mNumMeshes)
+        return Int(node.mNumMeshes)
     }
 
     /// The number of child nodes of this node.
     public var numChildren: Int {
-        return Int(_node.mNumChildren)
+        return Int(node.mNumChildren)
     }
 
     /// The meshes of this node.
@@ -68,9 +68,8 @@ public struct AiNode {
         }
 
         return(0..<numMeshes)
-            .compactMap { _node.mMeshes[$0] }
+            .compactMap { node.mMeshes[$0] }
             .map { Int($0) }
-
     }
 
     /// The child nodes of this node.
@@ -82,18 +81,18 @@ public struct AiNode {
         }
 
         return (0..<numChildren)
-            .compactMap { _node.mChildren[$0] }
+            .compactMap { node.mChildren[$0] }
             .map { AiNode($0.pointee) }
     }
 
     /// Metadata associated with this node or NULL if there is no metadata.
     /// Whether any metadata is generated depends on the source file format.
     public var metaData: aiMetadata? {
-        guard let _meta = _node.mMetaData?.pointee else {
+        guard let meta = node.mMetaData?.pointee else {
             return nil
         }
 
-        return _meta
+        return meta
     }
 }
 

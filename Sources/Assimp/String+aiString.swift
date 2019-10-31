@@ -1,21 +1,21 @@
 //
 //  String+aiString.swift
-//  
+//
 //
 //  Created by Christian Treffs on 21.06.19.
 //
 
 import CAssimp
 
-public extension String {
-    init?(aiString: aiString) {
+extension String {
+    public init?(aiString: aiString) {
         let cStringBuffer: UnsafePointer<CChar>? = withUnsafeBytes(of: aiString.data) { bytesPtr ->  UnsafePointer<CChar>? in
             if aiString.length <= 0 {
                 return nil
             }
             guard let boundMemory: UnsafePointer<CChar> = bytesPtr.baseAddress?.bindMemory(to: CChar.self,
                                                                                            capacity: aiString.length) else {
-                return nil
+                                                                                            return nil
             }
 
             let stringBuffer = UnsafeBufferPointer<CChar>(start: boundMemory,
@@ -31,7 +31,7 @@ public extension String {
         self.init(cString: cStringBufferStart)
     }
 
-    init?(bytes: UnsafeMutablePointer<Int8>, length: Int) {
+    public init?(bytes: UnsafeMutablePointer<Int8>, length: Int) {
         let bufferPtr = UnsafeMutableBufferPointer(start: bytes,
                                                    count: length)
 

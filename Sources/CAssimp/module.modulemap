@@ -1,5 +1,5 @@
-module CAssimp [system][extern_c] {
-  header "shims.h"
+module CAssimp [system] {
+  umbrella header "shims.h"
   link "assimp"
   export *
 }
