@@ -14,12 +14,12 @@ extension String {
                 return nil
             }
             guard let boundMemory: UnsafePointer<CChar> = bytesPtr.baseAddress?.bindMemory(to: CChar.self,
-                                                                                           capacity: aiString.length) else {
+                                                                                           capacity: Int(aiString.length)) else {
                                                                                             return nil
             }
 
             let stringBuffer = UnsafeBufferPointer<CChar>(start: boundMemory,
-                                                          count: aiString.length)
+                                                          count: Int(aiString.length))
 
             return stringBuffer.baseAddress
         }
