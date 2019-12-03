@@ -21,7 +21,7 @@ public struct AiMesh {
         public static let polygon = PrimitiveType(rawValue: aiPrimitiveType_POLYGON.rawValue)
     }
 
-    let mesh: aiMesh
+    @usableFromInline let mesh: aiMesh
 
     public init(_ aiMesh: aiMesh) {
         mesh = aiMesh
@@ -62,6 +62,11 @@ public struct AiMesh {
         return vertices
     }
 
+    @inlinable public var rawVertices: UnsafeMutablePointer<ai_real> {
+        return UnsafeMutableRawPointer(mesh.mVertices)!.bindMemory(to: ai_real.self,
+                                                                   capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
+    }
+
     /// Vertex normals.
     /// The array contains normalized vectors, NULL if not present.
     /// The array is mNumVertices in size.
@@ -78,6 +83,11 @@ public struct AiMesh {
 
         assert(normals.count == numVertices)
         return normals
+    }
+
+    @inlinable public var rawNormals: UnsafeMutablePointer<ai_real> {
+        return UnsafeMutableRawPointer(mesh.mNormals)!.bindMemory(to: ai_real.self,
+                                                                  capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
     }
 
     /// Vertex tangents.
@@ -104,6 +114,11 @@ public struct AiMesh {
         return tangents
     }
 
+    @inlinable public var rawTangents: UnsafeMutablePointer<ai_real> {
+        return UnsafeMutableRawPointer(mesh.mTangents)!.bindMemory(to: ai_real.self,
+                                                                   capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
+    }
+
     /// Vertex bitangents.
     /// The bitangent of a vertex points in the direction of the positive Y texture axis.
     /// The array contains normalized vectors, NULL if not present.
@@ -120,6 +135,11 @@ public struct AiMesh {
         assert(bitangents.count == numVertices)
 
         return bitangents
+    }
+
+    @inlinable public var rawBitangents: UnsafeMutablePointer<ai_real> {
+        return UnsafeMutableRawPointer(mesh.mBitangents)!.bindMemory(to: ai_real.self,
+                                                                     capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
     }
 
     /// Vertex color sets.
@@ -163,6 +183,11 @@ public struct AiMesh {
         }
 
         return coords
+    }
+
+    @inlinable public var rawPrimaryTextureCoords: UnsafeMutablePointer<ai_real> {
+        return UnsafeMutableRawPointer(mesh.mTextureCoords.0)!.bindMemory(to: ai_real.self,
+                                                                          capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
     }
 
     /// Specifies the number of components for a given UV channel.

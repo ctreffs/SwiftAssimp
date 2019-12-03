@@ -198,9 +198,17 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].primitiveTypes, [.triangle])
         XCTAssertEqual(scene.meshes[0].numVertices, 36)
         XCTAssertEqual(scene.meshes[0].vertices[0], [-25.0, -25.0, 0.0])
+        XCTAssertEqual(scene.meshes[0].vertices[35], [-25.0, 25.0, 0.0])
         XCTAssertEqual(scene.meshes[0].numFaces, 12)
         XCTAssertEqual(scene.meshes[0].numBones, 0)
         XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
+        XCTAssertEqual(scene.meshes[0].rawVertices[0], -25.0)
+        XCTAssertEqual(scene.meshes[0].rawVertices[1], -25.0)
+        XCTAssertEqual(scene.meshes[0].rawVertices[2], 0.0)
+        
+        XCTAssertEqual(scene.meshes[0].rawVertices[105], -25.0)
+        XCTAssertEqual(scene.meshes[0].rawVertices[106], 25.0)
+        XCTAssertEqual(scene.meshes[0].rawVertices[107], 0.0)
 
         // Faces
 
