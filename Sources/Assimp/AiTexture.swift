@@ -97,6 +97,26 @@ public struct AiTextureType: RawRepresentable, Equatable, CustomDebugStringConve
     /// Rarely used, almost never for real-time applications.
     public static let reflection = AiTextureType(rawValue: aiTextureType_REFLECTION.rawValue)
 
+    /// PBR Materials
+    ///
+    /// PBR definitions from maya and other modelling packages now use this standard.
+    /// This was originally introduced around 2012.
+    /// Support for this is in game engines like Godot, Unreal or Unity3D.
+    /// Modelling packages which use this are very common now.
+    
+    
+    public static let baseColor = AiTextureType(rawValue: aiTextureType_BASE_COLOR.rawValue)
+    
+    public static let normalCamera = AiTextureType(rawValue: aiTextureType_NORMAL_CAMERA.rawValue)
+    
+    public static let emissionColor = AiTextureType(rawValue: aiTextureType_EMISSION_COLOR.rawValue)
+    
+    public static let metalness = AiTextureType(rawValue: aiTextureType_METALNESS.rawValue)
+    
+    public static let diffuseRoughness = AiTextureType(rawValue: aiTextureType_DIFFUSE_ROUGHNESS.rawValue)
+    
+    public static let ambientOcclusion = AiTextureType(rawValue: aiTextureType_AMBIENT_OCCLUSION.rawValue)
+    
     /// Unknown texture
     ///
     /// A texture reference that does not match any of the definitions above is considered to be 'unknown'.
