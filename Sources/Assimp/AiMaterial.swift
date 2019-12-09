@@ -14,6 +14,10 @@ public struct AiMaterial {
         self.material = aiMaterial
     }
 
+    public init() {
+        self.material = aiMaterial()
+    }
+
     /// Number of properties in the data base
     public var numProperties: Int {
         return Int(material.mNumProperties)

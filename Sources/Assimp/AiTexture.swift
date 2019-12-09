@@ -28,7 +28,7 @@ public struct AiTexture {
     }
 }
 
-public struct AiTextureType: RawRepresentable, Equatable, CustomDebugStringConvertible {
+public struct AiTextureType: RawRepresentable {
     public let rawValue: UInt32
 
     public init(rawValue: UInt32) {
@@ -103,26 +103,35 @@ public struct AiTextureType: RawRepresentable, Equatable, CustomDebugStringConve
     /// This was originally introduced around 2012.
     /// Support for this is in game engines like Godot, Unreal or Unity3D.
     /// Modelling packages which use this are very common now.
-    
-    
+
     public static let baseColor = AiTextureType(rawValue: aiTextureType_BASE_COLOR.rawValue)
-    
+
     public static let normalCamera = AiTextureType(rawValue: aiTextureType_NORMAL_CAMERA.rawValue)
-    
+
     public static let emissionColor = AiTextureType(rawValue: aiTextureType_EMISSION_COLOR.rawValue)
-    
+
     public static let metalness = AiTextureType(rawValue: aiTextureType_METALNESS.rawValue)
-    
+
     public static let diffuseRoughness = AiTextureType(rawValue: aiTextureType_DIFFUSE_ROUGHNESS.rawValue)
-    
+
     public static let ambientOcclusion = AiTextureType(rawValue: aiTextureType_AMBIENT_OCCLUSION.rawValue)
-    
+
     /// Unknown texture
     ///
     /// A texture reference that does not match any of the definitions above is considered to be 'unknown'.
     /// It is still imported, but is excluded from any further postprocessing.
     public static let unknown = AiTextureType(rawValue: aiTextureType_UNKNOWN.rawValue)
+}
 
+extension AiTextureType {
+    @inlinable var type: aiTextureType {
+        return aiTextureType(rawValue: rawValue)
+    }
+}
+
+extension AiTextureType: Equatable { }
+
+extension AiTextureType: CustomDebugStringConvertible {
     @inlinable public var debugDescription: String {
         switch self {
         case .none:

@@ -1,6 +1,6 @@
 //
 //  AiMatKey.swift
-//  
+//
 //
 //  Created by Christian Treffs on 06.12.19.
 //
@@ -10,14 +10,14 @@ public struct AiMatKey: RawRepresentable {
     public let texType: UInt32
     public let texIndex: UInt32
     public let rawValue: String
-    
+
     init(base: Base, texType: AiTextureType = .none, texIndex: Int = 0) {
         self.rawValue = String(format: "%@,%d,%d", base.rawValue, texType.rawValue, texIndex)
         self.baseName = base.rawValue
         self.texType = texType.rawValue
         self.texIndex = UInt32(texIndex)
     }
-        
+
     public init?(rawValue: String) {
         self.rawValue = rawValue
         self.baseName = ""
@@ -57,7 +57,7 @@ extension AiMatKey {
         case TWOSIDED_BASE = "$mat.twosided"
         case UVTRANSFORM_BASE = "$tex.uvtrafo"
         case UVWSRC_BASE = "$tex.uvwsrc"
-        
+
         case GLTF_TEXTURE_TEXCOORD_BASE = "$tex.file.texCoord"
         case GLTF_MAPPINGNAME_BASE = "$tex.mappingname"
         case GLTF_MAPPINGID_BASE = "$tex.mappingid"
@@ -65,7 +65,7 @@ extension AiMatKey {
         case GLTF_MAPPINGFILTER_MIN_BASE = "$tex.mappingfiltermin"
         case GLTF_SCALE_BASE = "$tex.scale"
         case GLTF_STRENGTH_BASE = "$tex.strength"
-        
+
         case GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_FACTOR = "$mat.gltf.pbrMetallicRoughness.baseColorFactor"
         case GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR = "$mat.gltf.pbrMetallicRoughness.metallicFactor"
         case GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR = "$mat.gltf.pbrMetallicRoughness.roughnessFactor"
@@ -76,7 +76,6 @@ extension AiMatKey {
         case GLTF_UNLIT = "$mat.gltf.unlit"
     }
 }
-
 
 extension AiMatKey {
     public static let BLEND_FUNC: AiMatKey = .init(base: .BLEND_FUNC_BASE)
@@ -107,19 +106,18 @@ extension AiMatKey {
     public static let TWOSIDED: AiMatKey = .init(base: .TWOSIDED_BASE)
     public static let UVTRANSFORM: AiMatKey = .init(base: .UVTRANSFORM_BASE)
     public static let UVWSRC: AiMatKey = .init(base: .UVWSRC_BASE)
-    
-    
+
     public static let GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_FACTOR: AiMatKey = .init(base: .GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_FACTOR)
     public static let GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR: AiMatKey = .init(base: .GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR)
     public static let GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR: AiMatKey = .init(base: .GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR)
-    public static var GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_TEXTURE: AiMatKey = { .init(base: .TEXTURE_BASE ,texType: .diffuse, texIndex: 1) }()
+    public static var GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_TEXTURE: AiMatKey = { .init(base: .TEXTURE_BASE, texType: .diffuse, texIndex: 1) }()
     public static let GLTF_PBRMETALLICROUGHNESS_METALLICROUGHNESS_TEXTURE: AiMatKey = { .init(base: .TEXTURE_BASE, texType: .unknown, texIndex: 0) }()
     public static let GLTF_ALPHAMODE: AiMatKey = .init(base: .GLTF_ALPHAMODE)
     public static let GLTF_ALPHACUTOFF: AiMatKey = .init(base:  .GLTF_ALPHACUTOFF)
     public static let GLTF_PBRSPECULARGLOSSINESS: AiMatKey = .init(base:  .GLTF_PBRSPECULARGLOSSINESS)
     public static let GLTF_PBRSPECULARGLOSSINESS_GLOSSINESS_FACTOR: AiMatKey = .init(base:  .GLTF_PBRSPECULARGLOSSINESS_GLOSSINESS_FACTOR)
     public static let GLTF_UNLIT: AiMatKey = .init(base: .GLTF_UNLIT)
-    
+
     public static func BLEND_FUNC(_ texType: AiTextureType, _ texIndex: Int) -> AiMatKey { return .init(base: .BLEND_FUNC_BASE, texType: texType, texIndex: texIndex) }
     public static func BUMPSCALING(_ texType: AiTextureType, _ texIndex: Int) -> AiMatKey { return .init(base: .BUMPSCALING_BASE, texType: texType, texIndex: texIndex) }
     public static func COLOR_AMBIENT(_ texType: AiTextureType, _ texIndex: Int) -> AiMatKey { return .init(base: .COLOR_AMBIENT_BASE, texType: texType, texIndex: texIndex) }
