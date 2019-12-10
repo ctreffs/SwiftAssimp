@@ -7,6 +7,7 @@
 
 import CAssimp
 
+// Ref: https://github.com/helix-toolkit/helix-toolkit/blob/master/Source/HelixToolkit.SharpDX.Assimp.Shared/ImporterPartial_Material.cs
 public struct AiMaterial {
     var material: aiMaterial
 
@@ -33,32 +34,32 @@ public struct AiMaterial {
         guard numProperties > 0 else {
             return []
         }
-
-        let properties = (0..<numProperties)
-            .compactMap { material.mProperties[$0] }
-            .map { AiMaterialProperty($0.pointee) }
-
-        assert(properties.count == numProperties)
-
-        return properties
+        return [AiMaterialProperty](unsafeUninitializedCapacity: numProperties) { buffer, written in
+            for i in 0..<numProperties {
+                if let prop = material.mProperties[i] {
+                    buffer[i] = AiMaterialProperty(prop.pointee)
+                    written += 1
+                }
+            }
+        }
     }
 
     public var typedProperties: [AiMaterialPropertyIdentifiable] {
         return properties.compactMap { prop -> AiMaterialPropertyIdentifiable? in
-            switch (prop.type, prop.semantic) {
-            case (.string, _):
+            switch prop.type {
+            case .string:
                 return AiMaterialPropertyString(prop)
 
-            case (.float, _):
+            case .float:
                 return AiMaterialPropertyFloat(prop)
 
-            case (.int, _):
+            case .int:
                 return AiMaterialPropertyInt(prop)
 
-            case (.buffer, _):
+            case .buffer:
                 return AiMaterialPropertyBuffer(prop)
 
-            case (.double, _):
+            case .double:
                 return AiMaterialPropertyDouble(prop)
 
             default:
@@ -68,46 +69,143 @@ public struct AiMaterial {
     }
 
     /*
-     * @param pMat Pointer to the input material. May not be NULL
-     * @param pKey Key to search for. One of the AI_MATKEY_XXX constants.
-     * @param type Specifies the type of the texture to be retrieved (
-     *    e.g. diffuse, specular, height map ...)
-     * @param index Index of the texture to be retrieved.
-     * @param pPropOut Pointer to receive a pointer to a valid aiMaterialProperty
+     - aiGetMaterialProperty
+     - aiGetMaterialTextureCount
+     - aiGetMaterialTexture
+     - aiGetMaterialString
+     - aiGetMaterialColor
+
+     - aiGetMaterialFloat
+     - aiGetMaterialFloatArray
+     - aiGetMaterialInteger
+     - aiGetMaterialIntegerArray
+     - aiGetMaterialUVTransform
+     - aiGetMaterialXXX
      */
-    public mutating func getMaterialProperty(key: String, textureTypeSemantic type: UInt32 = 0, textureIndex index: UInt32 = 0) -> AiMaterialProperty {
-        let ptr = UnsafeMutablePointer<UnsafePointer<aiMaterialProperty>?>.allocate(capacity: MemoryLayout<aiMaterialProperty>.stride)
 
-        let result = aiGetMaterialProperty(&material,
-                                           key,
-                                           type,
-                                           index,
-                                           ptr)
+    public func getMaterialProperty(_ key: AiMatKey) -> AiMaterialProperty? {
+        return withUnsafePointer(to: self.material) { matPtr -> AiMaterialProperty? in
+            let matPropPtr = UnsafeMutablePointer<UnsafePointer<aiMaterialProperty>?>.allocate(capacity: MemoryLayout<aiMaterialProperty>.stride)
+            defer {
+                matPropPtr.deinitialize(count: 1)
+                matPropPtr.deallocate()
+            }
 
-        assert(result == aiReturn_SUCCESS)
+            let result = aiGetMaterialProperty(matPtr,
+                                               key.baseName,
+                                               key.texType,
+                                               key.texIndex,
+                                               matPropPtr)
 
-        let property = ptr.pointee!.pointee
-
-        return AiMaterialProperty(property)
+            guard result == aiReturn_SUCCESS, let property = matPropPtr.pointee?.pointee else {
+                return nil
+            }
+            return AiMaterialProperty(property)
+        }
     }
 
-    public mutating func getMaterialString(key: String, textureTypeSemantic type: UInt32 = 0, textureIndex index: UInt32 = 0) -> String? {
-        var string = aiString()
-        let result = aiGetMaterialString(&material, key, type, index, &string)
-
-        assert(result == aiReturn_SUCCESS)
-
-        return String(aiString: string)
+    /// Get the number of textures for a particular texture type.
+    public func getMaterialTextureCount(texType: AiTextureType) -> Int {
+        return withUnsafePointer(to: material) {
+            Int(aiGetMaterialTextureCount($0, texType.type))
+        }
     }
 
-    public mutating func getMaterialIntegerArray(key: String, textureTypeSemantic type: UInt32 = 0, textureIndex index: UInt32 = 0, pMax: inout UInt32) -> [Int32] {
-        var ints = [Int32](repeating: 0, count: Int(pMax))
+    public func getMaterialTexture(texType: AiTextureType, texIndex: Int) -> String? {
+        return withUnsafePointer(to: material) { (matPtr: UnsafePointer<aiMaterial>) -> String? in
+            var path = aiString()
+            // NOTE: the properties do not seem to be working
+            var mapping: aiTextureMapping = aiTextureMapping_UV
+            var uvIndex: UInt32 = 0
+            var blend: ai_real = 0.0
+            var op: aiTextureOp = aiTextureOp_Multiply
+            var mapmode: [aiTextureMapMode] = [aiTextureMapMode_Wrap, aiTextureMapMode_Wrap]
+            var flags: UInt32 = 0
+            let result = aiGetMaterialTexture(matPtr,
+                                              texType.type,
+                                              UInt32(texIndex),
+                                              &path,
+                                              &mapping,
+                                              &uvIndex,
+                                              &blend,
+                                              &op,
+                                              &mapmode,
+                                              &flags)
 
-        let result = aiGetMaterialIntegerArray(&material, key, type, index, &ints, &pMax)
-        assert(result == aiReturn_SUCCESS)
+            guard result == aiReturn_SUCCESS else {
+                return nil
+            }
 
-        return ints
+            print(mapping, uvIndex, blend, op, mapmode, flags)
+            return String(aiString: path)
+        }
     }
+
+    public func getMaterialString(_ key: AiMatKey) -> String? {
+        return withUnsafePointer(to: material) { matPtr -> String? in
+            var string = aiString()
+            let result = aiGetMaterialString(matPtr,
+                                             key.baseName,
+                                             key.texType,
+                                             key.texIndex,
+                                             &string)
+
+            guard result == aiReturn_SUCCESS else {
+                return nil
+            }
+
+            return String(aiString: string)
+        }
+    }
+
+    public func getMaterialColor(_ key: AiMatKey) -> SIMD4<ai_real>? {
+        return withUnsafePointer(to: material) { matPtr in
+            var color = aiColor4D()
+            let result = aiGetMaterialColor(matPtr,
+                                            key.baseName,
+                                            key.texType,
+                                            key.texIndex,
+                                            &color)
+            guard result == aiReturn_SUCCESS else {
+                return nil
+            }
+            return SIMD4<Float>(color.r, color.g, color.b, color.a)
+        }
+    }
+
+    public func getMaterialFloatArray(_ key: AiMatKey) -> [ai_real]? {
+        withUnsafePointer(to: material) { matPtr in
+            let count = MemoryLayout<aiUVTransform>.stride / MemoryLayout<ai_real>.stride
+            let pOut = UnsafeMutablePointer<ai_real>.allocate(capacity: count)
+            defer {
+                pOut.deinitialize(count: count)
+                pOut.deallocate()
+            }
+            var pMax: UInt32 = 0
+            let result = aiGetMaterialFloatArray(matPtr,
+                                                 key.baseName,
+                                                 key.texType,
+                                                 key.texIndex,
+                                                 pOut,
+                                                 &pMax)
+            guard result == aiReturn_SUCCESS, pMax > 0 else {
+                return nil
+            }
+
+            return [ai_real](UnsafeMutableBufferPointer<ai_real>(start: pOut, count: Int(pMax)))
+        }
+    }
+
+    /*
+     public mutating func getMaterialIntegerArray(key: String, textureTypeSemantic type: UInt32 = 0, textureIndex index: UInt32 = 0, pMax: inout UInt32) -> [Int32] {
+     var ints = [Int32](repeating: 0, count: Int(pMax))
+
+     let result = aiGetMaterialIntegerArray(&material, key, type, index, &ints, &pMax)
+     assert(result == aiReturn_SUCCESS)
+
+     return ints
+     }
+     */
 }
 
 extension AiMaterial: CustomDebugStringConvertible {

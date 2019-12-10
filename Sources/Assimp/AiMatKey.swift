@@ -4,6 +4,7 @@
 //
 //  Created by Christian Treffs on 06.12.19.
 //
+import Foundation
 
 public struct AiMatKey: RawRepresentable {
     public let baseName: String
@@ -77,34 +78,111 @@ extension AiMatKey {
     }
 }
 
+/// https://assimp-docs.readthedocs.io/en/latest/usage/use_the_lib.html#constants
+/// https://assimp-docs.readthedocs.io/en/latest/_sources/usage/use_the_lib.rst.txt
 extension AiMatKey {
+    /// One of the aiBlendMode enumerated values.
+    /// Defines how the final color value in the screen buffer is computed from the given color at that
+    /// position and the newly computed color from the material.
+    /// Simply said, alpha blending settings.
     public static let BLEND_FUNC: AiMatKey = .init(base: .BLEND_FUNC_BASE)
     public static let BUMPSCALING: AiMatKey = .init(base: .BUMPSCALING_BASE)
+
+    /// Ambient color of the material. This is typically scaled by the amount of ambient light.
     public static let COLOR_AMBIENT: AiMatKey = .init(base: .COLOR_AMBIENT_BASE)
+
+    /// Diffuse color of the material. This is typically scaled by the amount of incoming diffuse light (e.g. using gouraud shading)
     public static let COLOR_DIFFUSE: AiMatKey = .init(base: .COLOR_DIFFUSE_BASE)
+
+    /// Emissive color of the material.
+    /// This is the amount of light emitted by the object.
+    /// In real time applications it will usually not affect surrounding objects,
+    /// but raytracing applications may wish to treat emissive objects as light sources.
     public static let COLOR_EMISSIVE: AiMatKey = .init(base: .COLOR_EMISSIVE_BASE)
+
+    /// Defines the reflective color of the material.
+    /// This is typically scaled by the amount of incoming light from the direction of mirror reflection.
+    /// Usually combined with an environment lightmap of some kind for real-time applications.
     public static let COLOR_REFLECTIVE: AiMatKey = .init(base: .COLOR_REFLECTIVE_BASE)
+
+    /// Specular color of the material. This is typically scaled by the amount of incoming specular light (e.g. using phong shading)
     public static let COLOR_SPECULAR: AiMatKey = .init(base: .COLOR_SPECULAR_BASE)
+
+    /// Defines the transparent color of the material, this is the color to be multiplied with the color of translucent
+    /// light to construct the final 'destination color' for a particular position in the screen buffer. T
     public static let COLOR_TRANSPARENT: AiMatKey = .init(base: .COLOR_TRANSPARENT_BASE)
+
+    /// Specifies whether wireframe rendering must be turned on for the material. 0 for false, !0 for true.
     public static let ENABLE_WIREFRAME: AiMatKey = .init(base: .ENABLE_WIREFRAME_BASE)
+
     public static let GLOBAL_BACKGROUND_IMAGE: AiMatKey = .init(base: .GLOBAL_BACKGROUND_IMAGE_BASE)
+
+    /// Defines how the input mapping coordinates for sampling the n'th texture on the stack 't' are computed.
+    /// Usually explicit UV coordinates are provided, but some model file formats might also be using basic shapes,
+    /// such as spheres or cylinders, to project textures onto meshes.
     public static let MAPPING: AiMatKey = .init(base: .MAPPING_BASE)
+
+    /// Any of the aiTextureMapMode enumerated values.
+    /// Defines the texture wrapping mode on the x axis for sampling the n'th texture on the stack 't'.
+    /// 'Wrapping' occurs whenever UVs lie outside the 0..1 range.
     public static let MAPPINGMODE_U: AiMatKey = .init(base: .MAPPINGMODE_U_BASE)
+
+    /// Wrap mode on the v axis. See MAPPINGMODE_U.
     public static let MAPPINGMODE_V: AiMatKey = .init(base: .MAPPINGMODE_V_BASE)
+
+    /// The name of the material, if available.
+    ///
+    /// Ignored by aiProcess_RemoveRedundantMaterials. Materials are considered equal even if their names are different.
     public static let NAME: AiMatKey = .init(base: .NAME_BASE)
+
+    /// Defines the opacity of the material in a range between 0..1.
     public static let OPACITY: AiMatKey = .init(base: .OPACITY_BASE)
+
+    /// Scales the reflective color of the material.
     public static let REFLECTIVITY: AiMatKey = .init(base: .REFLECTIVITY_BASE)
+
+    /// Defines the Index Of Refraction for the material. That's not supported by most file formats.
     public static let REFRACTI: AiMatKey = .init(base: .REFRACTI_BASE)
+
+    /// One of the aiShadingMode enumerated values.
+    /// Defines the library shading model to use for (real time) rendering to approximate the original look of the material as closely as possible.
     public static let SHADING_MODEL: AiMatKey = .init(base: .SHADING_MODEL_BASE)
+
+    /// Defines the shininess of a phong-shaded material.
+    /// This is actually the exponent of the phong specular equation.
     public static let SHININESS: AiMatKey = .init(base: .SHININESS_BASE)
+
+    /// Scales the specular color of the material.
     public static let SHININESS_STRENGTH: AiMatKey = .init(base: .SHININESS_STRENGTH_BASE)
+
+    /// Defines the strength the n'th texture on the stack 't'.
+    /// All color components (rgb) are multipled with this factor before any further processing is done.
     public static let TEXBLEND: AiMatKey = .init(base: .TEXBLEND_BASE)
+
+    /// Defines miscellaneous flag for the n'th texture on the stack 't'.
+    /// This is a bitwise combination of the aiTextureFlags enumerated values.
     public static let TEXFLAGS: AiMatKey = .init(base: .TEXFLAGS_BASE)
+
+    /// Defines the base axis to to compute the mapping coordinates for the n'th texture on the stack 't' from.
+    /// This is not required for UV-mapped textures. For instance, if MAPPING(t,n) is aiTextureMapping_SPHERE, U and V
+    /// would map to longitude and latitude of a sphere around the given axis. The axis is given in local mesh space.
     public static let TEXMAP_AXIS: AiMatKey = .init(base: .TEXMAP_AXIS_BASE)
+
+    /// One of the aiTextureOp enumerated values.
+    /// Defines the arithmetic operation to be used to combine the n'th texture on the stack 't' with the n-1'th.
+    /// TEXOP(t,0) refers to the blend operation between the base color for this stack (e.g. COLOR_DIFFUSE for the diffuse stack) and the first texture.
     public static let TEXOP: AiMatKey = .init(base: .TEXOP_BASE)
+
+    /// Defines the path to the n'th texture on the stack 't', where 'n' is any value >= 0 and 't' is one of the aiTextureType enumerated values.
     public static let TEXTURE: AiMatKey = .init(base: .TEXTURE_BASE)
+
+    /// Specifies whether meshes using this material must be rendered without backface culling. 0 for false, !0 for true.
     public static let TWOSIDED: AiMatKey = .init(base: .TWOSIDED_BASE)
+
     public static let UVTRANSFORM: AiMatKey = .init(base: .UVTRANSFORM_BASE)
+
+    /// Defines the UV channel to be used as input mapping coordinates for sampling the n'th texture on the stack 't'.
+    /// All meshes assigned to this material share the same UV channel setup
     public static let UVWSRC: AiMatKey = .init(base: .UVWSRC_BASE)
 
     public static let GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_FACTOR: AiMatKey = .init(base: .GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_FACTOR)
@@ -142,6 +220,8 @@ extension AiMatKey {
     public static func TEXFLAGS(_ texType: AiTextureType, _ texIndex: Int) -> AiMatKey { return .init(base: .TEXFLAGS_BASE, texType: texType, texIndex: texIndex) }
     public static func TEXMAP_AXIS(_ texType: AiTextureType, _ texIndex: Int) -> AiMatKey { return .init(base: .TEXMAP_AXIS_BASE, texType: texType, texIndex: texIndex) }
     public static func TEXOP(_ texType: AiTextureType, _ texIndex: Int) -> AiMatKey { return .init(base: .TEXOP_BASE, texType: texType, texIndex: texIndex) }
+
+    /// Defines the path to the n'th texture on the stack 't', where 'n' is any value >= 0 and 't' is one of the aiTextureType enumerated values.
     public static func TEXTURE(_ texType: AiTextureType, _ texIndex: Int) -> AiMatKey { return .init(base: .TEXTURE_BASE, texType: texType, texIndex: texIndex) }
     public static func TWOSIDED(_ texType: AiTextureType, _ texIndex: Int) -> AiMatKey { return .init(base: .TWOSIDED_BASE, texType: texType, texIndex: texIndex) }
     public static func UVTRANSFORM(_ texType: AiTextureType, _ texIndex: Int) -> AiMatKey { return .init(base: .UVTRANSFORM_BASE, texType: texType, texIndex: texIndex) }
