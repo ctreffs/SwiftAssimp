@@ -173,38 +173,71 @@ public struct AiMaterial {
     }
 
     public func getMaterialFloatArray(_ key: AiMatKey) -> [ai_real]? {
-        withUnsafePointer(to: material) { matPtr in
+        return withUnsafePointer(to: material) { matPtr in
             let count = MemoryLayout<aiUVTransform>.stride / MemoryLayout<ai_real>.stride
-            let pOut = UnsafeMutablePointer<ai_real>.allocate(capacity: count)
-            defer {
-                pOut.deinitialize(count: count)
-                pOut.deallocate()
-            }
-            var pMax: UInt32 = 0
-            let result = aiGetMaterialFloatArray(matPtr,
-                                                 key.baseName,
-                                                 key.texType,
-                                                 key.texIndex,
-                                                 pOut,
-                                                 &pMax)
-            guard result == aiReturn_SUCCESS, pMax > 0 else {
-                return nil
-            }
+            return [ai_real](unsafeUninitializedCapacity: count) { buffer, written in
+                var pMax: UInt32 = 0
+                let result = aiGetMaterialFloatArray(matPtr,
+                                                     key.baseName,
+                                                     key.texType,
+                                                     key.texIndex,
+                                                     buffer.baseAddress!,
+                                                     &pMax)
+                guard result == aiReturn_SUCCESS else {
+                    return
+                }
 
-            return [ai_real](UnsafeMutableBufferPointer<ai_real>(start: pOut, count: Int(pMax)))
+                written = Int(pMax)
+            }
         }
     }
 
-    /*
-     public mutating func getMaterialIntegerArray(key: String, textureTypeSemantic type: UInt32 = 0, textureIndex index: UInt32 = 0, pMax: inout UInt32) -> [Int32] {
-     var ints = [Int32](repeating: 0, count: Int(pMax))
+    public func getMaterialIntegerArray(_ key: AiMatKey) -> [Int32] {
+        return withUnsafePointer(to: material) { matPtr in
+            [Int32](unsafeUninitializedCapacity: 4) { buffer, written in
+                var pMax: UInt32 = 0
+                let result = aiGetMaterialIntegerArray(matPtr,
+                                                       key.baseName,
+                                                       key.texType,
+                                                       key.texIndex,
+                                                       buffer.baseAddress!,
+                                                       &pMax)
 
-     let result = aiGetMaterialIntegerArray(&material, key, type, index, &ints, &pMax)
-     assert(result == aiReturn_SUCCESS)
+                guard result == aiReturn_SUCCESS, pMax > 0 else {
+                    return
+                }
 
-     return ints
-     }
-     */
+                written = Int(pMax)
+            }
+        }
+    }
+}
+
+extension AiMaterial {
+    @inlinable public var name: String? { return getMaterialString(.NAME) }
+
+    @inlinable public var shadingModel: AiShadingMode? {
+        guard let int = getMaterialProperty(.SHADING_MODEL)?.int.first else {
+            return nil
+        }
+        return AiShadingMode(rawValue: UInt32(int))
+    }
+
+    @inlinable public var cullBackfaces: Bool? {
+        guard let int = getMaterialProperty(.TWOSIDED)?.int.first else {
+            return nil
+        }
+
+        return !(int == 1)
+    }
+
+    @inlinable public var blendMode: aiBlendMode? {
+        guard let int = getMaterialProperty(.BLEND_FUNC)?.int.first else {
+            return nil
+        }
+
+        return aiBlendMode(UInt32(int))
+    }
 }
 
 extension AiMaterial: CustomDebugStringConvertible {

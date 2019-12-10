@@ -243,8 +243,8 @@ final class AssimpTests: XCTestCase {
 
     func testPBR() throws {
         //let file = "/Users/treffs/Development/personal/game-dev/fireblade/assets/models/pbr_helmet/pbr_helmet.obj"
-        //let file = "/Users/treffs/Development/personal/game-dev/fireblade/assets/models/buster_drone/scene.gltf"
-        let file = "/Users/treffs/Development/personal/game-dev/fireblade/assets/models/sponza_pbr/Sponza.gltf"
+        let file = "/Users/treffs/Development/personal/game-dev/fireblade/assets/models/buster_drone/scene.gltf"
+        //let file = "/Users/treffs/Development/personal/game-dev/fireblade/assets/models/sponza_pbr/Sponza.gltf"
 
         // https://threejs.org/docs/#api/en/materials/MeshStandardMaterial
         // http://assimp.sourceforge.net/lib_html/materials.html
@@ -257,7 +257,9 @@ final class AssimpTests: XCTestCase {
             .filter { $0.semantic != .none && $0.type == .string && $0.key.contains("file") }
             .compactMap { $0 as? AiMaterialPropertyString }
 
-        print(textureFiles.map { ($0.semantic, $0.string) })
+        print(scene.materials.flatMap { $0.typedProperties })
+        
+        print(scene.materials.map { $0.shadingModel })
 
         print(scene.materials.map { $0.getMaterialTextureCount(texType: .diffuse) })
         print(scene.materials.map { $0.getMaterialTextureCount(texType: .metalness) })
