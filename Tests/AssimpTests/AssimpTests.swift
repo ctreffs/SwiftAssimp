@@ -26,9 +26,9 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(SIMD2<Float>(aiVector2D(x: 5.6, y: 3.4)), SIMD2<Float>(5.6, 3.4))
     }
 
-    func testLoadAiSceneDAE() {
+    func testLoadAiSceneDAE() throws {
 
-        let fileURL = try! Resource.load(.duck_dae)
+        let fileURL = try Resource.load(.duck_dae)
 
         var scene: AiScene!
         XCTAssertNoThrow(scene = try AiScene(file: fileURL.path, flags: [.removeRedundantMaterials,
@@ -103,11 +103,11 @@ final class AssimpTests: XCTestCase {
 
     }
 
-    func testLoadAiSceneObj() {
+    func testLoadAiSceneObj() throws {
 
-        let fileURL = try! Resource.load(.box_obj)
+        let fileURL = try Resource.load(.box_obj)
 
-        let scene: AiScene = try! AiScene(file: fileURL.path)
+        let scene: AiScene = try AiScene(file: fileURL.path)
 
         XCTAssertEqual(scene.flags, [])
         XCTAssertEqual(scene.numMeshes, 1)
@@ -167,10 +167,10 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.cameras.count, 0)
     }
 
-    func testLoadAiScene3DS() {
-        let fileURL = try! Resource.load(.cubeDiffuseTextured_3ds)
+    func testLoadAiScene3DS() throws {
+        let fileURL = try Resource.load(.cubeDiffuseTextured_3ds)
 
-        let scene: AiScene = try! AiScene(file: fileURL.path)
+        let scene: AiScene = try AiScene(file: fileURL.path)
 
         XCTAssertEqual(scene.flags, [])
         XCTAssertEqual(scene.numMeshes, 1)
@@ -231,6 +231,39 @@ final class AssimpTests: XCTestCase {
 
         XCTAssertEqual(scene.cameras.count, 0)
 
+    }
+
+    func testPBR() throws {
+        //let file = "/Users/treffs/Development/personal/game-dev/fireblade/assets/models/pbr_helmet/pbr_helmet.obj"
+        //let file = "/Users/treffs/Development/personal/game-dev/fireblade/assets/models/buster_drone/scene.gltf"
+        let file = "/Users/treffs/Development/personal/game-dev/fireblade/assets/models/sponza_pbr/Sponza.gltf"
+
+        // https://threejs.org/docs/#api/en/materials/MeshStandardMaterial
+        // http://assimp.sourceforge.net/lib_html/materials.html
+
+        let scene = try AiScene(file: file)
+
+        let textureFiles = scene.materials
+            .map { $0.typedProperties }
+            .flatMap { $0 }
+            .filter { $0.semantic != .none && $0.type == .string && $0.key.contains("file") }
+            .compactMap { $0 as? AiMaterialPropertyString }
+
+        print(textureFiles.map { ($0.semantic, $0.string) })
+
+        print(scene.materials.map { $0.getMaterialTextureCount(texType: .diffuse) })
+        print(scene.materials.map { $0.getMaterialTextureCount(texType: .metalness) })
+        print(scene.materials.map { $0.getMaterialString(.NAME) })
+
+        print(scene.materials.map { $0.getMaterialColor(.COLOR_DIFFUSE) })
+        print(scene.materials.map { $0.getMaterialFloatArray(.UVTRANSFORM(.diffuse, 0)) })
+
+        print(scene.materials.compactMap { $0.getMaterialProperty(.GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_TEXTURE)?.string })
+        print(scene.materials.compactMap { $0.getMaterialProperty(.GLTF_PBRMETALLICROUGHNESS_METALLICROUGHNESS_TEXTURE)?.string })
+
+        print(scene.materials.compactMap { $0.getMaterialTexture(texType: .diffuse, texIndex: 0) })
+
+        XCTFail("not implemented yet")
     }
 
 }
