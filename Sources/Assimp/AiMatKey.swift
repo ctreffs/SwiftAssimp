@@ -28,6 +28,8 @@ public struct AiMatKey: RawRepresentable {
 }
 extension AiMatKey: Equatable { }
 
+// swiftlint:disable identifier_name
+
 extension AiMatKey {
     enum Base: String {
         case BLEND_FUNC_BASE = "$mat.blend"

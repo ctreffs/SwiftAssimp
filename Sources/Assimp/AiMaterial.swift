@@ -35,9 +35,9 @@ public struct AiMaterial {
             return []
         }
         return [AiMaterialProperty](unsafeUninitializedCapacity: numProperties) { buffer, written in
-            for i in 0..<numProperties {
-                if let prop = material.mProperties[i] {
-                    buffer[i] = AiMaterialProperty(prop.pointee)
+            for idx in 0..<numProperties {
+                if let prop = material.mProperties[idx] {
+                    buffer[idx] = AiMaterialProperty(prop.pointee)
                     written += 1
                 }
             }
@@ -118,7 +118,7 @@ public struct AiMaterial {
             var mapping: aiTextureMapping = aiTextureMapping_UV
             var uvIndex: UInt32 = 0
             var blend: ai_real = 0.0
-            var op: aiTextureOp = aiTextureOp_Multiply
+            var texOp: aiTextureOp = aiTextureOp_Multiply
             var mapmode: [aiTextureMapMode] = [aiTextureMapMode_Wrap, aiTextureMapMode_Wrap]
             var flags: UInt32 = 0
             let result = aiGetMaterialTexture(matPtr,
@@ -128,7 +128,7 @@ public struct AiMaterial {
                                               &mapping,
                                               &uvIndex,
                                               &blend,
-                                              &op,
+                                              &texOp,
                                               &mapmode,
                                               &flags)
 
@@ -136,7 +136,6 @@ public struct AiMaterial {
                 return nil
             }
 
-            print(mapping, uvIndex, blend, op, mapmode, flags)
             return String(aiString: path)
         }
     }

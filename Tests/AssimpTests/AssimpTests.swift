@@ -263,6 +263,7 @@ final class AssimpTests: XCTestCase {
 
         print(scene.materials.compactMap { $0.getMaterialTexture(texType: .diffuse, texIndex: 0) })
 
+        XCTFail("not implemented yet")
     }
 
 }
