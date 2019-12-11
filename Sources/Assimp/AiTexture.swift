@@ -158,6 +158,18 @@ extension AiTextureType: CustomDebugStringConvertible {
             return "lightmap"
         case .reflection:
             return "reflection"
+        case .baseColor:
+            return "baseColor"
+        case .normalCamera:
+            return "normalCamera"
+        case .emissionColor:
+            return "emissionColor"
+        case .metalness:
+            return "metalness"
+        case .diffuseRoughness:
+            return "diffuseRoughness"
+        case .ambientOcclusion:
+            return "ambientOcclusion"
         case .unknown:
             return "unknown"
         default:
