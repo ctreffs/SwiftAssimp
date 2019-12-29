@@ -3,6 +3,8 @@ image: swift:5.1
 before_script:
   # use the Gitlab CI Job token to login for all git clones on the machine.
   - echo -e "machine gitlab.com\nlogin gitlab-ci-token\npassword ${CI_JOB_TOKEN}" > ~/.netrc
+   # update dependency source list to more modern linux distribution
+  - echo -e "deb http://archive.ubuntu.com/ubuntu eoan main restricted universe multiverse" >> /etc/apt/sources.list
   - apt-get update -qq 
   - apt-get install -y -qq pkg-config libassimp-dev
   - make pkgConfigDebug

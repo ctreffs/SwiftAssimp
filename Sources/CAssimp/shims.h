@@ -24,16 +24,3 @@
 #include <assimp/vector2.h>
 #include <assimp/vector3.h>
 #include <assimp/version.h>
-
-/*
-#ifdef __APPLE__
-    //#ifdef __IPHONEOS__
-        // TODO:
-    //#else
-        #include "shims.macOS.h"
-    //#endif
-#else
-    #include "shims.linux.h"
-#endif
-
-*/
