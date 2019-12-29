@@ -25,16 +25,15 @@
 #include <assimp/vector3.h>
 #include <assimp/version.h>
 
-//#include <assimp/qnan.h>
-//#include <assimp/fast_atof.h>
+/*
+#ifdef __APPLE__
+    //#ifdef __IPHONEOS__
+        // TODO:
+    //#else
+        #include "shims.macOS.h"
+    //#endif
+#else
+    #include "shims.linux.h"
+#endif
 
-// #ifdef __APPLE__
-// 	#ifdef __IPHONEOS__
-// 		// TODO:
-// 	#else
-// 		#include "apple_macOS.h"
-// 	#endif
-// #else
-// 	#include "linux.h"
-// #endif
-// 
+*/

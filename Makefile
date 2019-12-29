@@ -41,3 +41,15 @@ precommit: lint genLinuxTests
 
 testReadme:
 	markdown-link-check -p -v ./README.md
+	
+pkgConfigDebug:
+	pkg-config --libs --cflags assimp
+
+copyMacPkgConfig:
+	cp ${PWD}/assimp5.mac.pc /usr/local/lib/pkgconfig/assimp.pc
+
+copyLinuxPkgConfig:
+	cp ${PWD}/assimp5.linux.pc /usr/local/lib/pkgconfig/assimp.pc
+
+build: copyMacPkgConfig pkgConfigDebug
+	swift build
