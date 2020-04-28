@@ -19,7 +19,7 @@ public struct AiFace {
     ///
     /// The maximum value for this member is #AI_MAX_FACE_INDICES.
     public var numIndices: Int {
-        return Int(face.mNumIndices)
+        Int(face.mNumIndices)
     }
 
     /// Pointer to the indices array.
@@ -39,7 +39,7 @@ public struct AiFace {
 
 extension AiFace: Equatable {
     public static func == (lhs: AiFace, rhs: AiFace) -> Bool {
-        return lhs.indices == rhs.indices &&
+        lhs.indices == rhs.indices &&
             lhs.numIndices == rhs.numIndices
     }
 }

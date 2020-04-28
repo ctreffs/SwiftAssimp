@@ -5,9 +5,9 @@ import CAssimp
 final class AssimpTests: XCTestCase {
 
     func testVersion() {
-        XCTAssertEqual(aiGetVersionMajor(), 4)
-        XCTAssertEqual(aiGetVersionMinor(), 1)
-        XCTAssertEqual(aiGetVersionRevision(), 0)
+        XCTAssertEqual(aiGetVersionMajor(), 5)
+        XCTAssertNotNil(aiGetVersionMinor())
+        XCTAssertNotNil(aiGetVersionRevision())
     }
 
     func testFailingInitializer() {
@@ -67,7 +67,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].name, "LOD3spShape")
         XCTAssertEqual(scene.meshes[0].primitiveTypes, [.triangle, .polygon])
         XCTAssertEqual(scene.meshes[0].numVertices, 8500)
-        XCTAssertEqual(scene.meshes[0].vertices[0], [-23.9364, 11.5353, 30.6125])
+        XCTAssertEqual(scene.meshes[0].vertices[0...2], [-23.9364, 11.5353, 30.6125])
         XCTAssertEqual(scene.meshes[0].numFaces, 2144)
         XCTAssertEqual(scene.meshes[0].numBones, 0)
         XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
@@ -134,7 +134,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].name, "1")
         XCTAssertEqual(scene.meshes[0].primitiveTypes, [.polygon])
         XCTAssertEqual(scene.meshes[0].numVertices, 8 * 3)
-        XCTAssertEqual(scene.meshes[0].vertices[0], [-0.5, 0.5, 0.5])
+        XCTAssertEqual(scene.meshes[0].vertices[0...2], [-0.5, 0.5, 0.5])
         XCTAssertEqual(scene.meshes[0].numFaces, 6)
         XCTAssertEqual(scene.meshes[0].numBones, 0)
         XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
@@ -197,18 +197,17 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].name, "0")
         XCTAssertEqual(scene.meshes[0].primitiveTypes, [.triangle])
         XCTAssertEqual(scene.meshes[0].numVertices, 36)
-        XCTAssertEqual(scene.meshes[0].vertices[0], [-25.0, -25.0, 0.0])
-        XCTAssertEqual(scene.meshes[0].vertices[35], [-25.0, 25.0, 0.0])
+        XCTAssertEqual(scene.meshes[0].vertices[0...2], [-25.0, -25.0, 0.0])
         XCTAssertEqual(scene.meshes[0].numFaces, 12)
         XCTAssertEqual(scene.meshes[0].numBones, 0)
         XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
-        XCTAssertEqual(scene.meshes[0].rawVertices[0], -25.0)
-        XCTAssertEqual(scene.meshes[0].rawVertices[1], -25.0)
-        XCTAssertEqual(scene.meshes[0].rawVertices[2], 0.0)
+        XCTAssertEqual(scene.meshes[0].rawVertices![0], -25.0)
+        XCTAssertEqual(scene.meshes[0].rawVertices![1], -25.0)
+        XCTAssertEqual(scene.meshes[0].rawVertices![2], 0.0)
         
-        XCTAssertEqual(scene.meshes[0].rawVertices[105], -25.0)
-        XCTAssertEqual(scene.meshes[0].rawVertices[106], 25.0)
-        XCTAssertEqual(scene.meshes[0].rawVertices[107], 0.0)
+        XCTAssertEqual(scene.meshes[0].rawVertices![105], -25.0)
+        XCTAssertEqual(scene.meshes[0].rawVertices![106], 25.0)
+        XCTAssertEqual(scene.meshes[0].rawVertices![107], 0.0)
 
         // Faces
 
