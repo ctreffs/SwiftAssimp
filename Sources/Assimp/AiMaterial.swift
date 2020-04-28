@@ -21,12 +21,12 @@ public struct AiMaterial {
 
     /// Number of properties in the data base
     public var numProperties: Int {
-        return Int(material.mNumProperties)
+        Int(material.mNumProperties)
     }
 
     /// Storage allocated
     public var numAllocated: Int {
-        return Int(material.mNumAllocated)
+        Int(material.mNumAllocated)
     }
 
     /// List of all material properties loaded.
@@ -45,7 +45,7 @@ public struct AiMaterial {
     }
 
     public var typedProperties: [AiMaterialPropertyIdentifiable] {
-        return properties.compactMap { prop -> AiMaterialPropertyIdentifiable? in
+        properties.compactMap { prop -> AiMaterialPropertyIdentifiable? in
             switch prop.type {
             case .string:
                 return AiMaterialPropertyString(prop)
@@ -84,7 +84,7 @@ public struct AiMaterial {
      */
 
     public func getMaterialProperty(_ key: AiMatKey) -> AiMaterialProperty? {
-        return withUnsafePointer(to: self.material) { matPtr -> AiMaterialProperty? in
+        withUnsafePointer(to: self.material) { matPtr -> AiMaterialProperty? in
             let matPropPtr = UnsafeMutablePointer<UnsafePointer<aiMaterialProperty>?>.allocate(capacity: MemoryLayout<aiMaterialProperty>.stride)
             defer {
                 matPropPtr.deinitialize(count: 1)
@@ -106,13 +106,13 @@ public struct AiMaterial {
 
     /// Get the number of textures for a particular texture type.
     public func getMaterialTextureCount(texType: AiTextureType) -> Int {
-        return withUnsafePointer(to: material) {
+        withUnsafePointer(to: material) {
             Int(aiGetMaterialTextureCount($0, texType.type))
         }
     }
 
     public func getMaterialTexture(texType: AiTextureType, texIndex: Int) -> String? {
-        return withUnsafePointer(to: material) { (matPtr: UnsafePointer<aiMaterial>) -> String? in
+        withUnsafePointer(to: material) { (matPtr: UnsafePointer<aiMaterial>) -> String? in
             var path = aiString()
             // NOTE: the properties do not seem to be working
             var mapping: aiTextureMapping = aiTextureMapping_UV
@@ -141,7 +141,7 @@ public struct AiMaterial {
     }
 
     public func getMaterialString(_ key: AiMatKey) -> String? {
-        return withUnsafePointer(to: material) { matPtr -> String? in
+        withUnsafePointer(to: material) { matPtr -> String? in
             var string = aiString()
             let result = aiGetMaterialString(matPtr,
                                              key.baseName,
@@ -158,7 +158,7 @@ public struct AiMaterial {
     }
 
     public func getMaterialColor(_ key: AiMatKey) -> SIMD4<ai_real>? {
-        return withUnsafePointer(to: material) { matPtr in
+        withUnsafePointer(to: material) { matPtr in
             var color = aiColor4D()
             let result = aiGetMaterialColor(matPtr,
                                             key.baseName,
@@ -173,7 +173,7 @@ public struct AiMaterial {
     }
 
     public func getMaterialFloatArray(_ key: AiMatKey) -> [ai_real]? {
-        return withUnsafePointer(to: material) { matPtr in
+        withUnsafePointer(to: material) { matPtr in
             let count = MemoryLayout<aiUVTransform>.stride / MemoryLayout<ai_real>.stride
             return [ai_real](unsafeUninitializedCapacity: count) { buffer, written in
                 var pMax: UInt32 = 0
@@ -193,7 +193,7 @@ public struct AiMaterial {
     }
 
     public func getMaterialIntegerArray(_ key: AiMatKey) -> [Int32] {
-        return withUnsafePointer(to: material) { matPtr in
+        withUnsafePointer(to: material) { matPtr in
             [Int32](unsafeUninitializedCapacity: 4) { buffer, written in
                 var pMax: UInt32 = 0
                 let result = aiGetMaterialIntegerArray(matPtr,
@@ -214,7 +214,7 @@ public struct AiMaterial {
 }
 
 extension AiMaterial {
-    @inlinable public var name: String? { return getMaterialString(.NAME) }
+    @inlinable public var name: String? { getMaterialString(.NAME) }
 
     @inlinable public var shadingModel: AiShadingMode? {
         guard let int = getMaterialProperty(.SHADING_MODEL)?.int.first else {
@@ -242,7 +242,7 @@ extension AiMaterial {
 
 extension AiMaterial: CustomDebugStringConvertible {
     public var debugDescription: String {
-        return """
+        """
         <AiMaterial
         - numProperties: \(numProperties)
         - numAllocated: \(numAllocated)
@@ -254,7 +254,7 @@ extension AiMaterial: CustomDebugStringConvertible {
 
 extension AiMaterial: Equatable {
     public static func == (lhs: AiMaterial, rhs: AiMaterial) -> Bool {
-        return lhs.numAllocated == rhs.numAllocated &&
+        lhs.numAllocated == rhs.numAllocated &&
             lhs.numProperties == rhs.numProperties &&
             lhs.properties == rhs.properties
     }

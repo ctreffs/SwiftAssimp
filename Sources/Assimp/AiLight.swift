@@ -15,6 +15,6 @@ public struct AiLight {
     }
 
     public var name: String? {
-        return String(aiString: light.mName)
+        String(aiString: light.mName)
     }
 }

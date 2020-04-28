@@ -32,12 +32,12 @@ public struct AiNode {
     /// e.g.
     /// `<DummyRootNode>`
     public var name: String {
-        return String(aiString: node.mName) ?? ""
+        String(aiString: node.mName) ?? ""
     }
 
     /// The transformation relative to the node's parent.
     public var transformation: aiMatrix4x4 {
-        return node.mTransformation
+        node.mTransformation
     }
 
     /// Parent node.
@@ -52,12 +52,12 @@ public struct AiNode {
 
     /// The number of meshes of this node.
     public var numMeshes: Int {
-        return Int(node.mNumMeshes)
+        Int(node.mNumMeshes)
     }
 
     /// The number of child nodes of this node.
     public var numChildren: Int {
-        return Int(node.mNumChildren)
+        Int(node.mNumChildren)
     }
 
     /// The meshes of this node.
@@ -98,7 +98,7 @@ public struct AiNode {
 
 extension AiNode: CustomDebugStringConvertible {
     public var debugDescription: String {
-        return """
+        """
         <AiNode '\(name)' meshes:\(meshes) children:\(numChildren)>\n\(children.map { "\t" + $0.debugDescription }.joined())
         """
     }

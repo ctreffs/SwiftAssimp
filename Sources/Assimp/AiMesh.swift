@@ -32,114 +32,103 @@ public struct AiMesh {
     ///
     /// The "SortByPrimitiveType"-Step can be used to make sure the output meshes consist of one primitive type each.
     public var primitiveTypes: PrimitiveType {
-        return PrimitiveType(rawValue: mesh.mPrimitiveTypes)
+        PrimitiveType(rawValue: mesh.mPrimitiveTypes)
     }
 
     /// The number of vertices in this mesh. This is also the size of all of the per-vertex data arrays.
     /// The maximum value for this member is #AI_MAX_VERTICES.
     public var numVertices: Int {
-        return Int(mesh.mNumVertices)
+        Int(mesh.mNumVertices)
     }
 
     /// The number of primitives (triangles, polygons, lines) in this mesh.
     /// This is also the size of the mFaces array.
     /// The maximum value for this member is #AI_MAX_FACES.
     public var numFaces: Int {
-        return Int(mesh.mNumFaces)
+        Int(mesh.mNumFaces)
     }
 
     /// Vertex positions. This array is always present in a mesh.
     /// The array is mNumVertices in size.
-    public var vertices: [SIMD3<Float>] {
-        guard numVertices > 0 else {
+    public var vertices: [ai_real] {
+        guard let vertices = rawVertices else {
             return []
         }
-        let vertices = (0..<numVertices)
-            .compactMap { mesh.mVertices[$0] }
-            .map { $0.vector }
 
-        assert(vertices.count == numVertices)
-        return vertices
+        return [ai_real](UnsafeBufferPointer(start: vertices, count: numVertices * 3))
     }
 
-    @inlinable public var rawVertices: UnsafeMutablePointer<ai_real> {
-        return UnsafeMutableRawPointer(mesh.mVertices)!.bindMemory(to: ai_real.self,
-                                                                   capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
+    @inlinable public var rawVertices: UnsafeMutablePointer<ai_real>? {
+        guard let vertices = UnsafeMutableRawPointer(mesh.mVertices) else {
+            return nil
+        }
+        return vertices.bindMemory(to: ai_real.self, capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
     }
 
     /// Vertex normals.
     /// The array contains normalized vectors, NULL if not present.
-    /// The array is mNumVertices in size.
+    /// The array is mNumVertices * 3 in size.
     ///
     /// Normals are undefined for point and line primitives.
     /// A mesh consisting of points and lines only may not have normal vectors.
     /// Meshes with mixed primitive types (i.e. lines and triangles) may have normals,
     /// but the normals for vertices that are only referenced by point or line primitives
     /// are undefined and set to QNaN (WARN: qNaN compares to inequal to *everything*, even to qNaN itself.
-    public var normals: [SIMD3<Float>] {
-        let normals = (0..<numVertices)
-            .compactMap { mesh.mNormals[$0] }
-            .map { $0.vector }
-
-        assert(normals.count == numVertices)
-        return normals
+    public var normals: [ai_real] {
+        guard let normals = rawNormals else {
+            return []
+        }
+        return [ai_real](UnsafeBufferPointer(start: normals, count: numVertices * 3))
     }
 
-    @inlinable public var rawNormals: UnsafeMutablePointer<ai_real> {
-        return UnsafeMutableRawPointer(mesh.mNormals)!.bindMemory(to: ai_real.self,
-                                                                  capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
+    @inlinable public var rawNormals: UnsafeMutablePointer<ai_real>? {
+        guard let normals = UnsafeMutableRawPointer(mesh.mNormals) else {
+            return nil
+        }
+        return normals.bindMemory(to: ai_real.self, capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
     }
 
     /// Vertex tangents.
     /// The tangent of a vertex points in the direction of the positive X texture axis.
     /// The array contains normalized vectors, NULL if not present.
-    /// The array is mNumVertices in size.
+    /// The array is mNumVertices * 3 in size.
     ///
     /// A mesh consisting of points and lines only may not have normal vectors.
     /// Meshes with mixed primitive types (i.e. lines and triangles) may have normals,
     /// but the normals for vertices that are only referenced by point or line primitives
     /// are undefined and set to qNaN.
     /// See the #mNormals member for a detailed discussion of qNaNs.
-    public var tangents: [SIMD3<Float>] {
-        guard mesh.mTangents != nil else {
+    public var tangents: [ai_real] {
+        guard let tangents = rawTangents else {
             return []
         }
 
-        let tangents = (0..<numVertices)
-            .compactMap { mesh.mTangents[$0] }
-            .map { $0.vector }
-
-        assert(tangents.count == numVertices)
-
-        return tangents
+        return [ai_real](UnsafeBufferPointer(start: tangents, count: numVertices * 3))
     }
 
-    @inlinable public var rawTangents: UnsafeMutablePointer<ai_real> {
-        return UnsafeMutableRawPointer(mesh.mTangents)!.bindMemory(to: ai_real.self,
-                                                                   capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
+    @inlinable public var rawTangents: UnsafeMutablePointer<ai_real>? {
+        guard let tangents = UnsafeMutableRawPointer(mesh.mTangents) else {
+            return nil
+        }
+        return tangents.bindMemory(to: ai_real.self, capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
     }
 
     /// Vertex bitangents.
     /// The bitangent of a vertex points in the direction of the positive Y texture axis.
     /// The array contains normalized vectors, NULL if not present.
-    /// The array is mNumVertices in size.
-    public var bitangents: [SIMD3<Float>] {
-        guard mesh.mBitangents != nil else {
+    /// The array is mNumVertices * 3 in size.
+    public var bitangents: [ai_real] {
+        guard let bitangents = rawBitangents else {
             return []
         }
-
-        let bitangents = (0..<numVertices)
-            .compactMap { mesh.mBitangents[$0] }
-            .map { $0.vector }
-
-        assert(bitangents.count == numVertices)
-
-        return bitangents
+        return [ai_real](UnsafeBufferPointer(start: bitangents, count: numVertices * 3))
     }
 
-    @inlinable public var rawBitangents: UnsafeMutablePointer<ai_real> {
-        return UnsafeMutableRawPointer(mesh.mBitangents)!.bindMemory(to: ai_real.self,
-                                                                     capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
+    @inlinable public var rawBitangents: UnsafeMutablePointer<ai_real>? {
+        guard let bitangents = UnsafeMutableRawPointer(mesh.mBitangents) else {
+            return nil
+        }
+        return bitangents.bindMemory(to: ai_real.self, capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
     }
 
     /// Vertex color sets.
@@ -185,9 +174,11 @@ public struct AiMesh {
         return coords
     }
 
-    @inlinable public var rawPrimaryTextureCoords: UnsafeMutablePointer<ai_real> {
-        return UnsafeMutableRawPointer(mesh.mTextureCoords.0)!.bindMemory(to: ai_real.self,
-                                                                          capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
+    @inlinable public var rawPrimaryTextureCoords: UnsafeMutablePointer<ai_real>? {
+        guard let primaryTexCoords = UnsafeMutableRawPointer(mesh.mTextureCoords.0) else {
+            return nil
+        }
+        return primaryTexCoords.bindMemory(to: ai_real.self, capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
     }
 
     /// Specifies the number of components for a given UV channel.
@@ -197,7 +188,7 @@ public struct AiMesh {
     /// If the value is 1 for a given channel, p.y is set to 0.0f, too.
     /// 4D coords are not supported
     public var numUVComponents: [Int] {
-        return [UInt32](withUnsafeBytes(of: mesh.mNumUVComponents) { ptr in ptr.bindMemory(to: UInt32.self) }).map { Int($0) }.filter { $0 > 0 }
+        [UInt32](withUnsafeBytes(of: mesh.mNumUVComponents) { ptr in ptr.bindMemory(to: UInt32.self) }).map { Int($0) }.filter { $0 > 0 }
     }
 
     /// The faces the mesh is constructed from.
@@ -222,7 +213,7 @@ public struct AiMesh {
     /// The number of bones this mesh contains.
     /// Can be 0, in which case the mBones array is NULL.
     public var numBones: Int {
-        return Int(mesh.mNumBones)
+        Int(mesh.mNumBones)
     }
 
     /// The material used by this mesh.
@@ -231,7 +222,7 @@ public struct AiMesh {
     /// If an imported model uses multiple materials, the import splits up the mesh.
     /// Use this value as index into the scene's material list.
     public var materialIndex: Int {
-        return Int(mesh.mMaterialIndex)
+        Int(mesh.mMaterialIndex)
     }
 
     /// Name of the mesh. Meshes can be named, but this is not a requirement and leaving this field empty is totally fine.
@@ -243,26 +234,26 @@ public struct AiMesh {
     ///    - Vertex animations refer to meshes by their names.
     ///
     public var name: String {
-        return String(aiString: mesh.mName) ?? ""
+        String(aiString: mesh.mName) ?? ""
     }
 
     /// The number of attachment meshes.
     ///
     /// **Note:** Currently only works with Collada loader.
     public var numAnimMeshes: Int {
-        return Int(mesh.mNumAnimMeshes)
+        Int(mesh.mNumAnimMeshes)
     }
 
     /// Method of morphing when animeshes are specified.
     public var method: UInt32 {
-        return mesh.mMethod
+        mesh.mMethod
     }
 }
 
 // MARK: - Equatable
 extension AiMesh: Equatable {
     public static func == (lhs: AiMesh, rhs: AiMesh) -> Bool {
-        return lhs.name == rhs.name &&
+        lhs.name == rhs.name &&
             lhs.materialIndex == rhs.materialIndex &&
             lhs.bitangents == rhs.bitangents &&
             lhs.faces == rhs.faces &&

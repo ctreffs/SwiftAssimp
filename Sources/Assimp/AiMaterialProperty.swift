@@ -75,19 +75,19 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
 
     /// Specifies the name of the property (key) Keys are generally case insensitive.
     public var key: String {
-        return String(aiString: property.mKey) ?? ""
+        String(aiString: property.mKey) ?? ""
     }
 
     /// Textures: Specifies the index of the texture.
     /// For non-texture properties, this member is always 0.
     public var index: Int {
-        return Int(property.mIndex)
+        Int(property.mIndex)
     }
 
     /// Textures: Specifies their exact usage semantic.
     /// For non-texture properties, this member is always 0 (or, better-said, #aiTextureType_NONE).
     public var semantic: AiTextureType {
-        return AiTextureType(rawValue: property.mSemantic)
+        AiTextureType(rawValue: property.mSemantic)
     }
 
     /// Type information for the property.
@@ -98,21 +98,21 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
     ///
     /// (It's probably a hacky solution, but it works.)
     public var type: TypeInfo {
-        return TypeInfo(rawValue: property.mType.rawValue)
+        TypeInfo(rawValue: property.mType.rawValue)
     }
 
     /// Size of the buffer mData is pointing to, in bytes.
     ///
     /// This value may not be 0.
     public var dataLength: Int {
-        return Int(property.mDataLength)
+        Int(property.mDataLength)
     }
 
     /// Binary buffer to hold the property's value.
     /// The size of the buffer is always mDataLength.
     public var dataBuffer: UnsafeBufferPointer<Int8> {
-        return UnsafeBufferPointer<Int8>(start: property.mData,
-                                         count: dataLength)
+        UnsafeBufferPointer<Int8>(start: property.mData,
+                                  count: dataLength)
     }
 
     public var string: String? {
@@ -167,7 +167,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
 
 extension AiMaterialProperty: CustomDebugStringConvertible {
     public var debugDescription: String {
-        return """
+        """
         <AiMaterialProperty
         - index: \(index)
         - key: \(key)
@@ -181,7 +181,7 @@ extension AiMaterialProperty: CustomDebugStringConvertible {
 
 extension AiMaterialProperty: Equatable {
     public static func == (lhs: AiMaterialProperty, rhs: AiMaterialProperty) -> Bool {
-        return lhs.key == rhs.key &&
+        lhs.key == rhs.key &&
             lhs.index == rhs.index &&
             lhs.semantic == rhs.semantic &&
             lhs.type == rhs.type &&
@@ -205,7 +205,7 @@ public struct AiMaterialPropertyString: AiMaterialPropertyIdentifiable, CustomDe
     }
 
     public var debugDescription: String {
-        return """
+        """
         <AiMaterialPropertyString
         - index: \(index)
         - key: \(key)
@@ -235,7 +235,7 @@ public struct AiMaterialPropertyBuffer: AiMaterialPropertyIdentifiable, CustomDe
     }
 
     public var debugDescription: String {
-        return """
+        """
         <AiMaterialPropertyBuffer
         - index: \(index)
         - key: \(key)
@@ -263,7 +263,7 @@ public struct AiMaterialPropertyDouble: AiMaterialPropertyIdentifiable, CustomDe
     }
 
     public var debugDescription: String {
-        return """
+        """
         <AiMaterialPropertyDouble
         - index: \(index)
         - key: \(key)
@@ -291,7 +291,7 @@ public struct AiMaterialPropertyFloat: AiMaterialPropertyIdentifiable, CustomDeb
     }
 
     public var debugDescription: String {
-        return """
+        """
         <AiMaterialPropertyFloat
         - index: \(index)
         - key: \(key)
@@ -319,7 +319,7 @@ public struct AiMaterialPropertyInt: AiMaterialPropertyIdentifiable, CustomDebug
     }
 
     public var debugDescription: String {
-        return """
+        """
         <AiMaterialPropertyInt
         - index: \(index)
         - key: \(key)

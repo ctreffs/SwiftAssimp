@@ -15,16 +15,16 @@ public struct AiTexture {
     }
 
     var width: Int {
-        return Int(texture.mWidth)
+        Int(texture.mWidth)
     }
 
     var height: Int {
-        return Int(texture.mHeight)
+        Int(texture.mHeight)
     }
 
     var pcData: [aiTexel] {
-        return [aiTexel](UnsafeMutableBufferPointer<aiTexel>(start: texture.pcData,
-                                                             count: width * height))
+        [aiTexel](UnsafeMutableBufferPointer<aiTexel>(start: texture.pcData,
+                                                      count: width * height))
     }
 }
 
@@ -125,7 +125,7 @@ public struct AiTextureType: RawRepresentable {
 
 extension AiTextureType {
     @inlinable var type: aiTextureType {
-        return aiTextureType(rawValue: rawValue)
+        aiTextureType(rawValue: rawValue)
     }
 }
 

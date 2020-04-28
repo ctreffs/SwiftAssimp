@@ -49,33 +49,33 @@ public class AiScene {
     /// Check whether the scene contains meshes
     /// Unless no special scene flags are set this will always be true.
     @inlinable public var hasMeshes: Bool {
-        return scene.mMeshes != nil && numMeshes > 0
+        scene.mMeshes != nil && numMeshes > 0
     }
 
     /// Check whether the scene contains materials
     /// Unless no special scene flags are set this will always be true.
     @inlinable public var hasMaterials: Bool {
-        return scene.mMaterials != nil && numMaterials > 0
+        scene.mMaterials != nil && numMaterials > 0
     }
 
     /// Check whether the scene contains lights
     @inlinable public var hasLights: Bool {
-        return scene.mLights != nil && numLights > 0
+        scene.mLights != nil && numLights > 0
     }
 
     /// Check whether the scene contains textures
     @inlinable public var hasTextures: Bool {
-        return scene.mTextures != nil && numTextures > 0
+        scene.mTextures != nil && numTextures > 0
     }
 
     /// Check whether the scene contains cameras
     @inlinable public var hasCameras: Bool {
-        return scene.mCameras != nil && numCameras > 0
+        scene.mCameras != nil && numCameras > 0
     }
 
     /// Check whether the scene contains animations
     @inlinable public var hasAnimations: Bool {
-        return scene.mAnimations != nil && numAnimations > 0
+        scene.mAnimations != nil && numAnimations > 0
     }
 
     /// Any combination of the AI_SCENE_FLAGS_XXX flags.
@@ -83,7 +83,7 @@ public class AiScene {
     /// By default this value is 0, no flags are set.
     /// Most applications will want to reject all scenes with the AI_SCENE_FLAGS_INCOMPLETE bit set.
     public var flags: Flags {
-        return Flags(rawValue: Int32(scene.mFlags))
+        Flags(rawValue: Int32(scene.mFlags))
     }
 
     /// The root node of the hierarchy.
@@ -100,7 +100,7 @@ public class AiScene {
 
     /// The number of meshes in the scene.
     public var numMeshes: Int {
-        return Int(scene.mNumMeshes)
+        Int(scene.mNumMeshes)
     }
 
     /// The array of meshes.
@@ -120,7 +120,7 @@ public class AiScene {
 
     /// The number of materials in the scene.
     public var numMaterials: Int {
-        return Int(scene.mNumMaterials)
+        Int(scene.mNumMaterials)
     }
 
     /// The array of materials.
@@ -146,7 +146,7 @@ public class AiScene {
 
     /// The number of animations in the scene.
     public var numAnimations: Int {
-        return Int(scene.mNumAnimations)
+        Int(scene.mNumAnimations)
     }
 
     /// The array of animations.
@@ -162,7 +162,7 @@ public class AiScene {
 
     /// The number of textures embedded into the file
     public var numTextures: Int {
-        return Int(scene.mNumTextures)
+        Int(scene.mNumTextures)
     }
 
     /// The array of embedded textures.
@@ -180,7 +180,7 @@ public class AiScene {
     /// The number of light sources in the scene.
     /// Light sources are fully optional, in most cases this attribute will be 0.
     public var numLights: Int {
-        return Int(scene.mNumLights)
+        Int(scene.mNumLights)
     }
 
     /// The array of light sources.
@@ -197,7 +197,7 @@ public class AiScene {
     /// The number of cameras in the scene.
     /// Cameras are fully optional, in most cases this attribute will be 0.
     public var numCameras: Int {
-        return Int(scene.mNumCameras)
+        Int(scene.mNumCameras)
     }
 
     /// The array of cameras.
@@ -217,6 +217,6 @@ public class AiScene {
 extension AiScene {
     @inlinable
     public func meshes(for node: AiNode) -> [AiMesh] {
-        return node.meshes.map { meshes[$0] }
+        node.meshes.map { meshes[$0] }
     }
 }
