@@ -71,7 +71,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].numFaces, 2144)
         XCTAssertEqual(scene.meshes[0].numBones, 0)
         XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
-
+        
         // Faces
 
         XCTAssertEqual(scene.meshes[0].numFaces, 2144)
@@ -100,7 +100,11 @@ final class AssimpTests: XCTestCase {
         // Cameras
 
         XCTAssertEqual(scene.cameras.count, 1)
-
+        
+        print(scene.materials.map { $0.debugDescription })
+        
+        XCTAssertEqual(scene.materials[0].getMaterialColor(.COLOR_DIFFUSE), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
+        XCTAssertEqual(scene.materials[0].getMaterialString(.TEXTURE(.diffuse, 0)), "./duckCM.tga")
     }
 
     func testLoadAiSceneObj() throws {
@@ -237,6 +241,9 @@ final class AssimpTests: XCTestCase {
         // Cameras
 
         XCTAssertEqual(scene.cameras.count, 0)
+        
+        XCTAssertEqual(scene.materials[0].getMaterialColor(.COLOR_DIFFUSE), SIMD4<Float>(0.5882353, 0.5882353, 0.5882353, 1.0))
+        XCTAssertEqual(scene.materials[0].getMaterialString(.TEXTURE(.diffuse, 0)), "TEST.PNG")
 
     }
 }
