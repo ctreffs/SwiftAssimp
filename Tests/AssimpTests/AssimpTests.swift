@@ -239,40 +239,4 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.cameras.count, 0)
 
     }
-
-    func testPBR() throws {
-        //let file = "/Users/treffs/Development/personal/game-dev/fireblade/assets/models/pbr_helmet/pbr_helmet.obj"
-        let file = "/Users/treffs/Development/personal/game-dev/fireblade/assets/models/buster_drone/scene.gltf"
-        //let file = "/Users/treffs/Development/personal/game-dev/fireblade/assets/models/sponza_pbr/Sponza.gltf"
-
-        // https://threejs.org/docs/#api/en/materials/MeshStandardMaterial
-        // http://assimp.sourceforge.net/lib_html/materials.html
-
-        let scene = try AiScene(file: file)
-
-        let textureFiles = scene.materials
-            .map { $0.typedProperties }
-            .flatMap { $0 }
-            .filter { $0.semantic != .none && $0.type == .string && $0.key.contains("file") }
-            .compactMap { $0 as? AiMaterialPropertyString }
-
-        print(scene.materials.flatMap { $0.typedProperties })
-        
-        print(scene.materials.map { $0.shadingModel })
-
-        print(scene.materials.map { $0.getMaterialTextureCount(texType: .diffuse) })
-        print(scene.materials.map { $0.getMaterialTextureCount(texType: .metalness) })
-        print(scene.materials.map { $0.getMaterialString(.NAME) })
-
-        print(scene.materials.map { $0.getMaterialColor(.COLOR_DIFFUSE) })
-        print(scene.materials.map { $0.getMaterialFloatArray(.UVTRANSFORM(.diffuse, 0)) })
-
-        print(scene.materials.compactMap { $0.getMaterialProperty(.GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_TEXTURE)?.string })
-        print(scene.materials.compactMap { $0.getMaterialProperty(.GLTF_PBRMETALLICROUGHNESS_METALLICROUGHNESS_TEXTURE)?.string })
-
-        print(scene.materials.compactMap { $0.getMaterialTexture(texType: .diffuse, texIndex: 0) })
-
-        XCTFail("not implemented yet")
-    }
-
 }

@@ -4,6 +4,7 @@
 //
 //  Created by Christian Treffs on 06.12.19.
 //
+
 import Foundation
 
 public struct AiMatKey: RawRepresentable {
@@ -13,7 +14,9 @@ public struct AiMatKey: RawRepresentable {
     public let rawValue: String
 
     init(base: Base, texType: AiTextureType = .none, texIndex: Int = 0) {
-        self.rawValue = String(format: "%@,%d,%d", base.rawValue, texType.rawValue, texIndex)
+        self.rawValue = base.rawValue.withCString { basePtr -> String in
+           return String(format: "%@,%d,%d", basePtr, texType.rawValue, texIndex)
+        }
         self.baseName = base.rawValue
         self.texType = texType.rawValue
         self.texIndex = UInt32(texIndex)
