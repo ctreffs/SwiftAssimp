@@ -45,11 +45,14 @@ testReadme:
 pkgConfigDebug:
 	pkg-config --libs --cflags assimp
 
+printBrewAssimpVersion:
+	@echo `brew info assimp | head -1 | awk '{ print $$3; }'`
+
 copyMacPkgConfig500:
-	cp ${PWD}/assimp5.0.0.mac.pc /usr/local/lib/pkgconfig/assimp.pc
+	sudo cp ${PWD}/assimp5.0.0.mac.pc /usr/local/lib/pkgconfig/assimp.pc
 
 copyMacPkgConfig501:
-	cp ${PWD}/assimp5.0.1.mac.pc /usr/local/lib/pkgconfig/assimp.pc
+	sudo cp ${PWD}/assimp5.0.1.mac.pc /usr/local/lib/pkgconfig/assimp.pc
 
 build: copyMacPkgConfig pkgConfigDebug
 	swift build
