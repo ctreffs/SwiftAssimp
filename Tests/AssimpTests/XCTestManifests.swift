@@ -7,7 +7,6 @@ extension AssimpTests {
     // to regenerate.
     static let __allTests__AssimpTests = [
         ("testFailingInitializer", testFailingInitializer),
-        ("testLoadAiScene3DS", testLoadAiScene3DS),
         ("testLoadAiSceneDAE", testLoadAiSceneDAE),
         ("testLoadAiSceneObj", testLoadAiSceneObj),
         ("testVec2fFromAiVector2D", testVec2fFromAiVector2D),
