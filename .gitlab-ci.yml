@@ -6,7 +6,7 @@ before_script:
    # update dependency source list to more modern linux distribution
   - echo -e "deb http://archive.ubuntu.com/ubuntu focal main restricted universe multiverse" >> /etc/apt/sources.list
   - apt-get update -qq 
-  - apt-get install -y -qq pkg-config libassimp-dev
+  - apt-get install -y -qq pkg-config libassimp5
   - make pkgConfigDebug
 
 stages: 
