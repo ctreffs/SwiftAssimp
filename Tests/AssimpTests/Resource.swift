@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if os(linux)
+import FoundationNetworking
+#endif
 
 enum Resource: String {
     case bunny_obj = "https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj"
