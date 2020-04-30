@@ -1,22 +1,11 @@
-prefix=/usr/local
-libdir=${prefix}/lib
-includedir=${prefix}/include
-
-Name: vulkan
-Description: Vulkan SDK
-Version: 1.1.121.1
-Libs: -L${libdir} -lvulkan
-Cflags: -I${includedir}
-
-
-prefix=/usr/local/Cellar/assimp/5.0.0
-exec_prefix=/usr/local/Cellar/assimp/5.0.0/
-libdir=/usr/local/Cellar/assimp/5.0.0/lib
-includedir=/usr/local/Cellar/assimp/5.0.0/include
+prefix=/usr/local/Cellar/assimp/5.0.1
+exec_prefix=/usr/local/Cellar/assimp/5.0.1/
+libdir=/usr/local/Cellar/assimp/5.0.1/lib
+includedir=/usr/local/Cellar/assimp/5.0.1/include
 
 Name: Assimp
 Description: Import various well-known 3D model formats in an uniform manner.
-Version: 5.0.0
+Version: 5.0.1
 Libs: -L${libdir} -lassimp
 Libs.private:  -lz
 Cflags: -I${includedir}
