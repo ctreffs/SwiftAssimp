@@ -14,9 +14,7 @@ public struct AiMatKey: RawRepresentable {
     public let rawValue: String
 
     init(base: Base, texType: AiTextureType = .none, texIndex: Int = 0) {
-        self.rawValue = base.rawValue.withCString { basePtr -> String in
-           return String(format: "%@,%d,%d", basePtr, texType.rawValue, texIndex)
-        }
+        self.rawValue = "\(base.rawValue),\(texType.rawValue),\(texIndex)"
         self.baseName = base.rawValue
         self.texType = texType.rawValue
         self.texIndex = UInt32(texIndex)
