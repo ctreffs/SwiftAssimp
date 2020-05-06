@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/ctreffs/SwiftAssimp.svg?branch=master)](https://travis-ci.com/ctreffs/SwiftAssimp)
 [![license](https://img.shields.io/badge/license-BSD3-brightgreen.svg)](LICENSE)
-[![swift version](https://img.shields.io/badge/swift-5.0+-brightgreen.svg)](https://swift.org/download)
+[![swift version](https://img.shields.io/badge/swift-5.1+-brightgreen.svg)](https://swift.org/download)
 [![platforms](https://img.shields.io/badge/platforms-%20macOS%20-brightgreen.svg)](#)
 [![platforms](https://img.shields.io/badge/platforms-linux-brightgreen.svg)](#)
 
@@ -20,24 +20,45 @@ These instructions will get your copy of the project up and running on your loca
 ### 📋 Prerequisites
 
 * [Swift Package Manager (SPM)](https://github.com/apple/swift-package-manager)
-* [Swiftlint](https://github.com/realm/SwiftLint) for linting - (optional)
+* [Open Asset Import Library (Assimp)](http://assimp.org)
 * [SwiftEnv](https://swiftenv.fuller.li/) for Swift version management - (optional)
+* [Swiftlint](https://github.com/realm/SwiftLint) for linting - (optional)
 
 ### 💻 Installing
 
-Swift Assimp is available for all platforms that support [Swift 5.0](https://swift.org/) and higher and the [Swift Package Manager (SPM)](https://github.com/apple/swift-package-manager).
+Swift Assimp is available for all platforms that support [Swift 5.1](https://swift.org/) and higher and the [Swift Package Manager (SPM)](https://github.com/apple/swift-package-manager).
 
-Extend the following lines in your `Package.swift` file or use it to create a new project.
+Extend your `Package.swift` file with the following lines or use it to create a new project.
+
+For package manifests using the Swift 5.1 toolchain use:
 
 ```swift
-// swift-tools-version:5.0
-
+// swift-tools-version:5.1
 import PackageDescription
 
 let package = Package(
     name: "YourPackageName",
     dependencies: [
-        .package(url: "https://github.com/ctreffs/SwiftAssimp.git", from: "1.0.0")
+        .package(url: "https://github.com/ctreffs/SwiftAssimp.git", from: "1.2.2")
+    ],
+    targets: [
+        .target(
+            name: "YourTargetName",
+            dependencies: ["Assimp"])
+    ]
+)
+
+```
+or for package manifests using the Swift 5.2 and hight toolchain use:
+
+```swift
+// swift-tools-version:5.2
+import PackageDescription
+
+let package = Package(
+    name: "YourPackageName",
+    dependencies: [
+        .package(name: "Assimp", url: "https://github.com/ctreffs/SwiftAssimp.git", from: "1.2.2")
     ],
     targets: [
         .target(
