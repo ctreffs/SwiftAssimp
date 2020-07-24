@@ -1,5 +1,6 @@
-module CAssimp [system] {
-  umbrella header "shims.h"
+framework module CAssimp {
+  umbrella header "shims.hpp"
   link "assimp"
   export *
+  module * { export * }
 }

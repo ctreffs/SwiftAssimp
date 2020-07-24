@@ -1,3 +1,5 @@
+ASSIMP_DIR=3rdparty/assimp
+CASSIMP_DIR=Sources/CAssimp
 lint:
 	swiftlint autocorrect --format
 	swiftlint lint --quiet
@@ -56,3 +58,17 @@ copyMacPkgConfig501:
 
 build: copyMacPkgConfig pkgConfigDebug
 	swift build
+
+buildAssimpLib:
+	cd $(ASSIMP_DIR); cmake CMakeLists.txt; make -j8
+
+copyAssimpDependencies:
+	mkdir -p $(CASSIMP_DIR)/bin; \
+	mkdir -p $(CASSIMP_DIR)/include/assimp; \
+	mkdir -p $(CASSIMP_DIR)/include/assimp/Compiler; \
+	mkdir -p $(CASSIMP_DIR)/lib; \
+	cp -r $(ASSIMP_DIR)/bin/* $(CASSIMP_DIR)/bin; \
+	cp $(ASSIMP_DIR)/include/assimp/*.h $(CASSIMP_DIR)/include/assimp; \
+	cp $(ASSIMP_DIR)/include/assimp/*.inl $(CASSIMP_DIR)/include/assimp; \
+	cp $(ASSIMP_DIR)/include/assimp/Compiler/*.h $(CASSIMP_DIR)/include/assimp/Compiler; \
+	cp -r $(ASSIMP_DIR)/lib/* $(CASSIMP_DIR)/lib
