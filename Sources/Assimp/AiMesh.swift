@@ -269,7 +269,7 @@ extension AiMesh: Equatable {
             lhs.textureCoords == rhs.textureCoords &&
             lhs.vertices == rhs.vertices
 
-        //FIXME: lhs.colors == rhs.colors &&
+        // FIXME: lhs.colors == rhs.colors &&
 
     }
 }

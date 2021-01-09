@@ -25,7 +25,7 @@ public struct AiNode {
     ///
     /// Implementations should be able to handle tokens such as whitespace, tabs, line feeds, quotation marks, ampersands etc.
     ///
-    ///Sometimes assimp introduces new nodes not present in the source file into the hierarchy (usually out of necessity because sometimes the source hierarchy format is simply not compatible).
+    /// Sometimes assimp introduces new nodes not present in the source file into the hierarchy (usually out of necessity because sometimes the source hierarchy format is simply not compatible).
     ///
     /// Their names are surrounded by
     /// `<>`
