@@ -82,7 +82,6 @@ public struct AiMaterial {
      - aiGetMaterialUVTransform
      - aiGetMaterialXXX
      */
-
     public func getMaterialProperty(_ key: AiMatKey) -> AiMaterialProperty? {
         withUnsafePointer(to: self.material) { matPtr -> AiMaterialProperty? in
             let matPropPtr = UnsafeMutablePointer<UnsafePointer<aiMaterialProperty>?>.allocate(capacity: MemoryLayout<aiMaterialProperty>.stride)
