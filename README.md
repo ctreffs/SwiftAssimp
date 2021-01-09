@@ -49,7 +49,7 @@ let package = Package(
 )
 
 ```
-or for package manifests using the Swift 5.2 and hight toolchain use:
+or for package manifests using the Swift 5.2+ toolchain use:
 
 ```swift
 // swift-tools-version:5.2
