@@ -15,7 +15,7 @@ extension String {
             }
             guard let boundMemory: UnsafePointer<CChar> = bytesPtr.baseAddress?.bindMemory(to: CChar.self,
                                                                                            capacity: Int(aiString.length)) else {
-                                                                                            return nil
+                return nil
             }
 
             let stringBuffer = UnsafeBufferPointer<CChar>(start: boundMemory,
@@ -36,7 +36,7 @@ extension String {
                                                    count: length)
 
         let codeUnits: [UTF8.CodeUnit] = bufferPtr
-            //.map { $0 > 0 ? $0 : Int8(0x20) } // this replaces all invalid characters with blank space
+            // .map { $0 > 0 ? $0 : Int8(0x20) } // this replaces all invalid characters with blank space
             .map { UTF8.CodeUnit($0) }
 
         self.init(decoding: codeUnits, as: UTF8.self)

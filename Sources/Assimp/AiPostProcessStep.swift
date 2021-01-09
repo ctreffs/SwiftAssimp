@@ -31,8 +31,8 @@ public struct AiPostProcessStep: OptionSet {
     /// Full, weight-based skinning is expensive while animating nodes is extremely cheap,
     /// so this step is offered to clean up the data in that regard.
     ///
-    ///Use #AI_CONFIG_PP_DB_THRESHOLD to control this.
-    ///Use #AI_CONFIG_PP_DB_ALL_OR_NONE if you want bones removed if and only if all bones within the scene qualify for removal.
+    /// Use #AI_CONFIG_PP_DB_THRESHOLD to control this.
+    /// Use #AI_CONFIG_PP_DB_ALL_OR_NONE if you want bones removed if and only if all bones within the scene qualify for removal.
     public static let debone = AiPostProcessStep(rawValue: aiProcess_Debone.rawValue)
 
     /// This step searches all meshes for degenerate primitives and converts them to proper lines or points.
