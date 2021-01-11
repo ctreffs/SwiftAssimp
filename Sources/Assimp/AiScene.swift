@@ -63,7 +63,7 @@ public class AiScene {
         scene.mLights != nil && numLights > 0
     }
 
-    /// Check whether the scene contains textures
+    /// Check whether the scene contains embedded textures
     @inlinable public var hasTextures: Bool {
         scene.mTextures != nil && numTextures > 0
     }
@@ -153,11 +153,17 @@ public class AiScene {
     /// All animations imported from the given file are listed here.
     /// The array is mNumAnimations in size.
     public var animations: [aiAnimation] {
-        guard numAnimations > 0, let ptr = scene.mAnimations?.pointee else {
+        guard numAnimations > 0 else {
             return []
         }
-        return [aiAnimation](UnsafeMutableBufferPointer<aiAnimation>(start: ptr,
-                                                                     count: numAnimations))
+
+        let animations = (0..<numAnimations)
+            .compactMap { scene.mAnimations[$0] }
+            .map { $0.pointee } // TODO: wrap animations
+
+        assert(animations.count == numAnimations)
+
+        return animations
     }
 
     /// The number of textures embedded into the file
@@ -170,11 +176,17 @@ public class AiScene {
     /// Not many file formats embed their textures into the file.
     /// An example is Quake's MDL format (which is also used by some GameStudio versions)
     public var textures: [AiTexture] {
-        guard numTextures > 0, let ptr = scene.mTextures?.pointee else {
+        guard numTextures > 0 else {
             return []
         }
-        return [aiTexture](UnsafeMutableBufferPointer<aiTexture>(start: ptr,
-                                                                 count: numTextures)).map { AiTexture($0) }
+
+        let textures = (0..<numTextures)
+            .compactMap { scene.mTextures[$0] }
+            .map { AiTexture($0.pointee) }
+
+        assert(textures.count == numTextures)
+
+        return textures
     }
 
     /// The number of light sources in the scene.
@@ -187,11 +199,17 @@ public class AiScene {
     /// All light sources imported from the given file are listed here.
     /// The array is mNumLights in size.
     public var lights: [AiLight] {
-        guard numLights > 0, let ptr = scene.mLights?.pointee else {
+        guard numLights > 0 else {
             return []
         }
-        return [aiLight](UnsafeMutableBufferPointer<aiLight>(start: ptr,
-                                                             count: numLights)).map { AiLight($0) }
+
+        let lights = (0..<numLights)
+            .compactMap { scene.mLights[$0] }
+            .map { AiLight($0.pointee) }
+
+        assert(lights.count == numLights)
+
+        return lights
     }
 
     /// The number of cameras in the scene.
@@ -205,12 +223,17 @@ public class AiScene {
     /// The array is mNumCameras in size.
     /// The first camera in the array (if existing) is the default camera view into the scene.
     public var cameras: [aiCamera] {
-        guard numCameras > 0, let ptr = scene.mCameras?.pointee else {
+        guard numCameras > 0 else {
             return []
         }
 
-        return [aiCamera](UnsafeMutableBufferPointer<aiCamera>(start: ptr,
-                                                               count: numCameras))
+        let cameras = (0..<numCameras)
+            .compactMap { scene.mCameras[$0] }
+            .map { $0.pointee } // TODO: wrap camera
+
+        assert(cameras.count == numCameras)
+
+        return cameras
     }
 }
 

@@ -19,6 +19,7 @@ enum Resource: String {
     case airplane_usdz = "https://developer.apple.com/augmented-reality/quick-look/models/biplane/toy_biplane.usdz"
     case boxTextured_gltf = "https://raw.githubusercontent.com/assimp/assimp/master/test/models/glTF2/BoxTextured-glTF/BoxTextured.gltf"
     case cubeDiffuseTextured_3ds = "https://github.com/assimp/assimp/raw/master/test/models/3DS/cube_with_diffuse_texture.3DS"
+    case damagedHelmet_glb = "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb"
 
     private static let fm = FileManager.default
 
