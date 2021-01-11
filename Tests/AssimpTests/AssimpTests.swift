@@ -101,7 +101,7 @@ final class AssimpTests: XCTestCase {
 
         XCTAssertEqual(scene.cameras.count, 1)
         
-        print(scene.materials.map { $0.debugDescription })
+        // print(scene.materials.map { $0.debugDescription })
         
         XCTAssertEqual(scene.materials[0].getMaterialColor(.COLOR_DIFFUSE), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
         XCTAssertEqual(scene.materials[0].getMaterialString(.TEXTURE(.diffuse, 0)), "./duckCM.tga")
@@ -245,5 +245,117 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.materials[0].getMaterialColor(.COLOR_DIFFUSE), SIMD4<Float>(0.5882353, 0.5882353, 0.5882353, 1.0))
         XCTAssertEqual(scene.materials[0].getMaterialString(.TEXTURE(.diffuse, 0)), "TEST.PNG")
 
+    }
+    
+    func testLoadAiSceneGLB() throws {
+        let fileURL = try Resource.load(.damagedHelmet_glb)
+
+        let scene: AiScene = try AiScene(file: fileURL.path)
+        
+        XCTAssertEqual(scene.flags, [])
+        XCTAssertEqual(scene.numMeshes, 1)
+        XCTAssertEqual(scene.numMaterials, 2)
+        XCTAssertEqual(scene.numAnimations, 0)
+        XCTAssertEqual(scene.numCameras, 0)
+        XCTAssertEqual(scene.numLights, 0)
+        XCTAssertEqual(scene.numTextures, 5)
+
+        // Scene Graph
+
+        XCTAssertEqual(scene.rootNode.numMeshes, 1)
+        XCTAssertEqual(scene.rootNode.meshes.count, 1)
+        XCTAssertEqual(scene.rootNode.numChildren, 0)
+        XCTAssertEqual(scene.rootNode.children.count, 0)
+        XCTAssertEqual(scene.rootNode.name, "node_damagedHelmet_-6514")
+        // Mesh
+
+        XCTAssertEqual(scene.meshes[0].name, "mesh_helmet_LP_13930damagedHelmet")
+        XCTAssertEqual(scene.meshes[0].primitiveTypes, [.triangle])
+        XCTAssertEqual(scene.meshes[0].numVertices, 14556)
+        XCTAssertEqual(scene.meshes[0].vertices[0...2], [-0.61199456, -0.030940875, 0.48309004])
+        XCTAssertEqual(scene.meshes[0].numFaces, 15452)
+        XCTAssertEqual(scene.meshes[0].numBones, 0)
+        XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
+        XCTAssertEqual(scene.meshes[0].rawVertices![0], -0.61199456)
+        XCTAssertEqual(scene.meshes[0].rawVertices![1], -0.030940875)
+        XCTAssertEqual(scene.meshes[0].rawVertices![2], 0.48309004)
+        
+        XCTAssertEqual(scene.meshes[0].rawVertices![105], -0.5812146)
+        XCTAssertEqual(scene.meshes[0].rawVertices![106], -0.029344887)
+        XCTAssertEqual(scene.meshes[0].rawVertices![107], 0.391574)
+
+        // Faces
+
+        XCTAssertEqual(scene.meshes[0].numFaces, 15452)
+        XCTAssertEqual(scene.meshes[0].faces.count, 15452)
+        XCTAssertEqual(scene.meshes[0].faces[0].numIndices, 3)
+        XCTAssertEqual(scene.meshes[0].faces[0].indices, [0, 1, 2])
+
+        // Materials
+
+        XCTAssertEqual(scene.materials[0].numProperties, 48)
+        XCTAssertEqual(scene.materials[0].numAllocated, 80)
+        XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
+
+        // Textures
+
+        XCTAssertEqual(scene.textures.count, scene.numTextures)
+        XCTAssertEqual(scene.meshes[0].numUVComponents, [2])
+        XCTAssertEqual(scene.meshes[0].textureCoords.count, 1)
+        XCTAssertEqual(scene.meshes[0].textureCoords[0].count, 14556)
+        XCTAssertEqual(scene.meshes[0].textureCoords[0][0], [0.704686, -0.24560404, 0.0])
+        
+        XCTAssertEqual(scene.textures[0].filename, nil)
+        XCTAssertEqual(scene.textures[0].achFormatHint, "jpg")
+        XCTAssertEqual(scene.textures[0].width, 935629)
+        XCTAssertEqual(scene.textures[0].height, 0)
+        XCTAssertEqual(scene.textures[0].isCompressed, true)
+        XCTAssertEqual(scene.textures[0].numPixels, 233907)
+        XCTAssertEqual(scene.textures[0].pcData.count, 233907)
+        XCTAssertEqual(scene.textures[0].pcDataBGRA.count, 935628)
+        XCTAssertEqual(scene.textures[0].pcDataRGBA.count, 935628)
+        
+        XCTAssertEqual(scene.textures[0].pcData[0].a, 224)
+        XCTAssertEqual(scene.textures[0].pcData[0].r, 255)
+        XCTAssertEqual(scene.textures[0].pcData[0].g, 216)
+        XCTAssertEqual(scene.textures[0].pcData[0].b, 255)
+        XCTAssertEqual(scene.textures[0].pcDataBGRA[0], 255) // b 255
+        XCTAssertEqual(scene.textures[0].pcDataBGRA[1], 216) // g 216
+        XCTAssertEqual(scene.textures[0].pcDataBGRA[2], 255) // r 255
+        XCTAssertEqual(scene.textures[0].pcDataBGRA[3], 224) // a 224
+        XCTAssertEqual(scene.textures[0].pcDataRGBA[0], 255) // r 255
+        XCTAssertEqual(scene.textures[0].pcDataRGBA[1], 216) // g 216
+        XCTAssertEqual(scene.textures[0].pcDataRGBA[2], 255) // b 255
+        XCTAssertEqual(scene.textures[0].pcDataRGBA[3], 224) // a 224
+        
+        XCTAssertEqual(scene.textures[1].filename, nil)
+        XCTAssertEqual(scene.textures[1].achFormatHint, "jpg")
+        XCTAssertEqual(scene.textures[1].width, 1300661)
+        XCTAssertEqual(scene.textures[1].height, 0)
+        XCTAssertEqual(scene.textures[1].isCompressed, true)
+        XCTAssertEqual(scene.textures[1].numPixels, 325165)
+        XCTAssertEqual(scene.textures[1].pcData.count, 325165)
+        XCTAssertEqual(scene.textures[1].pcDataBGRA.count, 1300660)
+        XCTAssertEqual(scene.textures[1].pcDataRGBA.count, 1300660)
+        XCTAssertEqual(scene.textures[1].pcData[0].a, 224)
+        XCTAssertEqual(scene.textures[1].pcData[0].r, 255)
+        XCTAssertEqual(scene.textures[1].pcData[0].g, 216)
+        XCTAssertEqual(scene.textures[1].pcData[0].b, 255)
+        XCTAssertEqual(scene.textures[1].pcDataBGRA[0], 255) // b 255
+        XCTAssertEqual(scene.textures[1].pcDataBGRA[1], 216) // g 216
+        XCTAssertEqual(scene.textures[1].pcDataBGRA[2], 255) // r 255
+        XCTAssertEqual(scene.textures[1].pcDataBGRA[3], 224) // a 224
+        XCTAssertEqual(scene.textures[1].pcDataRGBA[0], 255) // r 255
+        XCTAssertEqual(scene.textures[1].pcDataRGBA[1], 216) // g 216
+        XCTAssertEqual(scene.textures[1].pcDataRGBA[2], 255) // b 255
+        XCTAssertEqual(scene.textures[1].pcDataRGBA[3], 224) // a 224
+
+        // Lights
+
+        XCTAssertEqual(scene.lights.count, 0)
+
+        // Cameras
+
+        XCTAssertEqual(scene.cameras.count, 0)
     }
 }

@@ -9,6 +9,7 @@ extension AssimpTests {
         ("testFailingInitializer", testFailingInitializer),
         ("testLoadAiScene3DS", testLoadAiScene3DS),
         ("testLoadAiSceneDAE", testLoadAiSceneDAE),
+        ("testLoadAiSceneGLB", testLoadAiSceneGLB),
         ("testLoadAiSceneObj", testLoadAiSceneObj),
         ("testVec2fFromAiVector2D", testVec2fFromAiVector2D),
         ("testVec3fFromAiVector3D", testVec3fFromAiVector3D),

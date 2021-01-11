@@ -51,7 +51,10 @@ public struct AiTexture {
     /// The fourth character will always be '\\0'.
     public var achFormatHint: String {
         CArray<CChar>.read(texture.achFormatHint) { body in
-            String(cString: body.baseAddress!)
+            guard let baseAddress = body.baseAddress else {
+                return ""
+            }
+            return String(cString: baseAddress)
         }
     }
 
@@ -75,22 +78,55 @@ public struct AiTexture {
         height == 0
     }
 
+    /// Number of pixels in texture.
+    public var numPixels: Int {
+        if isCompressed {
+            let sizeInBytes = width
+            return sizeInBytes / MemoryLayout<aiTexel>.stride
+        } else {
+            return width * height
+        }
+    }
+
     /// Data of the texture.
     ///
     /// Points to an array of mWidth * mHeight aiTexel's.
     /// The format of the texture data is always ARGB8888 to make the implementation for user of the library as easy as possible.
     /// If mHeight = 0 this is a pointer to a memory buffer of size mWidth containing the compressed texture data.
     public var pcData: [aiTexel] {
-        let count: Int = height == 0 ? width : (width * height)
-        return [aiTexel](UnsafeMutableBufferPointer<aiTexel>(start: texture.pcData,
-                                                             count: count))
+        [aiTexel](UnsafeMutableBufferPointer<aiTexel>(start: texture.pcData,
+                                                      count: numPixels))
     }
 
-    public var rawPcData: UnsafeBufferPointer<UInt8> {
-        let count: Int = height == 0 ? width : (width * height)
-        let length = MemoryLayout<aiTexel>.stride * count
-        return texture.pcData.withMemoryRebound(to: UInt8.self, capacity: length) { ptr in
-            UnsafeBufferPointer<UInt8>(start: ptr, count: length)
+    public var pcDataBGRA: [UInt8] {
+        let pcData = self.pcData
+        return [UInt8](unsafeUninitializedCapacity: MemoryLayout<aiTexel>.stride * numPixels) { buffer, written in
+            for idx in 0..<numPixels {
+                buffer[written] = pcData[idx].b
+                written += 1
+                buffer[written] = pcData[idx].g
+                written += 1
+                buffer[written] = pcData[idx].r
+                written += 1
+                buffer[written] = pcData[idx].a
+                written += 1
+            }
+        }
+    }
+
+    public var pcDataRGBA: [UInt8] {
+        let pcData = self.pcData
+        return [UInt8](unsafeUninitializedCapacity: MemoryLayout<aiTexel>.stride * numPixels) { buffer, written in
+            for idx in 0..<numPixels {
+                buffer[written] = pcData[idx].r
+                written += 1
+                buffer[written] = pcData[idx].g
+                written += 1
+                buffer[written] = pcData[idx].b
+                written += 1
+                buffer[written] = pcData[idx].a
+                written += 1
+            }
         }
     }
 }
