@@ -8,11 +8,14 @@ let package = Package(
                  targets: ["Assimp"])
     ],
     targets: [
-        .target(name: "Assimp",
-                dependencies: ["CAssimp"]),
-        .target(name: "CAssimp"),
-        .testTarget(name: "AssimpTests", 
-            dependencies: ["Assimp"]),
+        .target(name: "Assimp", dependencies: ["CAssimp"]),
+        .target(name: "CAssimp",
+                linkerSettings: [
+                    .unsafeFlags(["-LSources/CAssimp/lib/macOS"],
+                                 .when(platforms: [.macOS], configuration: nil)),
+                    .linkedLibrary("assimp")
+                ]),
+        .testTarget(name: "AssimpTests",  dependencies: ["Assimp"])
     ],
-    cxxLanguageStandard: .gnucxx11
+    cLanguageStandard: .gnu99
 )
