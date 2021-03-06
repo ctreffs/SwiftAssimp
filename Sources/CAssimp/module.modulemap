@@ -1,6 +1,0 @@
-framework module CAssimp {
-  umbrella header "shims.hpp"
-  link "assimp"
-  export *
-  module * { export * }
-}
