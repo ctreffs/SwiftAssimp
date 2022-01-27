@@ -1,9 +1,9 @@
 //
-//  AiMaterial.swift
+// AiMaterial.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 21.06.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
 
@@ -12,7 +12,7 @@ public struct AiMaterial {
     let material: aiMaterial
 
     init(_ aiMaterial: aiMaterial) {
-        self.material = aiMaterial
+        material = aiMaterial
     }
 
     init?(_ mat: aiMaterial?) {
@@ -28,14 +28,13 @@ public struct AiMaterial {
     /// Storage allocated
     public lazy var numAllocated = Int(material.mNumAllocated)
 
-
     /// List of all material properties loaded.
     public lazy var properties: [AiMaterialProperty] = {
         guard numProperties > 0 else {
             return []
         }
         return [AiMaterialProperty](unsafeUninitializedCapacity: numProperties) { buffer, written in
-            for idx in 0..<numProperties {
+            for idx in 0 ..< numProperties {
                 if let prop = material.mProperties[idx] {
                     buffer[idx] = AiMaterialProperty(prop.pointee)
                     written += 1
@@ -44,29 +43,27 @@ public struct AiMaterial {
         }
     }()
 
-    public lazy var typedProperties: [AiMaterialPropertyIdentifiable] = {
-        properties.compactMap { prop -> AiMaterialPropertyIdentifiable? in
-            switch prop.type {
-            case .string:
-                return AiMaterialPropertyString(prop)
+    public lazy var typedProperties: [AiMaterialPropertyIdentifiable] = properties.compactMap { prop -> AiMaterialPropertyIdentifiable? in
+        switch prop.type {
+        case .string:
+            return AiMaterialPropertyString(prop)
 
-            case .float:
-                return AiMaterialPropertyFloat(prop)
+        case .float:
+            return AiMaterialPropertyFloat(prop)
 
-            case .int:
-                return AiMaterialPropertyInt(prop)
+        case .int:
+            return AiMaterialPropertyInt(prop)
 
-            case .buffer:
-                return AiMaterialPropertyBuffer(prop)
+        case .buffer:
+            return AiMaterialPropertyBuffer(prop)
 
-            case .double:
-                return AiMaterialPropertyDouble(prop)
+        case .double:
+            return AiMaterialPropertyDouble(prop)
 
-            default:
-                return nil
-            }
+        default:
+            return nil
         }
-    }()
+    }
 
     /*
      - aiGetMaterialProperty
@@ -83,7 +80,7 @@ public struct AiMaterial {
      - aiGetMaterialXXX
      */
     public func getMaterialProperty(_ key: AiMatKey) -> AiMaterialProperty? {
-        withUnsafePointer(to: self.material) { matPtr -> AiMaterialProperty? in
+        withUnsafePointer(to: material) { matPtr -> AiMaterialProperty? in
             let matPropPtr = UnsafeMutablePointer<UnsafePointer<aiMaterialProperty>?>.allocate(capacity: MemoryLayout<aiMaterialProperty>.stride)
             defer {
                 matPropPtr.deinitialize(count: 1)
@@ -275,8 +272,10 @@ public enum AiBlendMode {
         switch blendMode {
         case aiBlendMode_Default:
             self = .default
+
         case aiBlendMode_Additive:
             self = .additive
+
         default:
             return nil
         }

@@ -1,20 +1,21 @@
 //
-//  String+aiString.swift
+// String+aiString.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 21.06.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
 
 extension String {
     init?(_ aiString: aiString) {
-        let cStringBuffer: UnsafePointer<CChar>? = withUnsafeBytes(of: aiString.data) { bytesPtr ->  UnsafePointer<CChar>? in
+        let cStringBuffer: UnsafePointer<CChar>? = withUnsafeBytes(of: aiString.data) { bytesPtr -> UnsafePointer<CChar>? in
             if aiString.length <= 0 {
                 return nil
             }
             guard let boundMemory: UnsafePointer<CChar> = bytesPtr.baseAddress?.bindMemory(to: CChar.self,
-                                                                                           capacity: Int(aiString.length)) else {
+                                                                                           capacity: Int(aiString.length))
+            else {
                 return nil
             }
 

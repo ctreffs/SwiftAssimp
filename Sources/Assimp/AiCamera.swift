@@ -1,14 +1,13 @@
 //
-//  File.swift
-//  
+// AiCamera.swift
+// SwiftAssimp
 //
-//  Created by Christian Treffs on 27.01.22.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
 
 public struct AiCamera {
-
     let camera: aiCamera
 
     init(_ camera: aiCamera) {
@@ -45,7 +44,6 @@ public struct AiCamera {
     /// may be normalized, but it needn't.
     public lazy var up = Vec3(camera.mUp)
 
-
     /// 'LookAt' - vector of the camera coordinate system relative to
     /// the coordinate space defined by the corresponding node.
     ///
@@ -67,7 +65,6 @@ public struct AiCamera {
     /// a division through zero). The default value is 0.1f.
     public lazy var clipPlaneNear = camera.mClipPlaneNear
 
-
     /// Distance of the far clipping plane from the camera.
     ///
     /// The far clipping plane must, of course, be further away than the
@@ -77,7 +74,6 @@ public struct AiCamera {
     /// inaccuracies which could lead to z-fighting.
     public lazy var clipPlaneFar = camera.mClipPlaneFar
 
-
     /// Screen aspect ratio.
     ///
     /// This is the ration between the width and the height of the
@@ -85,7 +81,6 @@ public struct AiCamera {
     /// 0 if the aspect ratio is not defined in the source file.
     /// 0 is also the default value.
     public lazy var aspect = camera.mAspect
-
 
     /// Half horizontal orthographic width, in scene units.
     ///
@@ -96,5 +91,4 @@ public struct AiCamera {
     /// and mHorizontalFOV should be set to 0.
     /// The default value is 0 (not orthographic).
     public lazy var orthographicWidth: Float = camera.mOrthographicWidth
-
 }

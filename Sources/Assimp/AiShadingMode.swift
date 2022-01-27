@@ -1,9 +1,9 @@
 //
-//  AiShadingMode.swift
+// AiShadingMode.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 10.12.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
 
@@ -15,7 +15,7 @@ public struct AiShadingMode: RawRepresentable {
     }
 
     init(_ shadingMode: aiShadingMode) {
-        self.rawValue = shadingMode.rawValue
+        rawValue = shadingMode.rawValue
     }
 
     /** Flat shading. Shading is done on per-face base,
@@ -70,7 +70,7 @@ public struct AiShadingMode: RawRepresentable {
     public static let fresnel = AiShadingMode(aiShadingMode_Fresnel)
 }
 
-extension AiShadingMode: Equatable { }
+extension AiShadingMode: Equatable {}
 extension AiShadingMode: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
@@ -95,7 +95,7 @@ extension AiShadingMode: CustomDebugStringConvertible {
         case .toon:
             return "toon"
         default:
-            return "AiShadingMode<Unknown>(\(self.rawValue))"
+            return "AiShadingMode<Unknown>(\(rawValue))"
         }
     }
 }

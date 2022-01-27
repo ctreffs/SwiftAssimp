@@ -1,9 +1,9 @@
 //
-//  AiScene.swift
-//  Assimp
+// AiScene.swift
+// SwiftAssimp
 //
-//  Created by Christian Treffs on 19.06.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
 
@@ -54,13 +54,11 @@ public final class AiScene {
     /// Unless no special scene flags are set this will always be true.
     public lazy var hasMaterials: Bool = scene.mMaterials != nil && numMaterials > 0
 
-
     /// Check whether the scene contains lights
     public lazy var hasLights: Bool = scene.mLights != nil && numLights > 0
 
     /// Check whether the scene contains embedded textures
     public lazy var hasTextures: Bool = scene.mTextures != nil && numTextures > 0
-
 
     /// Check whether the scene contains cameras
     public lazy var hasCameras: Bool = scene.mCameras != nil && numCameras > 0
@@ -114,19 +112,19 @@ public final class AiScene {
     /// The array of animations.
     /// All animations imported from the given file are listed here.
     /// The array is mNumAnimations in size.
-  //  public var animations: [aiAnimation] {
-  //      guard numAnimations > 0 else {
-  //          return []
-  //      }
+    //  public var animations: [aiAnimation] {
+    //      guard numAnimations > 0 else {
+    //          return []
+    //      }
 
-  //      let animations = (0..<numAnimations)
-  //          .compactMap { scene.mAnimations[$0] }
-  //          .map { $0.pointee } // TODO: wrap animations
+    //      let animations = (0..<numAnimations)
+    //          .compactMap { scene.mAnimations[$0] }
+    //          .map { $0.pointee } // TODO: wrap animations
 
-  //      assert(animations.count == numAnimations)
+    //      assert(animations.count == numAnimations)
 
-  //      return animations
-  //  }
+    //      return animations
+    //  }
 
     /// The number of textures embedded into the file
     public lazy var numTextures = Int(scene.mNumTextures)
@@ -163,4 +161,3 @@ extension AiScene {
         node.meshes.map { meshes[$0] }
     }
 }
-

@@ -1,9 +1,9 @@
 //
-//  AiMesh.swift
+// AiMesh.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 21.06.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
 
@@ -54,14 +54,12 @@ public struct AiMesh {
     /// The array is numVertices * 3 in size.
     public lazy var vertices = withUnsafeVertices([AiReal].init)
 
-
     public mutating func withUnsafeVertices<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
         let count = numVertices * 3
         return try mesh.mVertices.withMemoryRebound(to: AiReal.self, capacity: count) {
             try body(UnsafeBufferPointer(start: $0, count: count))
         }
     }
-
 
     /// Vertex normals.
     /// The array contains normalized vectors, NULL if not present.
@@ -99,7 +97,6 @@ public struct AiMesh {
             try body(UnsafeBufferPointer(start: $0, count: count))
         }
     }
-
 
     /// Vertex bitangents.
     /// The bitangent of a vertex points in the direction of the positive Y texture axis.
@@ -139,7 +136,7 @@ public struct AiMesh {
             }
 
             return baseAddress.withMemoryRebound(to: AiReal.self, capacity: maxColorsPerSet) { pColorSet in
-                return [AiReal](UnsafeBufferPointer(start: pColorSet, count: maxColorsPerSet))
+                [AiReal](UnsafeBufferPointer(start: pColorSet, count: maxColorsPerSet))
             }
         }
 
@@ -155,15 +152,12 @@ public struct AiMesh {
         )
     }()
 
-
-
     /// Vertex texture coords, also known as UV channels.
     ///
     /// A mesh may contain 0 to AI_MAX_NUMBER_OF_TEXTURECOORDS per vertex.
     /// NULL if not present.
     /// The array is numVertices * 3 in size.
     public lazy var texCoords: Channels<[AiReal]?> = {
-
         typealias CVertexUVChannels = (UnsafeMutablePointer<aiVector3D>?,
                                        UnsafeMutablePointer<aiVector3D>?,
                                        UnsafeMutablePointer<aiVector3D>?,
@@ -175,14 +169,13 @@ public struct AiMesh {
 
         let maxTexCoordsPerChannel = numVertices * 3 // aiVector3D * numVertices
 
-
         func uvChannel(at keyPath: KeyPath<CVertexUVChannels, UnsafeMutablePointer<aiVector3D>?>) -> [AiReal]? {
             guard let baseAddress = mesh.mTextureCoords[keyPath: keyPath] else {
                 return nil
             }
 
             return baseAddress.withMemoryRebound(to: AiReal.self, capacity: maxTexCoordsPerChannel) {
-                return [AiReal](UnsafeBufferPointer(start: $0, count: maxTexCoordsPerChannel))
+                [AiReal](UnsafeBufferPointer(start: $0, count: maxTexCoordsPerChannel))
             }
         }
 
@@ -196,7 +189,6 @@ public struct AiMesh {
             uvChannel(at: \.6),
             uvChannel(at: \.7)
         )
-
     }()
 
     public lazy var texCoordsPacked: Channels<[AiReal]?> = {
@@ -210,7 +202,7 @@ public struct AiMesh {
                 return stride(from: 0, to: uvs.count, by: 3).map { uvs[$0] }
 
             case 2: // uv
-                return stride(from: 0, to: uvs.count, by: 3).flatMap { uvs[$0...$0+1] }
+                return stride(from: 0, to: uvs.count, by: 3).flatMap { uvs[$0 ... $0 + 1] }
 
             case 3: // uvw
                 return uvs

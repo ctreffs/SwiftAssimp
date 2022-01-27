@@ -1,9 +1,9 @@
 //
-//  AiLight.swift
+// AiLight.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 21.06.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
 
@@ -29,28 +29,27 @@ public struct AiLight {
     public lazy var name: String? = String(light.mName)
 
     /// The type of the light source.
-    public lazy var type: AiLightSourceType = AiLightSourceType(light.mType)
-
+    public lazy var type = AiLightSourceType(light.mType)
 
     /// Position of the light source in space. Relative to the
     /// transformation of the node corresponding to the light.
     ///
     /// The position is undefined for directional lights.
-    public lazy var position: Vec3 = Vec3(light.mPosition)
+    public lazy var position = Vec3(light.mPosition)
 
     /// Direction of the light source in space. Relative to the
     /// transformation of the node corresponding to the light.
     ///
     /// The direction is undefined for point lights. The vector
     /// may be normalized, but it needn't.
-    public lazy var direction: Vec3 = Vec3(light.mDirection)
+    public lazy var direction = Vec3(light.mDirection)
 
     /// Up direction of the light source in space. Relative to the
     /// transformation of the node corresponding to the light.
     ///
     /// The direction is undefined for point lights. The vector
     /// may be normalized, but it needn't.
-    public lazy var up: Vec3 = Vec3(light.mUp)
+    public lazy var up = Vec3(light.mUp)
 
     /// Constant light attenuation factor.
     ///
@@ -74,7 +73,6 @@ public struct AiLight {
     /// Naturally undefined for directional lights.
     public lazy var attenuationLinear: Float = light.mAttenuationLinear
 
-
     /// Quadratic light attenuation factor.
     ///
     /// The intensity of the light source at a given distance 'd' from
@@ -91,14 +89,14 @@ public struct AiLight {
     /// The diffuse light color is multiplied with the diffuse
     /// material color to obtain the final color that contributes
     /// to the diffuse shading term.
-    public lazy var colorDiffuse: Vec3 = Vec3(light.mColorDiffuse)
+    public lazy var colorDiffuse = Vec3(light.mColorDiffuse)
 
     /// Specular color of the light source
     ///
     /// The specular light color is multiplied with the specular
     /// material color to obtain the final color that contributes
     /// to the specular shading term.
-    public lazy var colorSpecular: Vec3 = Vec3(light.mColorSpecular)
+    public lazy var colorSpecular = Vec3(light.mColorSpecular)
 
     /// Ambient color of the light source
     ///
@@ -107,7 +105,7 @@ public struct AiLight {
     /// to the ambient shading term. Most renderers will ignore
     /// this value it, is just a remaining of the fixed-function pipeline
     /// that is still supported by quite many file formats.
-    public lazy var colorAmbient: Vec3 = Vec3(light.mColorAmbient)
+    public lazy var colorAmbient = Vec3(light.mColorAmbient)
 
     /// Inner angle of a spot light's light cone.
     ///
@@ -128,10 +126,8 @@ public struct AiLight {
     public lazy var angleOuterCone: Float = light.mAngleOuterCone
 
     /// Size of area light source.
-    public lazy var size: Vec2 = Vec2(light.mSize)
+    public lazy var size = Vec2(light.mSize)
 }
-
-
 
 public enum AiLightSourceType {
     case undefined
@@ -168,21 +164,24 @@ public enum AiLightSourceType {
         switch aiLightSourceType {
         case aiLightSource_UNDEFINED:
             self = .undefined
+
         case aiLightSource_DIRECTIONAL:
             self = .directional
+
         case aiLightSource_POINT:
             self = .point
+
         case aiLightSource_SPOT:
             self = .spot
+
         case aiLightSource_AMBIENT:
             self = .ambient
+
         case aiLightSource_AREA:
             self = .area
+
         default:
             self = .undefined
-
         }
     }
-
-
 }

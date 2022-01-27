@@ -1,9 +1,9 @@
 //
-//  simd+aiVector.swift
+// simd+aiVector.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 01.07.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
 
@@ -40,7 +40,6 @@ public typealias Vec3 = SIMD3<Float>
 
 public typealias AiReal = Float
 
-
 public struct AiMatrix4x4 {
     public let a1: AiReal
     public let a2: AiReal
@@ -60,21 +59,21 @@ public struct AiMatrix4x4 {
     public let d4: AiReal
 
     init(_ m: aiMatrix4x4) {
-        self.a1 = m.a1
-        self.a2 = m.a2
-        self.a3 = m.a3
-        self.a4 = m.a4
-        self.b1 = m.b1
-        self.b2 = m.b2
-        self.b3 = m.b3
-        self.b4 = m.b4
-        self.c1 = m.c1
-        self.c2 = m.c2
-        self.c3 = m.c3
-        self.c4 = m.c4
-        self.d1 = m.d1
-        self.d2 = m.d2
-        self.d3 = m.d3
-        self.d4 = m.d4
+        a1 = m.a1
+        a2 = m.a2
+        a3 = m.a3
+        a4 = m.a4
+        b1 = m.b1
+        b2 = m.b2
+        b3 = m.b3
+        b4 = m.b4
+        c1 = m.c1
+        c2 = m.c2
+        c3 = m.c3
+        c4 = m.c4
+        d1 = m.d1
+        d2 = m.d2
+        d3 = m.d3
+        d4 = m.d4
     }
 }

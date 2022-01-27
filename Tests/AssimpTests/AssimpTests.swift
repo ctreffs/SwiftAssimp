@@ -75,7 +75,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
         XCTAssertEqual(scene.meshes[0].tangents.count, 25500)
         XCTAssertEqual(scene.meshes[0].bitangents.count, 25500)
-        
+
         // Faces
 
         XCTAssertEqual(scene.meshes[0].numFaces, 2144)
@@ -106,9 +106,9 @@ final class AssimpTests: XCTestCase {
         // Cameras
 
         XCTAssertEqual(scene.cameras.count, 1)
-        
+
         // print(scene.materials.map { $0.debugDescription })
-        
+
         XCTAssertEqual(scene.materials[0].getMaterialColor(.COLOR_DIFFUSE), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
         XCTAssertEqual(scene.materials[0].getMaterialString(.TEXTURE(.diffuse, 0)), "./duckCM.tga")
     }
@@ -214,7 +214,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].vertices[0], -25.0)
         XCTAssertEqual(scene.meshes[0].vertices[1], -25.0)
         XCTAssertEqual(scene.meshes[0].vertices[2], 0.0)
-        
+
         XCTAssertEqual(scene.meshes[0].vertices[105], -25.0)
         XCTAssertEqual(scene.meshes[0].vertices[106], 25.0)
         XCTAssertEqual(scene.meshes[0].vertices[107], 0.0)
@@ -246,17 +246,17 @@ final class AssimpTests: XCTestCase {
         // Cameras
 
         XCTAssertEqual(scene.cameras.count, 0)
-        
+
         XCTAssertEqual(scene.materials[0].getMaterialColor(.COLOR_DIFFUSE), SIMD4<Float>(0.5882353, 0.5882353, 0.5882353, 1.0))
         XCTAssertEqual(scene.materials[0].getMaterialString(.TEXTURE(.diffuse, 0)), "TEST.PNG")
 
     }
-    
+
     func testLoadAiSceneGLB() throws {
         let fileURL = try Resource.load(.damagedHelmet_glb)
 
         let scene: AiScene = try AiScene(file: fileURL.path)
-        
+
         XCTAssertEqual(scene.flags, [])
         XCTAssertEqual(scene.numMeshes, 1)
         XCTAssertEqual(scene.numMaterials, 2)
@@ -284,7 +284,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].vertices[0], -0.61199456)
         XCTAssertEqual(scene.meshes[0].vertices[1], -0.030940875)
         XCTAssertEqual(scene.meshes[0].vertices[2], 0.48309004)
-        
+
         XCTAssertEqual(scene.meshes[0].vertices[105], -0.5812146)
         XCTAssertEqual(scene.meshes[0].vertices[106], -0.029344887)
         XCTAssertEqual(scene.meshes[0].vertices[107], 0.391574)
@@ -308,7 +308,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].numUVComponents.0, 2)
         XCTAssertEqual(scene.meshes[0].texCoords.0?.count, 43668)
         XCTAssertEqual(scene.meshes[0].texCoords.0?[0...2], [0.704686, -0.24560404, 0.0])
-        
+
         XCTAssertEqual(scene.textures[0].filename, nil)
         XCTAssertEqual(scene.textures[0].achFormatHint, "jpg")
         XCTAssertEqual(scene.textures[0].width, 935629)
@@ -316,7 +316,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.textures[0].isCompressed, true)
         XCTAssertEqual(scene.textures[0].numPixels, 233907)
         XCTAssertEqual(scene.textures[0].textureData.count, 935628)
-        
+
         XCTAssertEqual(scene.textures[0].textureData[0], 255)
         XCTAssertEqual(scene.textures[0].textureData[1], 216)
         XCTAssertEqual(scene.textures[0].textureData[2], 255)
@@ -329,7 +329,7 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.textures[0].textureData[1], 216) // g 216
         XCTAssertEqual(scene.textures[0].textureData[2], 255) // b 255
         XCTAssertEqual(scene.textures[0].textureData[3], 224) // a 224
-        
+
         XCTAssertEqual(scene.textures[1].filename, nil)
         XCTAssertEqual(scene.textures[1].achFormatHint, "jpg")
         XCTAssertEqual(scene.textures[1].width, 1300661)

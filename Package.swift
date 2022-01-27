@@ -17,7 +17,7 @@ let package = Package(
                        pkgConfig: "assimp",
                        providers: [
                         .brew(["assimp"]),
-                        .apt(["libassimp-dev"]),
+                        .apt(["libassimp-dev"])
                        ])
     ]
 )

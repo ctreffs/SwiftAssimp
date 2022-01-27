@@ -1,9 +1,9 @@
 //
-//  AiNode.swift
+// AiNode.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 04.07.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
 
@@ -65,7 +65,7 @@ public struct AiNode {
             return []
         }
 
-        return(0..<numMeshes)
+        return (0 ..< numMeshes)
             .compactMap { node.mMeshes[$0] }
             .map { Int($0) }
     }
@@ -78,7 +78,7 @@ public struct AiNode {
             return []
         }
 
-        return (0..<numChildren)
+        return (0 ..< numChildren)
             .compactMap { node.mChildren[$0] }
             .map { AiNode($0.pointee) }
     }
@@ -101,11 +101,9 @@ extension AiNode: CustomDebugStringConvertible {
     }
 }
 
-
 /// Container for holding metadata.
 /// Metadata is a key-value store using string keys and values.
 public struct AiMetadata {
-
     let meta: aiMetadata
 
     init(_ meta: aiMetadata) {
@@ -123,10 +121,9 @@ public struct AiMetadata {
     /// Entries in this array may be NULL if the corresponding property key has no assigned value.
     public lazy var values: [Entry] = UnsafeBufferPointer(start: meta.mValues, count: numProperties).compactMap(Entry.init)
 
-    public lazy var metadata = [String: Entry](uniqueKeysWithValues: (0..<numProperties).map{ (keys[$0], values[$0]) })
+    public lazy var metadata = [String: Entry](uniqueKeysWithValues: (0 ..< numProperties).map { (keys[$0], values[$0]) })
 
     public enum Entry {
-
         case bool(Bool)
         case int32(Int32)
         case uint64(UInt64)
@@ -180,5 +177,4 @@ public struct AiMetadata {
             }
         }
     }
-
 }

@@ -1,9 +1,9 @@
 //
-//  AiMaterialProperty.swift
+// AiMaterialProperty.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 01.07.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
 
@@ -145,7 +145,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
             return []
         }
 
-        return (0..<dataLength).map { Double(ptr[$0]) }
+        return (0 ..< dataLength).map { Double(ptr[$0]) }
     }
 
     public var float: [Float32] {
@@ -153,7 +153,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
             return []
         }
 
-        return (0..<dataLength).map { Float32(ptr[$0]) }
+        return (0 ..< dataLength).map { Float32(ptr[$0]) }
     }
 
     public var int: [Int32] {
@@ -161,7 +161,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
             return []
         }
 
-        return (0..<dataLength).map { Int32(ptr[$0]) }
+        return (0 ..< dataLength).map { Int32(ptr[$0]) }
     }
 }
 

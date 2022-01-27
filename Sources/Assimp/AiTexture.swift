@@ -1,9 +1,9 @@
 //
-//  AiTexture.swift
+// AiTexture.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 21.06.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
 
@@ -70,12 +70,12 @@ public struct AiTexture {
     ///
     /// If mHeight is zero the texture is compressed in a format like JPEG.
     /// In this case mWidth specifies the size of the memory area pcData is pointing to, in bytes.
-    public lazy var width: Int = Int(texture.mWidth)
+    public lazy var width = Int(texture.mWidth)
 
     /// Height of the texture, in pixels
     ///
     /// If this value is zero, pcData points to a compressed texture in any format (e.g. JPEG).
-    public lazy var height: Int = Int(texture.mHeight)
+    public lazy var height = Int(texture.mHeight)
 
     public lazy var isCompressed: Bool = height == 0
 
@@ -100,7 +100,7 @@ public struct AiTexture {
     public mutating func withUnsafeTextureData<R>(_ body: (UnsafeBufferPointer<UInt8>) throws -> R) rethrows -> R {
         let count = numPixels * 4 // aiTexel(BGRA) * numPixel
         return try texture.pcData.withMemoryRebound(to: UInt8.self, capacity: count) { pBytes in
-            try body(UnsafeBufferPointer<UInt8>.init(start: pBytes, count: count))
+            try body(UnsafeBufferPointer<UInt8>(start: pBytes, count: count))
         }
     }
 }
