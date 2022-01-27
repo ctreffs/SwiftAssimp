@@ -1,6 +1,6 @@
 import XCTest
-import Assimp
-import CAssimp
+@testable import Assimp
+@_implementationOnly import CAssimp
 
 final class AssimpTests: XCTestCase {
 
@@ -32,7 +32,8 @@ final class AssimpTests: XCTestCase {
 
         var scene: AiScene!
         XCTAssertNoThrow(scene = try AiScene(file: fileURL.path, flags: [.removeRedundantMaterials,
-                                                                         .genSmoothNormals]))
+                                                                         .genSmoothNormals,
+                                                                         .calcTangentSpace]))
 
         XCTAssertEqual(scene.flags, [])
         XCTAssertEqual(scene.numMeshes, 1)
@@ -64,13 +65,16 @@ final class AssimpTests: XCTestCase {
 
         // Mesh
 
-        XCTAssertEqual(scene.meshes[0].name, "LOD3spShape")
+        XCTAssertEqual(scene.meshes[0].name, "LOD3spShape-lib")
         XCTAssertEqual(scene.meshes[0].primitiveTypes, [.triangle, .polygon])
         XCTAssertEqual(scene.meshes[0].numVertices, 8500)
         XCTAssertEqual(scene.meshes[0].vertices[0...2], [-23.9364, 11.5353, 30.6125])
+        XCTAssertEqual(scene.meshes[0].vertices.count, 25500)
         XCTAssertEqual(scene.meshes[0].numFaces, 2144)
         XCTAssertEqual(scene.meshes[0].numBones, 0)
         XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
+        XCTAssertEqual(scene.meshes[0].tangents.count, 25500)
+        XCTAssertEqual(scene.meshes[0].bitangents.count, 25500)
         
         // Faces
 
@@ -88,10 +92,12 @@ final class AssimpTests: XCTestCase {
         // Textures
 
         XCTAssertEqual(scene.textures.count, 0)
-        XCTAssertEqual(scene.meshes[0].numUVComponents, [2])
-        XCTAssertEqual(scene.meshes[0].textureCoords.count, 1)
-        XCTAssertEqual(scene.meshes[0].textureCoords[0].count, 8500)
-        XCTAssertEqual(scene.meshes[0].textureCoords[0][0], [0.866606, 0.398924, 0.0])
+        XCTAssertEqual(scene.meshes[0].numUVComponents.0, 2)
+        XCTAssertEqual(scene.meshes[0].texCoords.0?.count, 25500)
+        XCTAssertEqual(scene.meshes[0].texCoords.0?[0...2], [0.866606, 0.398924, 0.0])
+        XCTAssertEqual(scene.meshes[0].texCoords.0?[3...5], [0.871384, 0.397619, 0.0])
+        XCTAssertEqual(scene.meshes[0].texCoordsPacked.0?[0...1], [0.866606, 0.398924])
+        XCTAssertEqual(scene.meshes[0].texCoordsPacked.0?[2...3], [0.871384, 0.397619])
 
         // Lights
 
@@ -152,15 +158,15 @@ final class AssimpTests: XCTestCase {
 
         // Materials
 
-        XCTAssertEqual(scene.materials[0].numProperties, 10)
-        XCTAssertEqual(scene.materials[0].numAllocated, 10)
+        XCTAssertEqual(scene.materials[0].numProperties, 16)
+        XCTAssertEqual(scene.materials[0].numAllocated, 20)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
 
         // Textures
 
         XCTAssertEqual(scene.textures.count, 0)
-        XCTAssertEqual(scene.meshes[0].numUVComponents, [])
-        XCTAssertEqual(scene.meshes[0].textureCoords.count, 0)
+        XCTAssertEqual(scene.meshes[0].numUVComponents.0, 0)
+        XCTAssertEqual(scene.meshes[0].texCoords.0?.count, nil)
 
         // Lights
 
@@ -205,13 +211,13 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].numFaces, 12)
         XCTAssertEqual(scene.meshes[0].numBones, 0)
         XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
-        XCTAssertEqual(scene.meshes[0].rawVertices![0], -25.0)
-        XCTAssertEqual(scene.meshes[0].rawVertices![1], -25.0)
-        XCTAssertEqual(scene.meshes[0].rawVertices![2], 0.0)
+        XCTAssertEqual(scene.meshes[0].vertices[0], -25.0)
+        XCTAssertEqual(scene.meshes[0].vertices[1], -25.0)
+        XCTAssertEqual(scene.meshes[0].vertices[2], 0.0)
         
-        XCTAssertEqual(scene.meshes[0].rawVertices![105], -25.0)
-        XCTAssertEqual(scene.meshes[0].rawVertices![106], 25.0)
-        XCTAssertEqual(scene.meshes[0].rawVertices![107], 0.0)
+        XCTAssertEqual(scene.meshes[0].vertices[105], -25.0)
+        XCTAssertEqual(scene.meshes[0].vertices[106], 25.0)
+        XCTAssertEqual(scene.meshes[0].vertices[107], 0.0)
 
         // Faces
 
@@ -229,10 +235,9 @@ final class AssimpTests: XCTestCase {
         // Textures
 
         XCTAssertEqual(scene.textures.count, 0)
-        XCTAssertEqual(scene.meshes[0].numUVComponents, [2])
-        XCTAssertEqual(scene.meshes[0].textureCoords.count, 1)
-        XCTAssertEqual(scene.meshes[0].textureCoords[0].count, 36)
-        XCTAssertEqual(scene.meshes[0].textureCoords[0][0], [0.6936096, 0.30822724, 0.0])
+        XCTAssertEqual(scene.meshes[0].numUVComponents.0, 2)
+        XCTAssertEqual(scene.meshes[0].texCoords.0?.count, 108)
+        XCTAssertEqual(scene.meshes[0].texCoords.0?[0...2], [0.6936096, 0.30822724, 0.0])
 
         // Lights
 
@@ -276,13 +281,13 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.meshes[0].numFaces, 15452)
         XCTAssertEqual(scene.meshes[0].numBones, 0)
         XCTAssertEqual(scene.meshes[0].numAnimMeshes, 0)
-        XCTAssertEqual(scene.meshes[0].rawVertices![0], -0.61199456)
-        XCTAssertEqual(scene.meshes[0].rawVertices![1], -0.030940875)
-        XCTAssertEqual(scene.meshes[0].rawVertices![2], 0.48309004)
+        XCTAssertEqual(scene.meshes[0].vertices[0], -0.61199456)
+        XCTAssertEqual(scene.meshes[0].vertices[1], -0.030940875)
+        XCTAssertEqual(scene.meshes[0].vertices[2], 0.48309004)
         
-        XCTAssertEqual(scene.meshes[0].rawVertices![105], -0.5812146)
-        XCTAssertEqual(scene.meshes[0].rawVertices![106], -0.029344887)
-        XCTAssertEqual(scene.meshes[0].rawVertices![107], 0.391574)
+        XCTAssertEqual(scene.meshes[0].vertices[105], -0.5812146)
+        XCTAssertEqual(scene.meshes[0].vertices[106], -0.029344887)
+        XCTAssertEqual(scene.meshes[0].vertices[107], 0.391574)
 
         // Faces
 
@@ -293,17 +298,16 @@ final class AssimpTests: XCTestCase {
 
         // Materials
 
-        XCTAssertEqual(scene.materials[0].numProperties, 48)
+        XCTAssertEqual(scene.materials[0].numProperties, 50)
         XCTAssertEqual(scene.materials[0].numAllocated, 80)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
 
         // Textures
 
         XCTAssertEqual(scene.textures.count, scene.numTextures)
-        XCTAssertEqual(scene.meshes[0].numUVComponents, [2])
-        XCTAssertEqual(scene.meshes[0].textureCoords.count, 1)
-        XCTAssertEqual(scene.meshes[0].textureCoords[0].count, 14556)
-        XCTAssertEqual(scene.meshes[0].textureCoords[0][0], [0.704686, -0.24560404, 0.0])
+        XCTAssertEqual(scene.meshes[0].numUVComponents.0, 2)
+        XCTAssertEqual(scene.meshes[0].texCoords.0?.count, 43668)
+        XCTAssertEqual(scene.meshes[0].texCoords.0?[0...2], [0.704686, -0.24560404, 0.0])
         
         XCTAssertEqual(scene.textures[0].filename, nil)
         XCTAssertEqual(scene.textures[0].achFormatHint, "jpg")
@@ -311,22 +315,20 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.textures[0].height, 0)
         XCTAssertEqual(scene.textures[0].isCompressed, true)
         XCTAssertEqual(scene.textures[0].numPixels, 233907)
-        XCTAssertEqual(scene.textures[0].pcData.count, 233907)
-        XCTAssertEqual(scene.textures[0].pcDataBGRA.count, 935628)
-        XCTAssertEqual(scene.textures[0].pcDataRGBA.count, 935628)
+        XCTAssertEqual(scene.textures[0].textureData.count, 935628)
         
-        XCTAssertEqual(scene.textures[0].pcData[0].a, 224)
-        XCTAssertEqual(scene.textures[0].pcData[0].r, 255)
-        XCTAssertEqual(scene.textures[0].pcData[0].g, 216)
-        XCTAssertEqual(scene.textures[0].pcData[0].b, 255)
-        XCTAssertEqual(scene.textures[0].pcDataBGRA[0], 255) // b 255
-        XCTAssertEqual(scene.textures[0].pcDataBGRA[1], 216) // g 216
-        XCTAssertEqual(scene.textures[0].pcDataBGRA[2], 255) // r 255
-        XCTAssertEqual(scene.textures[0].pcDataBGRA[3], 224) // a 224
-        XCTAssertEqual(scene.textures[0].pcDataRGBA[0], 255) // r 255
-        XCTAssertEqual(scene.textures[0].pcDataRGBA[1], 216) // g 216
-        XCTAssertEqual(scene.textures[0].pcDataRGBA[2], 255) // b 255
-        XCTAssertEqual(scene.textures[0].pcDataRGBA[3], 224) // a 224
+        XCTAssertEqual(scene.textures[0].textureData[0], 255)
+        XCTAssertEqual(scene.textures[0].textureData[1], 216)
+        XCTAssertEqual(scene.textures[0].textureData[2], 255)
+        XCTAssertEqual(scene.textures[0].textureData[3], 224)
+        XCTAssertEqual(scene.textures[0].textureData[0], 255) // b 255
+        XCTAssertEqual(scene.textures[0].textureData[1], 216) // g 216
+        XCTAssertEqual(scene.textures[0].textureData[2], 255) // r 255
+        XCTAssertEqual(scene.textures[0].textureData[3], 224) // a 224
+        XCTAssertEqual(scene.textures[0].textureData[0], 255) // r 255
+        XCTAssertEqual(scene.textures[0].textureData[1], 216) // g 216
+        XCTAssertEqual(scene.textures[0].textureData[2], 255) // b 255
+        XCTAssertEqual(scene.textures[0].textureData[3], 224) // a 224
         
         XCTAssertEqual(scene.textures[1].filename, nil)
         XCTAssertEqual(scene.textures[1].achFormatHint, "jpg")
@@ -334,21 +336,19 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(scene.textures[1].height, 0)
         XCTAssertEqual(scene.textures[1].isCompressed, true)
         XCTAssertEqual(scene.textures[1].numPixels, 325165)
-        XCTAssertEqual(scene.textures[1].pcData.count, 325165)
-        XCTAssertEqual(scene.textures[1].pcDataBGRA.count, 1300660)
-        XCTAssertEqual(scene.textures[1].pcDataRGBA.count, 1300660)
-        XCTAssertEqual(scene.textures[1].pcData[0].a, 224)
-        XCTAssertEqual(scene.textures[1].pcData[0].r, 255)
-        XCTAssertEqual(scene.textures[1].pcData[0].g, 216)
-        XCTAssertEqual(scene.textures[1].pcData[0].b, 255)
-        XCTAssertEqual(scene.textures[1].pcDataBGRA[0], 255) // b 255
-        XCTAssertEqual(scene.textures[1].pcDataBGRA[1], 216) // g 216
-        XCTAssertEqual(scene.textures[1].pcDataBGRA[2], 255) // r 255
-        XCTAssertEqual(scene.textures[1].pcDataBGRA[3], 224) // a 224
-        XCTAssertEqual(scene.textures[1].pcDataRGBA[0], 255) // r 255
-        XCTAssertEqual(scene.textures[1].pcDataRGBA[1], 216) // g 216
-        XCTAssertEqual(scene.textures[1].pcDataRGBA[2], 255) // b 255
-        XCTAssertEqual(scene.textures[1].pcDataRGBA[3], 224) // a 224
+        XCTAssertEqual(scene.textures[1].textureData.count, 1300660)
+        XCTAssertEqual(scene.textures[1].textureData[0], 255)
+        XCTAssertEqual(scene.textures[1].textureData[1], 216)
+        XCTAssertEqual(scene.textures[1].textureData[2], 255)
+        XCTAssertEqual(scene.textures[1].textureData[3], 224)
+        XCTAssertEqual(scene.textures[1].textureData[0], 255) // b 255
+        XCTAssertEqual(scene.textures[1].textureData[1], 216) // g 216
+        XCTAssertEqual(scene.textures[1].textureData[2], 255) // r 255
+        XCTAssertEqual(scene.textures[1].textureData[3], 224) // a 224
+        XCTAssertEqual(scene.textures[1].textureData[0], 255) // r 255
+        XCTAssertEqual(scene.textures[1].textureData[1], 216) // g 216
+        XCTAssertEqual(scene.textures[1].textureData[2], 255) // b 255
+        XCTAssertEqual(scene.textures[1].textureData[3], 224) // a 224
 
         // Lights
 

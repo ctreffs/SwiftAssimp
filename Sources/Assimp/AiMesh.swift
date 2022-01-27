@@ -5,7 +5,7 @@
 //  Created by Christian Treffs on 21.06.19.
 //
 
-import CAssimp
+@_implementationOnly import CAssimp
 
 public struct AiMesh {
     public struct PrimitiveType: OptionSet {
@@ -21,49 +21,47 @@ public struct AiMesh {
         public static let polygon = PrimitiveType(rawValue: aiPrimitiveType_POLYGON.rawValue)
     }
 
-    @usableFromInline let mesh: aiMesh
+    let mesh: aiMesh
 
-    public init(_ aiMesh: aiMesh) {
+    init(_ aiMesh: aiMesh) {
         mesh = aiMesh
+    }
+
+    init?(_ mesh: aiMesh?) {
+        guard let mesh = mesh else {
+            return nil
+        }
+
+        self.init(mesh)
     }
 
     /// Bitwise combination of the members of the #aiPrimitiveType enum.
     /// This specifies which types of primitives are present in the mesh.
     ///
     /// The "SortByPrimitiveType"-Step can be used to make sure the output meshes consist of one primitive type each.
-    public var primitiveTypes: PrimitiveType {
-        PrimitiveType(rawValue: mesh.mPrimitiveTypes)
-    }
+    public lazy var primitiveTypes = PrimitiveType(rawValue: mesh.mPrimitiveTypes)
 
     /// The number of vertices in this mesh. This is also the size of all of the per-vertex data arrays.
     /// The maximum value for this member is #AI_MAX_VERTICES.
-    public var numVertices: Int {
-        Int(mesh.mNumVertices)
-    }
+    public lazy var numVertices = Int(mesh.mNumVertices)
 
     /// The number of primitives (triangles, polygons, lines) in this mesh.
     /// This is also the size of the mFaces array.
     /// The maximum value for this member is #AI_MAX_FACES.
-    public var numFaces: Int {
-        Int(mesh.mNumFaces)
-    }
+    public lazy var numFaces = Int(mesh.mNumFaces)
 
     /// Vertex positions. This array is always present in a mesh.
-    /// The array is mNumVertices in size.
-    public var vertices: [ai_real] {
-        guard let vertices = rawVertices else {
-            return []
-        }
+    /// The array is numVertices * 3 in size.
+    public lazy var vertices = withUnsafeVertices([AiReal].init)
 
-        return [ai_real](UnsafeBufferPointer(start: vertices, count: numVertices * 3))
+
+    public mutating func withUnsafeVertices<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
+        let count = numVertices * 3
+        return try mesh.mVertices.withMemoryRebound(to: AiReal.self, capacity: count) {
+            try body(UnsafeBufferPointer(start: $0, count: count))
+        }
     }
 
-    @inlinable public var rawVertices: UnsafeMutablePointer<ai_real>? {
-        guard let vertices = UnsafeMutableRawPointer(mesh.mVertices) else {
-            return nil
-        }
-        return vertices.bindMemory(to: ai_real.self, capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
-    }
 
     /// Vertex normals.
     /// The array contains normalized vectors, NULL if not present.
@@ -74,18 +72,13 @@ public struct AiMesh {
     /// Meshes with mixed primitive types (i.e. lines and triangles) may have normals,
     /// but the normals for vertices that are only referenced by point or line primitives
     /// are undefined and set to QNaN (WARN: qNaN compares to inequal to *everything*, even to qNaN itself.
-    public var normals: [ai_real] {
-        guard let normals = rawNormals else {
-            return []
-        }
-        return [ai_real](UnsafeBufferPointer(start: normals, count: numVertices * 3))
-    }
+    public lazy var normals = withUnsafeNormals([AiReal].init)
 
-    @inlinable public var rawNormals: UnsafeMutablePointer<ai_real>? {
-        guard let normals = UnsafeMutableRawPointer(mesh.mNormals) else {
-            return nil
+    public mutating func withUnsafeNormals<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
+        let count = numVertices * 3
+        return try mesh.mNormals.withMemoryRebound(to: AiReal.self, capacity: count) {
+            try body(UnsafeBufferPointer(start: $0, count: count))
         }
-        return normals.bindMemory(to: ai_real.self, capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
     }
 
     /// Vertex tangents.
@@ -98,88 +91,146 @@ public struct AiMesh {
     /// but the normals for vertices that are only referenced by point or line primitives
     /// are undefined and set to qNaN.
     /// See the #mNormals member for a detailed discussion of qNaNs.
-    public var tangents: [ai_real] {
-        guard let tangents = rawTangents else {
-            return []
-        }
+    public lazy var tangents = withUnsafeTangents([AiReal].init)
 
-        return [ai_real](UnsafeBufferPointer(start: tangents, count: numVertices * 3))
+    public mutating func withUnsafeTangents<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
+        let count = numVertices * 3
+        return try mesh.mTangents.withMemoryRebound(to: AiReal.self, capacity: count) {
+            try body(UnsafeBufferPointer(start: $0, count: count))
+        }
     }
 
-    @inlinable public var rawTangents: UnsafeMutablePointer<ai_real>? {
-        guard let tangents = UnsafeMutableRawPointer(mesh.mTangents) else {
-            return nil
-        }
-        return tangents.bindMemory(to: ai_real.self, capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
-    }
 
     /// Vertex bitangents.
     /// The bitangent of a vertex points in the direction of the positive Y texture axis.
     /// The array contains normalized vectors, NULL if not present.
     /// The array is mNumVertices * 3 in size.
-    public var bitangents: [ai_real] {
-        guard let bitangents = rawBitangents else {
-            return []
+    public lazy var bitangents = withUnsafeBitangents([AiReal].init)
+
+    public mutating func withUnsafeBitangents<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
+        let count = numVertices * 3
+        return try mesh.mBitangents.withMemoryRebound(to: AiReal.self, capacity: count) {
+            try body(UnsafeBufferPointer(start: $0, count: count))
         }
-        return [ai_real](UnsafeBufferPointer(start: bitangents, count: numVertices * 3))
     }
 
-    @inlinable public var rawBitangents: UnsafeMutablePointer<ai_real>? {
-        guard let bitangents = UnsafeMutableRawPointer(mesh.mBitangents) else {
-            return nil
-        }
-        return bitangents.bindMemory(to: ai_real.self, capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
-    }
+    public typealias Channels<T> = (T, T, T, T, T, T, T, T)
 
     /// Vertex color sets.
     ///
     /// A mesh may contain 0 to #AI_MAX_NUMBER_OF_COLOR_SETS vertex colors per vertex.
     /// NULL if not present.
-    /// Each array is mNumVertices in size if present.
-    public var colors: [[aiColor4D]] {
-        let sets = [UnsafeMutablePointer<aiColor4D>?](withUnsafeBytes(of: mesh.mColors) { ptr in ptr.bindMemory(to: UnsafeMutablePointer<aiColor4D>?.self) })
+    /// Each array is numVertices * 4 in size if present.
+    /// Returns RGBA colors.
+    public lazy var colors: Channels<[AiReal]?> = {
+        typealias CVertexColorSet = (UnsafeMutablePointer<aiColor4D>?,
+                                     UnsafeMutablePointer<aiColor4D>?,
+                                     UnsafeMutablePointer<aiColor4D>?,
+                                     UnsafeMutablePointer<aiColor4D>?,
+                                     UnsafeMutablePointer<aiColor4D>?,
+                                     UnsafeMutablePointer<aiColor4D>?,
+                                     UnsafeMutablePointer<aiColor4D>?,
+                                     UnsafeMutablePointer<aiColor4D>?)
 
-        let colors: [[aiColor4D]] = sets.compactMap { (optPtr: UnsafeMutablePointer<aiColor4D>?) -> [aiColor4D]? in
-            guard let ptr = optPtr else {
+        let maxColorsPerSet = numVertices * 4 // aiColor4D(RGBA) * numVertices
+        func colorSet(at keyPath: KeyPath<CVertexColorSet, UnsafeMutablePointer<aiColor4D>?>) -> [AiReal]? {
+            guard let baseAddress = mesh.mColors[keyPath: keyPath] else {
                 return nil
             }
 
-            let colors = [aiColor4D]((0..<numVertices).compactMap { ptr[$0] })
-
-            return colors
+            return baseAddress.withMemoryRebound(to: AiReal.self, capacity: maxColorsPerSet) { pColorSet in
+                return [AiReal](UnsafeBufferPointer(start: pColorSet, count: maxColorsPerSet))
+            }
         }
-        return colors
-    }
+
+        return (
+            colorSet(at: \.0),
+            colorSet(at: \.1),
+            colorSet(at: \.2),
+            colorSet(at: \.3),
+            colorSet(at: \.4),
+            colorSet(at: \.5),
+            colorSet(at: \.6),
+            colorSet(at: \.7)
+        )
+    }()
+
+
 
     /// Vertex texture coords, also known as UV channels.
     ///
     /// A mesh may contain 0 to AI_MAX_NUMBER_OF_TEXTURECOORDS per vertex.
     /// NULL if not present.
-    /// The array is mNumVertices in size.
-    public var textureCoords: [[SIMD3<Float>]] {
-        let channels = [UnsafeMutablePointer<aiVector3D>?](withUnsafeBytes(of: mesh.mTextureCoords) { ptr in ptr.bindMemory(to: UnsafeMutablePointer<aiVector3D>?.self) })
+    /// The array is numVertices * 3 in size.
+    public lazy var texCoords: Channels<[AiReal]?> = {
 
-        let coords: [[SIMD3<Float>]] = channels.compactMap { (optPtr: UnsafeMutablePointer<aiVector3D>?) -> [SIMD3<Float>]? in
-            guard let ptr = optPtr else {
+        typealias CVertexUVChannels = (UnsafeMutablePointer<aiVector3D>?,
+                                       UnsafeMutablePointer<aiVector3D>?,
+                                       UnsafeMutablePointer<aiVector3D>?,
+                                       UnsafeMutablePointer<aiVector3D>?,
+                                       UnsafeMutablePointer<aiVector3D>?,
+                                       UnsafeMutablePointer<aiVector3D>?,
+                                       UnsafeMutablePointer<aiVector3D>?,
+                                       UnsafeMutablePointer<aiVector3D>?)
+
+        let maxTexCoordsPerChannel = numVertices * 3 // aiVector3D * numVertices
+
+
+        func uvChannel(at keyPath: KeyPath<CVertexUVChannels, UnsafeMutablePointer<aiVector3D>?>) -> [AiReal]? {
+            guard let baseAddress = mesh.mTextureCoords[keyPath: keyPath] else {
                 return nil
             }
 
-            let texCoors = (0..<numVertices)
-                .compactMap { ptr[$0] }
-                .map { $0.vector }
-
-            return texCoors
+            return baseAddress.withMemoryRebound(to: AiReal.self, capacity: maxTexCoordsPerChannel) {
+                return [AiReal](UnsafeBufferPointer(start: $0, count: maxTexCoordsPerChannel))
+            }
         }
 
-        return coords
-    }
+        return Channels(
+            uvChannel(at: \.0),
+            uvChannel(at: \.1),
+            uvChannel(at: \.2),
+            uvChannel(at: \.3),
+            uvChannel(at: \.4),
+            uvChannel(at: \.5),
+            uvChannel(at: \.6),
+            uvChannel(at: \.7)
+        )
 
-    @inlinable public var rawPrimaryTextureCoords: UnsafeMutablePointer<ai_real>? {
-        guard let primaryTexCoords = UnsafeMutableRawPointer(mesh.mTextureCoords.0) else {
-            return nil
+    }()
+
+    public lazy var texCoordsPacked: Channels<[AiReal]?> = {
+        func packChannel(uv: KeyPath<Channels<Int>, Int>, tex: KeyPath<Channels<[AiReal]?>, [AiReal]?>) -> [AiReal]? {
+            let numComps: Int = numUVComponents[keyPath: uv]
+            guard let uvs = self.texCoords[keyPath: tex] else {
+                return nil
+            }
+            switch numComps {
+            case 1: // u
+                return stride(from: 0, to: uvs.count, by: 3).map { uvs[$0] }
+
+            case 2: // uv
+                return stride(from: 0, to: uvs.count, by: 3).flatMap { uvs[$0...$0+1] }
+
+            case 3: // uvw
+                return uvs
+
+            default:
+                return nil
+            }
         }
-        return primaryTexCoords.bindMemory(to: ai_real.self, capacity: MemoryLayout<ai_real>.stride * numVertices * 3)
-    }
+
+        return Channels(
+            packChannel(uv: \.0, tex: \.0),
+            packChannel(uv: \.1, tex: \.1),
+            packChannel(uv: \.2, tex: \.2),
+            packChannel(uv: \.3, tex: \.3),
+            packChannel(uv: \.4, tex: \.4),
+            packChannel(uv: \.5, tex: \.5),
+            packChannel(uv: \.6, tex: \.6),
+            packChannel(uv: \.7, tex: \.7)
+        )
+    }()
 
     /// Specifies the number of components for a given UV channel.
     /// Up to three channels are supported (UVW, for accessing volume or cube maps).
@@ -187,43 +238,32 @@ public struct AiMesh {
     /// If the value is 2 for a given channel n, the component p.z of mTextureCoords[n][p] is set to 0.0f.
     /// If the value is 1 for a given channel, p.y is set to 0.0f, too.
     /// 4D coords are not supported
-    public var numUVComponents: [Int] {
-        [UInt32](withUnsafeBytes(of: mesh.mNumUVComponents) { ptr in ptr.bindMemory(to: UInt32.self) }).map { Int($0) }.filter { $0 > 0 }
-    }
+    public lazy var numUVComponents = Channels(Int(mesh.mNumUVComponents.0),
+                                               Int(mesh.mNumUVComponents.1),
+                                               Int(mesh.mNumUVComponents.2),
+                                               Int(mesh.mNumUVComponents.3),
+                                               Int(mesh.mNumUVComponents.4),
+                                               Int(mesh.mNumUVComponents.5),
+                                               Int(mesh.mNumUVComponents.6),
+                                               Int(mesh.mNumUVComponents.7))
 
     /// The faces the mesh is constructed from.
     /// Each face refers to a number of vertices by their indices.
     /// This array is always present in a mesh, its size is given in mNumFaces.
     ///
     /// If the #AI_SCENE_FLAGS_NON_VERBOSE_FORMAT is NOT set each face references an unique set of vertices.
-    public var faces: [AiFace] {
-        guard numFaces > 0 else {
-            return []
-        }
-
-        let faces = (0..<numFaces)
-            .compactMap { mesh.mFaces[$0] }
-            .map { AiFace($0) }
-
-        assert(faces.count == numFaces)
-
-        return faces
-    }
+    public lazy var faces: [AiFace] = UnsafeBufferPointer(start: mesh.mFaces, count: numFaces).compactMap(AiFace.init)
 
     /// The number of bones this mesh contains.
     /// Can be 0, in which case the mBones array is NULL.
-    public var numBones: Int {
-        Int(mesh.mNumBones)
-    }
+    public lazy var numBones = Int(mesh.mNumBones)
 
     /// The material used by this mesh.
     ///
     /// A mesh uses only a single material.
     /// If an imported model uses multiple materials, the import splits up the mesh.
     /// Use this value as index into the scene's material list.
-    public var materialIndex: Int {
-        Int(mesh.mMaterialIndex)
-    }
+    public lazy var materialIndex = Int(mesh.mMaterialIndex)
 
     /// Name of the mesh. Meshes can be named, but this is not a requirement and leaving this field empty is totally fine.
     ///
@@ -234,7 +274,7 @@ public struct AiMesh {
     ///    - Vertex animations refer to meshes by their names.
     ///
     public var name: String {
-        String(aiString: mesh.mName) ?? ""
+        String(mesh.mName) ?? ""
     }
 
     /// The number of attachment meshes.
@@ -247,51 +287,5 @@ public struct AiMesh {
     /// Method of morphing when animeshes are specified.
     public var method: UInt32 {
         mesh.mMethod
-    }
-}
-
-// MARK: - Equatable
-extension AiMesh: Equatable {
-    public static func == (lhs: AiMesh, rhs: AiMesh) -> Bool {
-        lhs.name == rhs.name &&
-            lhs.materialIndex == rhs.materialIndex &&
-            lhs.bitangents == rhs.bitangents &&
-            lhs.faces == rhs.faces &&
-            lhs.method == rhs.method &&
-            lhs.normals == rhs.normals &&
-            lhs.numAnimMeshes == rhs.numAnimMeshes &&
-            lhs.numBones == rhs.numBones &&
-            lhs.numFaces == rhs.numFaces &&
-            lhs.numUVComponents == rhs.numUVComponents &&
-            lhs.numVertices == rhs.numVertices &&
-            lhs.primitiveTypes == rhs.primitiveTypes &&
-            lhs.tangents == rhs.tangents &&
-            lhs.textureCoords == rhs.textureCoords &&
-            lhs.vertices == rhs.vertices
-
-        // FIXME: lhs.colors == rhs.colors &&
-
-    }
-}
-
-// MARK: - Hashable
-extension AiMesh: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
-        hasher.combine(materialIndex)
-        hasher.combine(bitangents)
-        hasher.combine(faces)
-        hasher.combine(method)
-        hasher.combine(normals)
-        hasher.combine(numAnimMeshes)
-        hasher.combine(numBones)
-        hasher.combine(numFaces)
-        hasher.combine(numUVComponents)
-        hasher.combine(numVertices)
-        hasher.combine(primitiveTypes.rawValue)
-        hasher.combine(tangents)
-        hasher.combine(textureCoords)
-        hasher.combine(vertices)
-        // FIXME: hasher.combine(colors)
     }
 }

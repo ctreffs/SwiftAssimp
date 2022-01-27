@@ -5,10 +5,10 @@
 //  Created by Christian Treffs on 21.06.19.
 //
 
-import CAssimp
+@_implementationOnly import CAssimp
 
 extension String {
-    public init?(aiString: aiString) {
+    init?(_ aiString: aiString) {
         let cStringBuffer: UnsafePointer<CChar>? = withUnsafeBytes(of: aiString.data) { bytesPtr ->  UnsafePointer<CChar>? in
             if aiString.length <= 0 {
                 return nil
@@ -31,7 +31,7 @@ extension String {
         self.init(cString: cStringBufferStart)
     }
 
-    public init?(bytes: UnsafeMutablePointer<Int8>, length: Int) {
+    init?(bytes: UnsafeMutablePointer<Int8>, length: Int) {
         let bufferPtr = UnsafeMutableBufferPointer(start: bytes,
                                                    count: length)
 

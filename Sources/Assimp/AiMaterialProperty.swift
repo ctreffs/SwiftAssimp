@@ -5,7 +5,7 @@
 //  Created by Christian Treffs on 01.07.19.
 //
 
-import CAssimp
+@_implementationOnly import CAssimp
 
 public protocol AiMaterialPropertyIdentifiable {
     /// Specifies the name of the property (key) Keys are generally case insensitive.
@@ -75,7 +75,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
 
     /// Specifies the name of the property (key) Keys are generally case insensitive.
     public var key: String {
-        String(aiString: property.mKey) ?? ""
+        String(property.mKey) ?? ""
     }
 
     /// Textures: Specifies the index of the texture.
@@ -137,7 +137,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
         guard result == aiReturn_SUCCESS else {
             return nil
         }
-        return String(aiString: pOut)
+        return String(pOut)
     }
 
     public var double: [Double] {

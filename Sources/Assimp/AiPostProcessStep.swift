@@ -5,7 +5,7 @@
 //  Created by Christian Treffs on 21.06.19.
 //
 
-import CAssimp
+@_implementationOnly import CAssimp
 
 public struct AiPostProcessStep: OptionSet {
     public var rawValue: UInt32

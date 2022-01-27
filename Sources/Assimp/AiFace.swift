@@ -5,7 +5,7 @@
 //  Created by Christian Treffs on 02.07.19.
 //
 
-import CAssimp
+@_implementationOnly import CAssimp
 
 /// The default face winding order is counter clockwise (CCW).
 public struct AiFace {

@@ -5,7 +5,7 @@
 //  Created by Christian Treffs on 04.07.19.
 //
 
-import CAssimp
+@_implementationOnly import CAssimp
 
 public struct AiNode {
     let node: aiNode
@@ -31,14 +31,12 @@ public struct AiNode {
     /// `<>`
     /// e.g.
     /// `<DummyRootNode>`
-    public var name: String {
-        String(aiString: node.mName) ?? ""
+    public var name: String? {
+        String(node.mName)
     }
 
     /// The transformation relative to the node's parent.
-    public var transformation: aiMatrix4x4 {
-        node.mTransformation
-    }
+    public lazy var transformation = AiMatrix4x4(node.mTransformation)
 
     /// Parent node.
     ///
@@ -87,19 +85,100 @@ public struct AiNode {
 
     /// Metadata associated with this node or NULL if there is no metadata.
     /// Whether any metadata is generated depends on the source file format.
-    public var metaData: aiMetadata? {
-        guard let meta = node.mMetaData?.pointee else {
+    public lazy var metaData: AiMetadata? = {
+        guard let meta = node.mMetaData else {
             return nil
         }
-
-        return meta
-    }
+        return AiMetadata(meta.pointee)
+    }()
 }
 
 extension AiNode: CustomDebugStringConvertible {
     public var debugDescription: String {
         """
-        <AiNode '\(name)' meshes:\(meshes) children:\(numChildren)>\n\(children.map { "\t" + $0.debugDescription }.joined())
+        <AiNode '\(name ?? "")' meshes:\(meshes) children:\(numChildren)>\n\(children.map { "\t" + $0.debugDescription }.joined())
         """
     }
+}
+
+
+/// Container for holding metadata.
+/// Metadata is a key-value store using string keys and values.
+public struct AiMetadata {
+
+    let meta: aiMetadata
+
+    init(_ meta: aiMetadata) {
+        self.meta = meta
+    }
+
+    /// Length of the mKeys and mValues arrays, respectively
+    public lazy var numProperties = Int(meta.mNumProperties)
+
+    /// Arrays of keys, may not be NULL.
+    /// Entries in this array may not be NULL as well.
+    public lazy var keys: [String] = UnsafeBufferPointer(start: meta.mKeys, count: numProperties).compactMap(String.init)
+
+    /// Arrays of values, may not be NULL.
+    /// Entries in this array may be NULL if the corresponding property key has no assigned value.
+    public lazy var values: [Entry] = UnsafeBufferPointer(start: meta.mValues, count: numProperties).compactMap(Entry.init)
+
+    public lazy var metadata = [String: Entry](uniqueKeysWithValues: (0..<numProperties).map{ (keys[$0], values[$0]) })
+
+    public enum Entry {
+
+        case bool(Bool)
+        case int32(Int32)
+        case uint64(UInt64)
+        case float(Float)
+        case double(Double)
+        case string(String)
+        case vec3(Vec3)
+        case metadata(AiMetadata)
+
+        init?(_ entry: aiMetadataEntry) {
+            guard let pData = entry.mData else {
+                return nil
+            }
+
+            switch entry.mType {
+            case AI_BOOL:
+                self = .bool(pData.bindMemory(to: Bool.self, capacity: 1).pointee)
+
+            case AI_INT32:
+                self = .int32(pData.bindMemory(to: Int32.self, capacity: 1).pointee)
+
+            case AI_UINT64:
+                self = .uint64(pData.bindMemory(to: UInt64.self, capacity: 1).pointee)
+
+            case AI_FLOAT:
+                self = .float(pData.bindMemory(to: Float.self, capacity: 1).pointee)
+
+            case AI_DOUBLE:
+                self = .double(pData.bindMemory(to: Double.self, capacity: 1).pointee)
+
+            case AI_AISTRING:
+                guard let string = String(pData.bindMemory(to: aiString.self, capacity: 1).pointee) else {
+                    return nil
+                }
+                self = .string(string)
+
+            case AI_AIVECTOR3D:
+                self = .vec3(Vec3(pData.bindMemory(to: aiVector3D.self, capacity: 1).pointee))
+
+            case AI_AIMETADATA:
+                self = .metadata(AiMetadata(pData.bindMemory(to: aiMetadata.self, capacity: 1).pointee))
+
+            case AI_META_MAX:
+                return nil
+
+            case FORCE_32BIT:
+                return nil
+
+            default:
+                return nil
+            }
+        }
+    }
+
 }
