@@ -1,0 +1,7 @@
+--exclude .build,.github,.swiftpm,Scripts
+--extensionacl on-declarations
+--ifdef no-indent
+--maxwidth 220
+--semicolons never
+--stripunusedargs unnamed-only
+--header ignore
