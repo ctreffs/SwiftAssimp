@@ -1,11 +1,11 @@
 //
-//  AiMaterialProperty.swift
+// AiMaterialProperty.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 01.07.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
-import CAssimp
+@_implementationOnly import CAssimp
 
 public protocol AiMaterialPropertyIdentifiable {
     /// Specifies the name of the property (key) Keys are generally case insensitive.
@@ -75,7 +75,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
 
     /// Specifies the name of the property (key) Keys are generally case insensitive.
     public var key: String {
-        String(aiString: property.mKey) ?? ""
+        String(property.mKey) ?? ""
     }
 
     /// Textures: Specifies the index of the texture.
@@ -137,7 +137,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
         guard result == aiReturn_SUCCESS else {
             return nil
         }
-        return String(aiString: pOut)
+        return String(pOut)
     }
 
     public var double: [Double] {
@@ -145,7 +145,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
             return []
         }
 
-        return (0..<dataLength).map { Double(ptr[$0]) }
+        return (0 ..< dataLength).map { Double(ptr[$0]) }
     }
 
     public var float: [Float32] {
@@ -153,7 +153,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
             return []
         }
 
-        return (0..<dataLength).map { Float32(ptr[$0]) }
+        return (0 ..< dataLength).map { Float32(ptr[$0]) }
     }
 
     public var int: [Int32] {
@@ -161,7 +161,7 @@ public struct AiMaterialProperty: AiMaterialPropertyIdentifiable {
             return []
         }
 
-        return (0..<dataLength).map { Int32(ptr[$0]) }
+        return (0 ..< dataLength).map { Int32(ptr[$0]) }
     }
 }
 

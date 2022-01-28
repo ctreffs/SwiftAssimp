@@ -1,70 +1,67 @@
 //
-//  AiMaterial.swift
+// AiMaterial.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 21.06.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
-import CAssimp
+@_implementationOnly import CAssimp
 
 // Ref: https://github.com/helix-toolkit/helix-toolkit/blob/master/Source/HelixToolkit.SharpDX.Assimp.Shared/ImporterPartial_Material.cs
 public struct AiMaterial {
-    var material: aiMaterial
+    let material: aiMaterial
 
     init(_ aiMaterial: aiMaterial) {
-        self.material = aiMaterial
+        material = aiMaterial
     }
 
-    public init() {
-        self.material = aiMaterial()
+    init?(_ mat: aiMaterial?) {
+        guard let mat = mat else {
+            return nil
+        }
+        self.init(mat)
     }
 
     /// Number of properties in the data base
-    public var numProperties: Int {
-        Int(material.mNumProperties)
-    }
+    public lazy var numProperties = Int(material.mNumProperties)
 
     /// Storage allocated
-    public var numAllocated: Int {
-        Int(material.mNumAllocated)
-    }
+    public lazy var numAllocated = Int(material.mNumAllocated)
 
     /// List of all material properties loaded.
-    public var properties: [AiMaterialProperty] {
+    public lazy var properties: [AiMaterialProperty] = {
         guard numProperties > 0 else {
             return []
         }
         return [AiMaterialProperty](unsafeUninitializedCapacity: numProperties) { buffer, written in
-            for idx in 0..<numProperties {
+            for idx in 0 ..< numProperties {
                 if let prop = material.mProperties[idx] {
                     buffer[idx] = AiMaterialProperty(prop.pointee)
                     written += 1
                 }
             }
         }
-    }
+    }()
 
-    public var typedProperties: [AiMaterialPropertyIdentifiable] {
-        properties.compactMap { prop -> AiMaterialPropertyIdentifiable? in
-            switch prop.type {
-            case .string:
-                return AiMaterialPropertyString(prop)
+    public lazy var typedProperties: [AiMaterialPropertyIdentifiable] = properties.compactMap { prop -> AiMaterialPropertyIdentifiable? in
+        switch prop.type {
+        case .string:
+            return AiMaterialPropertyString(prop)
 
-            case .float:
-                return AiMaterialPropertyFloat(prop)
+        case .float:
+            return AiMaterialPropertyFloat(prop)
 
-            case .int:
-                return AiMaterialPropertyInt(prop)
+        case .int:
+            return AiMaterialPropertyInt(prop)
 
-            case .buffer:
-                return AiMaterialPropertyBuffer(prop)
+        case .buffer:
+            return AiMaterialPropertyBuffer(prop)
 
-            case .double:
-                return AiMaterialPropertyDouble(prop)
+        case .double:
+            return AiMaterialPropertyDouble(prop)
 
-            default:
-                return nil
-            }
+        default:
+            return nil
         }
     }
 
@@ -83,7 +80,7 @@ public struct AiMaterial {
      - aiGetMaterialXXX
      */
     public func getMaterialProperty(_ key: AiMatKey) -> AiMaterialProperty? {
-        withUnsafePointer(to: self.material) { matPtr -> AiMaterialProperty? in
+        withUnsafePointer(to: material) { matPtr -> AiMaterialProperty? in
             let matPropPtr = UnsafeMutablePointer<UnsafePointer<aiMaterialProperty>?>.allocate(capacity: MemoryLayout<aiMaterialProperty>.stride)
             defer {
                 matPropPtr.deinitialize(count: 1)
@@ -135,7 +132,7 @@ public struct AiMaterial {
                 return nil
             }
 
-            return String(aiString: path)
+            return String(path)
         }
     }
 
@@ -152,11 +149,11 @@ public struct AiMaterial {
                 return nil
             }
 
-            return String(aiString: string)
+            return String(string)
         }
     }
 
-    public func getMaterialColor(_ key: AiMatKey) -> SIMD4<ai_real>? {
+    public func getMaterialColor(_ key: AiMatKey) -> SIMD4<AiReal>? {
         withUnsafePointer(to: material) { matPtr in
             var color = aiColor4D()
             let result = aiGetMaterialColor(matPtr,
@@ -171,7 +168,7 @@ public struct AiMaterial {
         }
     }
 
-    public func getMaterialFloatArray(_ key: AiMatKey) -> [ai_real]? {
+    public func getMaterialFloatArray(_ key: AiMatKey) -> [AiReal]? {
         withUnsafePointer(to: material) { matPtr in
             let count = MemoryLayout<aiUVTransform>.stride / MemoryLayout<ai_real>.stride
             return [ai_real](unsafeUninitializedCapacity: count) { buffer, written in
@@ -230,31 +227,57 @@ extension AiMaterial {
         return !(int == 1)
     }
 
-    @inlinable public var blendMode: aiBlendMode? {
+    public var blendMode: AiBlendMode? {
         guard let int = getMaterialProperty(.BLEND_FUNC)?.int.first else {
             return nil
         }
 
-        return aiBlendMode(UInt32(int))
+        return AiBlendMode(aiBlendMode(UInt32(int)))
     }
 }
 
-extension AiMaterial: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        """
-        <AiMaterial
-        - numProperties: \(numProperties)
-        - numAllocated: \(numAllocated)
-        - properties: \(properties.debugDescription)
-        >
-        """
-    }
-}
+/// Defines alpha-blend flags.
+///
+/// If you're familiar with OpenGL or D3D, these flags aren't new to you.
+/// They define *how* the final color value of a pixel is computed, basing
+/// on the previous color at that pixel and the new color value from the
+/// material.
+/// The blend formula is:
+/// ```
+///   SourceColor * SourceBlend + DestColor * DestBlend
+/// ```
+/// where DestColor is the previous color in the frame-buffer at this
+/// position and SourceColor is the material color before the transparency
+/// calculation.<br>
+/// This corresponds to the #AI_MATKEY_BLEND_FUNC property.
+///
+public enum AiBlendMode {
+    /// Default blend mode
+    ///
+    /// Formula:
+    /// ```
+    /// SourceColor*SourceAlpha + DestColor*(1-SourceAlpha)
+    /// ```
+    case `default`
 
-extension AiMaterial: Equatable {
-    public static func == (lhs: AiMaterial, rhs: AiMaterial) -> Bool {
-        lhs.numAllocated == rhs.numAllocated &&
-            lhs.numProperties == rhs.numProperties &&
-            lhs.properties == rhs.properties
+    ///  Additive blending
+    ///
+    /// Formula:
+    /// ```
+    /// SourceColor*1 + DestColor*1
+    /// ```
+    case additive
+
+    init?(_ blendMode: aiBlendMode) {
+        switch blendMode {
+        case aiBlendMode_Default:
+            self = .default
+
+        case aiBlendMode_Additive:
+            self = .additive
+
+        default:
+            return nil
+        }
     }
 }

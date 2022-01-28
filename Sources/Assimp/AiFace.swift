@@ -1,11 +1,11 @@
 //
-//  AiFace.swift
+// AiFace.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 02.07.19.
-//
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
-import CAssimp
+@_implementationOnly import CAssimp
 
 /// The default face winding order is counter clockwise (CCW).
 public struct AiFace {
@@ -29,7 +29,7 @@ public struct AiFace {
             return []
         }
 
-        let indices = [UInt32]((0..<numIndices).compactMap { face.mIndices[$0] })
+        let indices = [UInt32]((0 ..< numIndices).compactMap { face.mIndices[$0] })
 
         assert(indices.count == numIndices)
 

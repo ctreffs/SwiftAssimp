@@ -1,11 +1,9 @@
 //
-//  AiMatKey.swift
+// AiMatKey.swift
+// SwiftAssimp
 //
-//
-//  Created by Christian Treffs on 06.12.19.
-//
-
-import Foundation
+// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 public struct AiMatKey: RawRepresentable {
     public let baseName: String
@@ -14,20 +12,21 @@ public struct AiMatKey: RawRepresentable {
     public let rawValue: String
 
     init(base: Base, texType: AiTextureType = .none, texIndex: Int = 0) {
-        self.rawValue = "\(base.rawValue),\(texType.rawValue),\(texIndex)"
-        self.baseName = base.rawValue
+        rawValue = "\(base.rawValue),\(texType.rawValue),\(texIndex)"
+        baseName = base.rawValue
         self.texType = texType.rawValue
         self.texIndex = UInt32(texIndex)
     }
 
     public init?(rawValue: String) {
         self.rawValue = rawValue
-        self.baseName = ""
-        self.texType = 0
-        self.texIndex = 0
+        baseName = ""
+        texType = 0
+        texIndex = 0
     }
 }
-extension AiMatKey: Equatable { }
+
+extension AiMatKey: Equatable {}
 
 // swiftlint:disable identifier_name
 
@@ -191,12 +190,12 @@ extension AiMatKey {
     public static let GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_FACTOR: AiMatKey = .init(base: .GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_FACTOR)
     public static let GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR: AiMatKey = .init(base: .GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR)
     public static let GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR: AiMatKey = .init(base: .GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR)
-    public static var GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_TEXTURE: AiMatKey = { .init(base: .TEXTURE_BASE, texType: .diffuse, texIndex: 1) }()
-    public static let GLTF_PBRMETALLICROUGHNESS_METALLICROUGHNESS_TEXTURE: AiMatKey = { .init(base: .TEXTURE_BASE, texType: .unknown, texIndex: 0) }()
+    public static var GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_TEXTURE: AiMatKey = .init(base: .TEXTURE_BASE, texType: .diffuse, texIndex: 1)
+    public static let GLTF_PBRMETALLICROUGHNESS_METALLICROUGHNESS_TEXTURE: AiMatKey = .init(base: .TEXTURE_BASE, texType: .unknown, texIndex: 0)
     public static let GLTF_ALPHAMODE: AiMatKey = .init(base: .GLTF_ALPHAMODE)
-    public static let GLTF_ALPHACUTOFF: AiMatKey = .init(base:  .GLTF_ALPHACUTOFF)
-    public static let GLTF_PBRSPECULARGLOSSINESS: AiMatKey = .init(base:  .GLTF_PBRSPECULARGLOSSINESS)
-    public static let GLTF_PBRSPECULARGLOSSINESS_GLOSSINESS_FACTOR: AiMatKey = .init(base:  .GLTF_PBRSPECULARGLOSSINESS_GLOSSINESS_FACTOR)
+    public static let GLTF_ALPHACUTOFF: AiMatKey = .init(base: .GLTF_ALPHACUTOFF)
+    public static let GLTF_PBRSPECULARGLOSSINESS: AiMatKey = .init(base: .GLTF_PBRSPECULARGLOSSINESS)
+    public static let GLTF_PBRSPECULARGLOSSINESS_GLOSSINESS_FACTOR: AiMatKey = .init(base: .GLTF_PBRSPECULARGLOSSINESS_GLOSSINESS_FACTOR)
     public static let GLTF_UNLIT: AiMatKey = .init(base: .GLTF_UNLIT)
 
     public static func BLEND_FUNC(_ texType: AiTextureType, _ texIndex: Int) -> AiMatKey { .init(base: .BLEND_FUNC_BASE, texType: texType, texIndex: texIndex) }

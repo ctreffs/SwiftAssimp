@@ -13,13 +13,13 @@ extension AssimpTests {
         ("testLoadAiSceneObj", testLoadAiSceneObj),
         ("testVec2fFromAiVector2D", testVec2fFromAiVector2D),
         ("testVec3fFromAiVector3D", testVec3fFromAiVector3D),
-        ("testVersion", testVersion),
+        ("testVersion", testVersion)
     ]
 }
 
 public func __allTests() -> [XCTestCaseEntry] {
     return [
-        testCase(AssimpTests.__allTests__AssimpTests),
+        testCase(AssimpTests.__allTests__AssimpTests)
     ]
 }
 #endif
