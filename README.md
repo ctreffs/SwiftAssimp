@@ -1,17 +1,16 @@
 # Swift Assimp
 
-[![Build Status](https://travis-ci.com/ctreffs/SwiftAssimp.svg?branch=master)](https://travis-ci.com/ctreffs/SwiftAssimp)
 [![license](https://img.shields.io/badge/license-BSD3-brightgreen.svg)](LICENSE)
 [![swift version](https://img.shields.io/badge/swift-5.1+-brightgreen.svg)](https://swift.org/download)
 [![platforms](https://img.shields.io/badge/platforms-%20macOS%20-brightgreen.svg)](#)
 [![platforms](https://img.shields.io/badge/platforms-linux-brightgreen.svg)](#)
 
-This is a  **thin** Swift wrapper around the popular and excellent [**Open Asset Import Library**](http://assimp.org) library.  
+This is a  **thin** Swift wrapper around the popular and excellent [**Open Asset Import Library**](https://github.com/assimp/assimp) library.  
 It provides a **swifty** and **typesafe** API. 
 
 > Open Asset Import Library (short name: Assimp) is a portable Open Source library to import various well-known 3D model formats in a uniform manner. The most recent version also knows how to export 3d files and is therefore suitable as a general-purpose 3D model converter.
 > Loads 40+ 3D file formats into one unified and clean data structure.    
-> ~ [www.assimp.org](http://www.assimp.org)
+> ~ [www.assimp.org](https://github.com/assimp/assimp)
 
 ## 🚀 Getting Started
 
