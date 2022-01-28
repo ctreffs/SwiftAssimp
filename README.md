@@ -19,7 +19,7 @@ These instructions will get your copy of the project up and running on your loca
 ### 📋 Prerequisites
 
 * [Swift Package Manager (SPM)](https://github.com/apple/swift-package-manager)
-* [Open Asset Import Library (Assimp)](http://assimp.org)
+* [Open Asset Import Library (Assimp)](https://github.com/assimp/assimp)
 * [SwiftEnv](https://swiftenv.fuller.li/) for Swift version management - (optional)
 * [Swiftlint](https://github.com/realm/SwiftLint) for linting - (optional)
 
