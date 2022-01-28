@@ -25,6 +25,10 @@ build-debug:
 build-release:
 	swift build -c release --skip-update
 
+.PHONY: test
+test:
+	swift test
+
 # Reset the complete cache/build directory and Package.resolved files
 .PHONY: reset
 	swift package reset
