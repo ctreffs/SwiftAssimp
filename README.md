@@ -1,7 +1,9 @@
 # Swift Assimp
 
+[![macOS](https://github.com/ctreffs/SwiftAssimp/actions/workflows/ci-macos.yml/badge.svg)](https://github.com/ctreffs/SwiftAssimp/actions/workflows/ci-macos.yml)
+[![Linux](https://github.com/ctreffs/SwiftAssimp/actions/workflows/ci-linux.yml/badge.svg)](https://github.com/ctreffs/SwiftAssimp/actions/workflows/ci-linux.yml)
 [![license](https://img.shields.io/badge/license-BSD3-brightgreen.svg)](LICENSE)
-[![swift version](https://img.shields.io/badge/swift-5.1+-brightgreen.svg)](https://swift.org/download)
+[![swift version](https://img.shields.io/badge/swift-5.3+-brightgreen.svg)](https://swift.org/download)
 [![platforms](https://img.shields.io/badge/platforms-%20macOS%20-brightgreen.svg)](#)
 [![platforms](https://img.shields.io/badge/platforms-linux-brightgreen.svg)](#)
 
@@ -25,33 +27,14 @@ These instructions will get your copy of the project up and running on your loca
 
 ### 💻 Installing
 
-Swift Assimp is available for all platforms that support [Swift 5.1](https://swift.org/) and higher and the [Swift Package Manager (SPM)](https://github.com/apple/swift-package-manager).
+Swift Assimp is available for all platforms that support [Swift 5.3](https://swift.org/) and higher and the [Swift Package Manager (SPM)](https://github.com/apple/swift-package-manager).
 
 Extend your `Package.swift` file with the following lines or use it to create a new project.
 
-For package manifests using the Swift 5.1 toolchain use:
+For package manifests using the Swift 5.3+ toolchain use:
 
 ```swift
-// swift-tools-version:5.1
-import PackageDescription
-
-let package = Package(
-    name: "YourPackageName",
-    dependencies: [
-        .package(url: "https://github.com/ctreffs/SwiftAssimp.git", from: "1.3.1")
-    ],
-    targets: [
-        .target(
-            name: "YourTargetName",
-            dependencies: ["Assimp"])
-    ]
-)
-
-```
-or for package manifests using the Swift 5.2+ toolchain use:
-
-```swift
-// swift-tools-version:5.2
+// swift-tools-version:5.3
 import PackageDescription
 
 let package = Package(
