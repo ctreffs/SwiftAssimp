@@ -8,11 +8,11 @@
 @_implementationOnly import CAssimp
 
 public enum Assimp {
-    static func canImportFileExtension(_ fileExtension: String) -> Bool { aiGetImporterDesc(fileExtension.lowercased()) != nil }
+    public static func canImportFileExtension(_ fileExtension: String) -> Bool { aiGetImporterDesc(fileExtension.lowercased()) != nil }
 
-    static func getImporterDescriptor(for fileExtension: String) -> AiImporterDesc? { AiImporterDesc(aiGetImporterDesc(fileExtension.lowercased())?.pointee) }
+    public static func getImporterDescriptor(for fileExtension: String) -> AiImporterDesc? { AiImporterDesc(aiGetImporterDesc(fileExtension.lowercased())?.pointee) }
 
-    static func importFormats() -> [AiImporterDesc] {
+    public static func importFormats() -> [AiImporterDesc] {
         let count = aiGetImportFormatCount()
 
         guard count > 0 else {
@@ -23,11 +23,11 @@ public enum Assimp {
             .compactMap { AiImporterDesc(aiGetImportFormatDescription($0)?.pointee) }
     }
 
-    static func importFileExtensions() -> [String] {
+    public static func importFileExtensions() -> [String] {
         importFormats().flatMap(\.fileExtensions).sorted()
     }
 
-    static func exportFormats() -> [AiExporterDesc] {
+    public static func exportFormats() -> [AiExporterDesc] {
         let count = aiGetExportFormatCount()
 
         guard count > 0 else {
@@ -38,7 +38,7 @@ public enum Assimp {
             .compactMap { AiExporterDesc(aiGetExportFormatDescription($0)?.pointee) }
     }
 
-    static func exportFileExtensions() -> [String] {
+    public static func exportFileExtensions() -> [String] {
         exportFormats().map(\.fileExtension).sorted()
     }
 }
