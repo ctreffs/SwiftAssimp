@@ -112,19 +112,7 @@ public final class AiScene {
     /// The array of animations.
     /// All animations imported from the given file are listed here.
     /// The array is mNumAnimations in size.
-    //  public var animations: [aiAnimation] {
-    //      guard numAnimations > 0 else {
-    //          return []
-    //      }
-
-    //      let animations = (0..<numAnimations)
-    //          .compactMap { scene.mAnimations[$0] }
-    //          .map { $0.pointee } // TODO: wrap animations
-
-    //      assert(animations.count == numAnimations)
-
-    //      return animations
-    //  }
+    public lazy var animations: [AiAnimation] = UnsafeBufferPointer(start: scene.mAnimations, count: numAnimations).compactMap { AiAnimation($0?.pointee) }
 
     /// The number of textures embedded into the file
     public lazy var numTextures = Int(scene.mNumTextures)
