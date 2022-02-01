@@ -26,6 +26,20 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(SIMD2<Float>(aiVector2D(x: 5.6, y: 3.4)), SIMD2<Float>(5.6, 3.4))
     }
 
+    func testImportFormats() {
+        XCTAssertTrue(Assimp.canImportFileExtension("obj"))
+        XCTAssertTrue(Assimp.canImportFileExtension("dae"))
+        XCTAssertTrue(Assimp.canImportFileExtension("gltf"))
+        XCTAssertFalse(Assimp.canImportFileExtension("txt"))
+        XCTAssertFalse(Assimp.canImportFileExtension("psd"))
+
+        XCTAssertGreaterThanOrEqual(Assimp.importFileExtensions().count, 70)
+    }
+
+    func testExportFormats() {
+        XCTAssertGreaterThanOrEqual(Assimp.exportFileExtensions().count, 20)
+    }
+
     func testLoadAiSceneDAE() throws {
 
         let fileURL = try Resource.load(.duck_dae)
