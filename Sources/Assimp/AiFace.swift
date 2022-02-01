@@ -18,35 +18,9 @@ public struct AiFace {
     /// Number of indices defining this face.
     ///
     /// The maximum value for this member is #AI_MAX_FACE_INDICES.
-    public var numIndices: Int {
-        Int(face.mNumIndices)
-    }
+    public lazy var numIndices: Int = .init(face.mNumIndices)
 
     /// Pointer to the indices array.
     /// Size of the array is given in numIndices.
-    public var indices: [UInt32] {
-        guard numIndices > 0 else {
-            return []
-        }
-
-        let indices = [UInt32]((0 ..< numIndices).compactMap { face.mIndices[$0] })
-
-        assert(indices.count == numIndices)
-
-        return indices
-    }
-}
-
-extension AiFace: Equatable {
-    public static func == (lhs: AiFace, rhs: AiFace) -> Bool {
-        lhs.indices == rhs.indices &&
-            lhs.numIndices == rhs.numIndices
-    }
-}
-
-extension AiFace: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(indices)
-        hasher.combine(numIndices)
-    }
+    public lazy var indices: [UInt32] = Array(UnsafeBufferPointer(start: face.mIndices, count: numIndices))
 }

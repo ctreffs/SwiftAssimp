@@ -26,6 +26,30 @@ final class AssimpTests: XCTestCase {
         XCTAssertEqual(SIMD2<Float>(aiVector2D(x: 5.6, y: 3.4)), SIMD2<Float>(5.6, 3.4))
     }
 
+    func testImportFormats() {
+        XCTAssertTrue(Assimp.canImportFileExtension("obj"))
+        XCTAssertTrue(Assimp.canImportFileExtension("dae"))
+        XCTAssertTrue(Assimp.canImportFileExtension("gltf"))
+        XCTAssertFalse(Assimp.canImportFileExtension("txt"))
+        XCTAssertFalse(Assimp.canImportFileExtension("psd"))
+
+        XCTAssertEqual(Assimp.importFileExtensions(), ["3d", "3ds", "3mf", "ac", "ac3d", "acc", "amf", "ase", "ask", "assbin", "b3d",
+                                                       "blend", "bsp", "bvh", "cob", "csm", "dae", "dxf", "enff", "fbx",
+                                                       "glb", "glb", "gltf", "gltf", "hmp", "ifc", "ifczip", "iqm", "irr", "irrmesh",
+                                                       "lwo", "lws", "lxo", "md2", "md3", "md5anim", "md5camera", "md5mesh", "mdc", "mdl",
+                                                       "mesh", "mesh.xml", "mot", "ms3d", "ndo", "nff", "obj", "off", "ogex", "pk3", "ply",
+                                                       "pmx", "prj", "q3o", "q3s", "raw", "scn", "sib", "smd", "step", "stl", "stp", "ter",
+                                                       "uc", "vta", "x", "x3d", "x3db", "xgl", "xml", "xml", "xml", "zae", "zgl"])
+
+        dump(Assimp.importFormats())
+    }
+
+    func testExportFormats() {
+        XCTAssertEqual(Assimp.exportFileExtensions(), ["3ds", "3mf", "assbin", "assxml", "dae", "fbx", "fbx",
+                                                       "glb", "glb", "gltf", "gltf", "json", "obj", "obj",
+                                                       "pbrt", "ply", "ply", "stl", "stl", "stp", "x", "x3d"])
+    }
+
     func testLoadAiSceneDAE() throws {
 
         let fileURL = try Resource.load(.duck_dae)
