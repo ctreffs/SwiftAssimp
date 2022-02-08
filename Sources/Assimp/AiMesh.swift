@@ -7,7 +7,7 @@
 
 @_implementationOnly import CAssimp
 
-public struct AiMesh {
+public final class AiMesh {
     public struct PrimitiveType: OptionSet {
         public let rawValue: UInt32
 
@@ -23,11 +23,19 @@ public struct AiMesh {
 
     let mesh: aiMesh
 
-    init(_ aiMesh: aiMesh) {
-        mesh = aiMesh
+    init(_ mesh: aiMesh) {
+        self.mesh = mesh
+        primitiveTypes = PrimitiveType(rawValue: mesh.mPrimitiveTypes)
+        numVertices = Int(mesh.mNumVertices)
+        numFaces = Int(mesh.mNumFaces)
+        numBones = Int(mesh.mNumBones)
+        materialIndex = Int(mesh.mMaterialIndex)
+        name = String(mesh.mName)
+        numAnimMeshes = Int(mesh.mNumAnimMeshes)
+        method = mesh.mMethod
     }
 
-    init?(_ mesh: aiMesh?) {
+    convenience init?(_ mesh: aiMesh?) {
         guard let mesh = mesh else {
             return nil
         }
@@ -39,22 +47,22 @@ public struct AiMesh {
     /// This specifies which types of primitives are present in the mesh.
     ///
     /// The "SortByPrimitiveType"-Step can be used to make sure the output meshes consist of one primitive type each.
-    public lazy var primitiveTypes = PrimitiveType(rawValue: mesh.mPrimitiveTypes)
+    public var primitiveTypes: PrimitiveType
 
     /// The number of vertices in this mesh. This is also the size of all of the per-vertex data arrays.
     /// The maximum value for this member is #AI_MAX_VERTICES.
-    public lazy var numVertices = Int(mesh.mNumVertices)
+    public var numVertices: Int
 
     /// The number of primitives (triangles, polygons, lines) in this mesh.
     /// This is also the size of the mFaces array.
     /// The maximum value for this member is #AI_MAX_FACES.
-    public lazy var numFaces = Int(mesh.mNumFaces)
+    public var numFaces: Int
 
     /// Vertex positions. This array is always present in a mesh.
     /// The array is numVertices * 3 in size.
     public lazy var vertices = withUnsafeVertices([AiReal].init)
 
-    public mutating func withUnsafeVertices<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
+    public func withUnsafeVertices<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
         let count = numVertices * 3
         return try mesh.mVertices.withMemoryRebound(to: AiReal.self, capacity: count) {
             try body(UnsafeBufferPointer(start: $0, count: count))
@@ -72,7 +80,7 @@ public struct AiMesh {
     /// are undefined and set to QNaN (WARN: qNaN compares to inequal to *everything*, even to qNaN itself.
     public lazy var normals = withUnsafeNormals([AiReal].init)
 
-    public mutating func withUnsafeNormals<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
+    public func withUnsafeNormals<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
         let count = numVertices * 3
         return try mesh.mNormals.withMemoryRebound(to: AiReal.self, capacity: count) {
             try body(UnsafeBufferPointer(start: $0, count: count))
@@ -91,7 +99,7 @@ public struct AiMesh {
     /// See the #mNormals member for a detailed discussion of qNaNs.
     public lazy var tangents = withUnsafeTangents([AiReal].init)
 
-    public mutating func withUnsafeTangents<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
+    public func withUnsafeTangents<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
         let count = numVertices * 3
         return try mesh.mTangents.withMemoryRebound(to: AiReal.self, capacity: count) {
             try body(UnsafeBufferPointer(start: $0, count: count))
@@ -104,7 +112,7 @@ public struct AiMesh {
     /// The array is mNumVertices * 3 in size.
     public lazy var bitangents = withUnsafeBitangents([AiReal].init)
 
-    public mutating func withUnsafeBitangents<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
+    public func withUnsafeBitangents<R>(_ body: (UnsafeBufferPointer<AiReal>) throws -> R) rethrows -> R {
         let count = numVertices * 3
         return try mesh.mBitangents.withMemoryRebound(to: AiReal.self, capacity: count) {
             try body(UnsafeBufferPointer(start: $0, count: count))
@@ -248,14 +256,14 @@ public struct AiMesh {
 
     /// The number of bones this mesh contains.
     /// Can be 0, in which case the mBones array is NULL.
-    public lazy var numBones = Int(mesh.mNumBones)
+    public var numBones: Int
 
     /// The material used by this mesh.
     ///
     /// A mesh uses only a single material.
     /// If an imported model uses multiple materials, the import splits up the mesh.
     /// Use this value as index into the scene's material list.
-    public lazy var materialIndex = Int(mesh.mMaterialIndex)
+    public var materialIndex: Int
 
     /// Name of the mesh. Meshes can be named, but this is not a requirement and leaving this field empty is totally fine.
     ///
@@ -265,19 +273,13 @@ public struct AiMesh {
     ///      Assigning the same (dummy) name to each of the result meshes aids the caller at recovering the original mesh partitioning.
     ///    - Vertex animations refer to meshes by their names.
     ///
-    public var name: String {
-        String(mesh.mName) ?? ""
-    }
+    public var name: String?
 
     /// The number of attachment meshes.
     ///
     /// **Note:** Currently only works with Collada loader.
-    public var numAnimMeshes: Int {
-        Int(mesh.mNumAnimMeshes)
-    }
+    public var numAnimMeshes: Int
 
     /// Method of morphing when animeshes are specified.
-    public var method: UInt32 {
-        mesh.mMethod
-    }
+    public var method: UInt32
 }

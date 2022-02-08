@@ -20,8 +20,27 @@
 public struct AiTexture {
     let texture: aiTexture
 
-    init(_ aiTexture: aiTexture) {
-        texture = aiTexture
+    init(_ texture: aiTexture) {
+        self.texture = texture
+        filename = String(texture.mFilename)
+        achFormatHint = CArray<CChar>.read(texture.achFormatHint) { body in
+            guard let baseAddress = body.baseAddress else {
+                return ""
+            }
+            return String(cString: baseAddress)
+        }
+        let width = Int(texture.mWidth)
+        self.width = width
+        let height = Int(texture.mHeight)
+        self.height = height
+        numPixels = {
+            if height == 0 {
+                let sizeInBytes = width
+                return sizeInBytes / MemoryLayout<aiTexel>.stride
+            } else {
+                return width * height
+            }
+        }()
     }
 
     init?(_ aiTexture: aiTexture?) {
@@ -35,9 +54,7 @@ public struct AiTexture {
     /// Texture original filename.
     ///
     /// Used to get the texture reference.
-    public var filename: String? {
-        String(texture.mFilename)
-    }
+    public var filename: String?
 
     /// A hint from the loader to make it easier for applications
     /// to determine the type of embedded textures.
@@ -57,37 +74,24 @@ public struct AiTexture {
     /// extension is chosen (JPEG maps to 'jpg', not to 'jpeg').
     /// E.g. 'dds\\0', 'pcx\\0', 'jpg\\0'.  All characters are lower-case.
     /// The fourth character will always be '\\0'.
-    public var achFormatHint: String {
-        CArray<CChar>.read(texture.achFormatHint) { body in
-            guard let baseAddress = body.baseAddress else {
-                return ""
-            }
-            return String(cString: baseAddress)
-        }
-    }
+    public var achFormatHint: String
 
     /// Width of the texture, in pixels
     ///
     /// If mHeight is zero the texture is compressed in a format like JPEG.
     /// In this case mWidth specifies the size of the memory area pcData is pointing to, in bytes.
-    public lazy var width = Int(texture.mWidth)
+    public var width: Int
 
     /// Height of the texture, in pixels
     ///
     /// If this value is zero, pcData points to a compressed texture in any format (e.g. JPEG).
-    public lazy var height = Int(texture.mHeight)
+    public var height: Int
 
-    public lazy var isCompressed: Bool = height == 0
+    @inline(__always)
+    public var isCompressed: Bool { height == 0 }
 
     /// Number of pixels in texture.
-    public lazy var numPixels: Int = {
-        if isCompressed {
-            let sizeInBytes = width
-            return sizeInBytes / MemoryLayout<aiTexel>.stride
-        } else {
-            return width * height
-        }
-    }()
+    public var numPixels: Int
 
     /// Data of the texture.
     ///
@@ -95,7 +99,7 @@ public struct AiTexture {
     /// The format of the texture data is always ARGB8888 to make the implementation for user of the library as easy as possible.
     /// If mHeight = 0 this is a pointer to a memory buffer of size mWidth containing the compressed texture data.
     /// Texel layout is BGRA.
-    public lazy var textureData = withUnsafeTextureData([UInt8].init)
+    public lazy var textureData: [UInt8] = withUnsafeTextureData([UInt8].init)
 
     public mutating func withUnsafeTextureData<R>(_ body: (UnsafeBufferPointer<UInt8>) throws -> R) rethrows -> R {
         let count = numPixels * 4 // aiTexel(BGRA) * numPixel

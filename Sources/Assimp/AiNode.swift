@@ -10,8 +10,42 @@
 public struct AiNode {
     let node: aiNode
 
-    init(_ aiNode: aiNode) {
-        node = aiNode
+    init(_ node: aiNode) {
+        self.node = node
+        name = String(node.mName)
+        transformation = AiMatrix4x4(node.mTransformation)
+        let numMeshes = Int(node.mNumMeshes)
+        self.numMeshes = numMeshes
+        let numChildren = Int(node.mNumChildren)
+        self.numChildren = numChildren
+        meshes = {
+            guard numMeshes > 0 else {
+                return []
+            }
+
+            return (0 ..< numMeshes)
+                .compactMap { node.mMeshes[$0] }
+                .map { Int($0) }
+        }()
+
+        if numChildren > 0 {
+            children = UnsafeBufferPointer(start: node.mChildren, count: numChildren).compactMap { AiNode($0?.pointee) }
+        } else {
+            children = []
+        }
+
+        if let meta = node.mMetaData {
+            metaData = AiMetadata(meta.pointee)
+        } else {
+            metaData = nil
+        }
+    }
+
+    init?(_ node: aiNode?) {
+        guard let node = node else {
+            return nil
+        }
+        self.init(node)
     }
 
     /// The name of the node.
@@ -31,12 +65,10 @@ public struct AiNode {
     /// `<>`
     /// e.g.
     /// `<DummyRootNode>`
-    public var name: String? {
-        String(node.mName)
-    }
+    public var name: String?
 
     /// The transformation relative to the node's parent.
-    public lazy var transformation = AiMatrix4x4(node.mTransformation)
+    public var transformation: AiMatrix4x4
 
     /// Parent node.
     ///
@@ -49,48 +81,23 @@ public struct AiNode {
     }
 
     /// The number of meshes of this node.
-    public var numMeshes: Int {
-        Int(node.mNumMeshes)
-    }
+    public var numMeshes: Int
 
     /// The number of child nodes of this node.
-    public var numChildren: Int {
-        Int(node.mNumChildren)
-    }
+    public var numChildren: Int
 
     /// The meshes of this node.
     /// Each entry is an index into the mesh list of the #aiScene.
-    public var meshes: [Int] {
-        guard numMeshes > 0 else {
-            return []
-        }
-
-        return (0 ..< numMeshes)
-            .compactMap { node.mMeshes[$0] }
-            .map { Int($0) }
-    }
+    public var meshes: [Int]
 
     /// The child nodes of this node.
     ///
     /// NULL if mNumChildren is 0.
-    public var children: [AiNode] {
-        guard numChildren > 0 else {
-            return []
-        }
-
-        return (0 ..< numChildren)
-            .compactMap { node.mChildren[$0] }
-            .map { AiNode($0.pointee) }
-    }
+    public var children: [AiNode]
 
     /// Metadata associated with this node or NULL if there is no metadata.
     /// Whether any metadata is generated depends on the source file format.
-    public lazy var metaData: AiMetadata? = {
-        guard let meta = node.mMetaData else {
-            return nil
-        }
-        return AiMetadata(meta.pointee)
-    }()
+    public var metaData: AiMetadata?
 }
 
 extension AiNode: CustomDebugStringConvertible {
@@ -104,24 +111,26 @@ extension AiNode: CustomDebugStringConvertible {
 /// Container for holding metadata.
 /// Metadata is a key-value store using string keys and values.
 public struct AiMetadata {
-    let meta: aiMetadata
-
     init(_ meta: aiMetadata) {
-        self.meta = meta
+        numProperties = Int(meta.mNumProperties)
+        keys = UnsafeBufferPointer(start: meta.mKeys, count: numProperties).compactMap(String.init)
+        values = UnsafeBufferPointer(start: meta.mValues, count: numProperties).compactMap(Entry.init)
     }
 
     /// Length of the mKeys and mValues arrays, respectively
-    public lazy var numProperties = Int(meta.mNumProperties)
+    public var numProperties: Int
 
     /// Arrays of keys, may not be NULL.
     /// Entries in this array may not be NULL as well.
-    public lazy var keys: [String] = UnsafeBufferPointer(start: meta.mKeys, count: numProperties).compactMap(String.init)
+    public var keys: [String]
 
     /// Arrays of values, may not be NULL.
     /// Entries in this array may be NULL if the corresponding property key has no assigned value.
-    public lazy var values: [Entry] = UnsafeBufferPointer(start: meta.mValues, count: numProperties).compactMap(Entry.init)
+    public var values: [Entry]
 
-    public lazy var metadata = [String: Entry](uniqueKeysWithValues: (0 ..< numProperties).map { (keys[$0], values[$0]) })
+    public var metadata: [String: Entry] {
+        [String: Entry](uniqueKeysWithValues: (0 ..< numProperties).map { (keys[$0], values[$0]) })
+    }
 
     public enum Entry {
         case bool(Bool)

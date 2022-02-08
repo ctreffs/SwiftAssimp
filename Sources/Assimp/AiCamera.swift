@@ -8,10 +8,16 @@
 @_implementationOnly import CAssimp
 
 public struct AiCamera {
-    let camera: aiCamera
-
     init(_ camera: aiCamera) {
-        self.camera = camera
+        name = String(camera.mName)
+        position = Vec3(camera.mPosition)
+        up = Vec3(camera.mUp)
+        lookAt = Vec3(camera.mLookAt)
+        horizontalFOV = camera.mHorizontalFOV
+        clipPlaneNear = camera.mClipPlaneNear
+        clipPlaneFar = camera.mClipPlaneFar
+        aspect = camera.mAspect
+        orthographicWidth = camera.mOrthographicWidth
     }
 
     init?(_ camera: aiCamera?) {
@@ -27,13 +33,13 @@ public struct AiCamera {
     /// There must be a node in the scenegraph with the same name.
     /// This node specifies the position of the camera in the scene
     /// hierarchy and can be animated.
-    public lazy var name = String(camera.mName)
+    public var name: String?
 
     /// Position of the camera relative to the coordinate space
     /// defined by the corresponding node.
     ///
     /// The default value is 0|0|0.
-    public lazy var position = Vec3(camera.mPosition)
+    public var position: Vec3
 
     /// 'Up' - vector of the camera coordinate system relative to
     /// the coordinate space defined by the corresponding node.
@@ -42,7 +48,7 @@ public struct AiCamera {
     /// the cross product of  the up and lookAt vectors.
     /// The default value is 0|1|0. The vector
     /// may be normalized, but it needn't.
-    public lazy var up = Vec3(camera.mUp)
+    public var up: Vec3
 
     /// 'LookAt' - vector of the camera coordinate system relative to
     /// the coordinate space defined by the corresponding node.
@@ -50,20 +56,20 @@ public struct AiCamera {
     /// This is the viewing direction of the user.
     /// The default value is 0|0|1. The vector
     /// may be normalized, but it needn't.
-    public lazy var lookAt = Vec3(camera.mLookAt)
+    public var lookAt: Vec3
 
     /// Horizontal field of view angle, in radians.
     ///
     /// The field of view angle is the angle between the center
     /// line of the screen and the left or right border.
     /// The default value is 1/4PI.
-    public lazy var horizontalFOV = camera.mHorizontalFOV
+    public var horizontalFOV: Float
 
     /// Distance of the near clipping plane from the camera.
     ///
     /// The value may not be 0.f (for arithmetic reasons to prevent
     /// a division through zero). The default value is 0.1f.
-    public lazy var clipPlaneNear = camera.mClipPlaneNear
+    public var clipPlaneNear: Float
 
     /// Distance of the far clipping plane from the camera.
     ///
@@ -72,7 +78,7 @@ public struct AiCamera {
     /// between the near and the far plane should not be too
     /// large (between 1000-10000 should be ok) to avoid floating-point
     /// inaccuracies which could lead to z-fighting.
-    public lazy var clipPlaneFar = camera.mClipPlaneFar
+    public var clipPlaneFar: Float
 
     /// Screen aspect ratio.
     ///
@@ -80,7 +86,7 @@ public struct AiCamera {
     /// screen. Typical values are 4/3, 1/2 or 1/1. This value is
     /// 0 if the aspect ratio is not defined in the source file.
     /// 0 is also the default value.
-    public lazy var aspect = camera.mAspect
+    public var aspect: Float
 
     /// Half horizontal orthographic width, in scene units.
     ///
@@ -90,5 +96,5 @@ public struct AiCamera {
     /// ratio between the orthographic width and height
     /// and mHorizontalFOV should be set to 0.
     /// The default value is 0 (not orthographic).
-    public lazy var orthographicWidth: Float = camera.mOrthographicWidth
+    public var orthographicWidth: Float
 }

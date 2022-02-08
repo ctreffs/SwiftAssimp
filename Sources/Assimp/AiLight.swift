@@ -8,10 +8,21 @@
 @_implementationOnly import CAssimp
 
 public struct AiLight {
-    let light: aiLight
-
-    init(_ aiLight: aiLight) {
-        light = aiLight
+    init(_ light: aiLight) {
+        name = String(light.mName)
+        type = AiLightSourceType(light.mType)
+        position = Vec3(light.mPosition)
+        direction = Vec3(light.mDirection)
+        up = Vec3(light.mUp)
+        attenuationConstant = light.mAttenuationConstant
+        attenuationLinear = light.mAttenuationLinear
+        attenuationQuadratic = light.mAttenuationQuadratic
+        colorDiffuse = Vec3(light.mColorDiffuse)
+        colorSpecular = Vec3(light.mColorSpecular)
+        colorAmbient = Vec3(light.mColorAmbient)
+        angleInnerCone = light.mAngleInnerCone
+        angleOuterCone = light.mAngleOuterCone
+        size = Vec2(light.mSize)
     }
 
     init?(_ aiLight: aiLight?) {
@@ -26,30 +37,30 @@ public struct AiLight {
     /// There must be a node in the scene-graph with the same name.
     /// This node specifies the position of the light in the scene
     /// hierarchy and can be animated.
-    public lazy var name: String? = String(light.mName)
+    public var name: String?
 
     /// The type of the light source.
-    public lazy var type = AiLightSourceType(light.mType)
+    public var type: AiLightSourceType
 
     /// Position of the light source in space. Relative to the
     /// transformation of the node corresponding to the light.
     ///
     /// The position is undefined for directional lights.
-    public lazy var position = Vec3(light.mPosition)
+    public var position: Vec3
 
     /// Direction of the light source in space. Relative to the
     /// transformation of the node corresponding to the light.
     ///
     /// The direction is undefined for point lights. The vector
     /// may be normalized, but it needn't.
-    public lazy var direction = Vec3(light.mDirection)
+    public var direction: Vec3
 
     /// Up direction of the light source in space. Relative to the
     /// transformation of the node corresponding to the light.
     ///
     /// The direction is undefined for point lights. The vector
     /// may be normalized, but it needn't.
-    public lazy var up = Vec3(light.mUp)
+    public var up: Vec3
 
     /// Constant light attenuation factor.
     ///
@@ -60,7 +71,7 @@ public struct AiLight {
     /// @endcode
     /// This member corresponds to the att0 variable in the equation.
     /// Naturally undefined for directional lights.
-    public lazy var attenuationConstant: Float = light.mAttenuationConstant
+    public var attenuationConstant: Float
 
     /// Linear light attenuation factor.
     ///
@@ -71,7 +82,7 @@ public struct AiLight {
     /// @endcode
     /// This member corresponds to the att1 variable in the equation.
     /// Naturally undefined for directional lights.
-    public lazy var attenuationLinear: Float = light.mAttenuationLinear
+    public var attenuationLinear: Float
 
     /// Quadratic light attenuation factor.
     ///
@@ -82,21 +93,21 @@ public struct AiLight {
     /// @endcode
     /// This member corresponds to the att2 variable in the equation.
     /// Naturally undefined for directional lights.
-    public lazy var attenuationQuadratic: Float = light.mAttenuationQuadratic
+    public var attenuationQuadratic: Float
 
     /// Diffuse color of the light source
     ///
     /// The diffuse light color is multiplied with the diffuse
     /// material color to obtain the final color that contributes
     /// to the diffuse shading term.
-    public lazy var colorDiffuse = Vec3(light.mColorDiffuse)
+    public var colorDiffuse: Vec3
 
     /// Specular color of the light source
     ///
     /// The specular light color is multiplied with the specular
     /// material color to obtain the final color that contributes
     /// to the specular shading term.
-    public lazy var colorSpecular = Vec3(light.mColorSpecular)
+    public var colorSpecular: Vec3
 
     /// Ambient color of the light source
     ///
@@ -105,14 +116,14 @@ public struct AiLight {
     /// to the ambient shading term. Most renderers will ignore
     /// this value it, is just a remaining of the fixed-function pipeline
     /// that is still supported by quite many file formats.
-    public lazy var colorAmbient = Vec3(light.mColorAmbient)
+    public var colorAmbient: Vec3
 
     /// Inner angle of a spot light's light cone.
     ///
     /// The spot light has maximum influence on objects inside this
     /// angle. The angle is given in radians. It is 2PI for point
     /// lights and undefined for directional lights.
-    public lazy var angleInnerCone: Float = light.mAngleInnerCone
+    public var angleInnerCone: Float
 
     /// Outer angle of a spot light's light cone.
     ///
@@ -123,10 +134,10 @@ public struct AiLight {
     /// It is assumed that the application uses a smooth
     /// interpolation between the inner and the outer cone of the
     /// spot light.
-    public lazy var angleOuterCone: Float = light.mAngleOuterCone
+    public var angleOuterCone: Float
 
     /// Size of area light source.
-    public lazy var size = Vec2(light.mSize)
+    public var size: Vec2
 }
 
 public enum AiLightSourceType {

@@ -15,6 +15,8 @@ final class AssimpTests: XCTestCase {
         XCTAssertFalse(Assimp.canImportFileExtension("psd"))
 
         XCTAssertGreaterThanOrEqual(Assimp.importFileExtensions().count, 70)
+
+        print(Assimp.importFileExtensions())
     }
 
     func testExportFormats() {
