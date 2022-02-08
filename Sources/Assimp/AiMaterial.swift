@@ -11,8 +11,25 @@
 public struct AiMaterial {
     let material: aiMaterial
 
-    init(_ aiMaterial: aiMaterial) {
-        material = aiMaterial
+    init(_ material: aiMaterial) {
+        self.material = material
+        let numProperties = Int(material.mNumProperties)
+        self.numProperties = numProperties
+        let numAllocated = Int(material.mNumAllocated)
+        self.numAllocated = numAllocated
+        properties = {
+            guard numProperties > 0 else {
+                return []
+            }
+            return [AiMaterialProperty](unsafeUninitializedCapacity: numProperties) { buffer, written in
+                for idx in 0 ..< numProperties {
+                    if let prop = material.mProperties[idx] {
+                        buffer[idx] = AiMaterialProperty(prop.pointee)
+                        written += 1
+                    }
+                }
+            }
+        }()
     }
 
     init?(_ mat: aiMaterial?) {
@@ -23,25 +40,13 @@ public struct AiMaterial {
     }
 
     /// Number of properties in the data base
-    public lazy var numProperties = Int(material.mNumProperties)
+    public var numProperties: Int
 
     /// Storage allocated
-    public lazy var numAllocated = Int(material.mNumAllocated)
+    public var numAllocated: Int
 
     /// List of all material properties loaded.
-    public lazy var properties: [AiMaterialProperty] = {
-        guard numProperties > 0 else {
-            return []
-        }
-        return [AiMaterialProperty](unsafeUninitializedCapacity: numProperties) { buffer, written in
-            for idx in 0 ..< numProperties {
-                if let prop = material.mProperties[idx] {
-                    buffer[idx] = AiMaterialProperty(prop.pointee)
-                    written += 1
-                }
-            }
-        }
-    }()
+    public var properties: [AiMaterialProperty]
 
     public lazy var typedProperties: [AiMaterialPropertyIdentifiable] = properties.compactMap { prop -> AiMaterialPropertyIdentifiable? in
         switch prop.type {

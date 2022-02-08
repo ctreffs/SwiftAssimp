@@ -9,18 +9,17 @@
 
 /// The default face winding order is counter clockwise (CCW).
 public struct AiFace {
-    let face: aiFace
-
-    init(_ aiFace: aiFace) {
-        face = aiFace
+    init(_ face: aiFace) {
+        numIndices = Int(face.mNumIndices)
+        indices = Array(UnsafeBufferPointer(start: face.mIndices, count: numIndices))
     }
 
     /// Number of indices defining this face.
     ///
     /// The maximum value for this member is #AI_MAX_FACE_INDICES.
-    public lazy var numIndices: Int = .init(face.mNumIndices)
+    public var numIndices: Int
 
     /// Pointer to the indices array.
     /// Size of the array is given in numIndices.
-    public lazy var indices: [UInt32] = Array(UnsafeBufferPointer(start: face.mIndices, count: numIndices))
+    public var indices: [UInt32]
 }
