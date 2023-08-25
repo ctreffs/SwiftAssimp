@@ -65,23 +65,6 @@ apt-get install libassimp-dev
 
 depending on you platform.
 
-### ⚠️ Caution macOS homebrew users
-
-Swift package manager relies on the [pkg-config](http://pkg-config.freedesktop.org) tool to find system installed libraries.
-Assimp version 5 contains a regression, which provides a broken pkg-config file (assimp.pc). 
-Therefore SPM is not able to find the include headers out of the box resulting in the error:
-`shims.h:1:10: error: 'assimp/cimport.h' file not found`.
-This is a known bug and is tracked here <https://github.com/assimp/assimp/issues/3174> and here <https://github.com/assimp/assimp/issues/2804>.
-However there is a fix that requires one manual step.
-
-Depending on your assimp version run the following command in your Terminal:
-
-- print the currently installed assimp version: `printBrewAssimpVersion`
-    - for version 5.0.0:  `make copyMacPkgConfig500`
-    - for version 5.0.1:  `make copyMacPkgConfig501`
-
-This will copy a corrected pkg-config file to the appropriate library location. You will need to repeat this step when updating assimp via homebrew until a fix is provided by the assimp developers.
-Be sure to close Xcode before retrying to build.
 
 ## 📝 Code Example
 
