@@ -37,6 +37,6 @@ jobs:
           apt update
           apt-get install -y -qq pkg-config libassimp-dev
       - name: Test
-        run: make test
+        run: swift test
       - name: Build Release
-        run: make build-release
+        run: swift build -c release
