@@ -2,7 +2,7 @@
 // AiMatKey.swift
 // SwiftAssimp
 //
-// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Copyright © 2019-2023 Christian Treffs. All rights reserved.
 // Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 public struct AiMatKey: RawRepresentable {
