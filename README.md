@@ -1,11 +1,11 @@
 # Swift Assimp
 
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fctreffs%2FSwiftAssimp%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/ctreffs/SwiftAssimp)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fctreffs%2FSwiftAssimp%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/ctreffs/SwiftAssimp)
 [![macOS](https://github.com/ctreffs/SwiftAssimp/actions/workflows/ci-macos.yml/badge.svg)](https://github.com/ctreffs/SwiftAssimp/actions/workflows/ci-macos.yml)
 [![Linux](https://github.com/ctreffs/SwiftAssimp/actions/workflows/ci-linux.yml/badge.svg)](https://github.com/ctreffs/SwiftAssimp/actions/workflows/ci-linux.yml)
 [![license](https://img.shields.io/badge/license-BSD3-brightgreen.svg)](LICENSE)
-[![swift version](https://img.shields.io/badge/swift-5.3+-brightgreen.svg)](https://swift.org/download)
-[![platforms](https://img.shields.io/badge/platforms-%20macOS%20-brightgreen.svg)](#)
-[![platforms](https://img.shields.io/badge/platforms-linux-brightgreen.svg)](#)
+
 
 This is a  **thin** Swift wrapper around the popular and excellent [**Open Asset Import Library**](https://github.com/assimp/assimp) library.  
 It provides a **swifty** and **typesafe** API. 
