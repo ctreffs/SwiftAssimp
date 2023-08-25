@@ -40,7 +40,7 @@ import PackageDescription
 let package = Package(
     name: "YourPackageName",
     dependencies: [
-        .package(name: "Assimp", url: "https://github.com/ctreffs/SwiftAssimp.git", from: "1.3.1")
+        .package(name: "Assimp", url: "https://github.com/ctreffs/SwiftAssimp.git", from: "2.1.0")
     ],
     targets: [
         .target(
