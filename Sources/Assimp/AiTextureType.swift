@@ -113,6 +113,6 @@ extension AiTextureType: Equatable {}
 
 extension AiTextureType: CustomDebugStringConvertible {
     public var debugDescription: String {
-        String(cString: TextureTypeToString(aiTextureType(rawValue: rawValue)))
+        String(cString: aiTextureTypeToString(aiTextureType(rawValue: rawValue)))
     }
 }
