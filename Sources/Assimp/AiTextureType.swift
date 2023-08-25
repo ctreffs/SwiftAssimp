@@ -2,7 +2,7 @@
 // AiTextureType.swift
 // SwiftAssimp
 //
-// Copyright © 2019-2022 Christian Treffs. All rights reserved.
+// Copyright © 2019-2023 Christian Treffs. All rights reserved.
 // Licensed under BSD 3-Clause License. See LICENSE file for details.
 
 @_implementationOnly import CAssimp
@@ -110,9 +110,3 @@ public struct AiTextureType: RawRepresentable {
 }
 
 extension AiTextureType: Equatable {}
-
-extension AiTextureType: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        String(cString: TextureTypeToString(aiTextureType(rawValue: rawValue)))
-    }
-}
