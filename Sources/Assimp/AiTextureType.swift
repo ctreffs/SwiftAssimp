@@ -110,9 +110,3 @@ public struct AiTextureType: RawRepresentable {
 }
 
 extension AiTextureType: Equatable {}
-
-extension AiTextureType: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        String(cString: aiTextureTypeToString(aiTextureType(rawValue: rawValue)))
-    }
-}
