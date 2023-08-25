@@ -155,7 +155,7 @@ final class AssimpTests: XCTestCase {
 
         // Materials
 
-        XCTAssertEqual(scene.materials[0].numProperties, 16)
+        XCTAssertEqual(scene.materials[0].numProperties, 12)
         XCTAssertEqual(scene.materials[0].numAllocated, 20)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
 
@@ -295,7 +295,7 @@ final class AssimpTests: XCTestCase {
 
         // Materials
 
-        XCTAssertEqual(scene.materials[0].numProperties, 50)
+        XCTAssertEqual(scene.materials[0].numProperties, 62)
         XCTAssertEqual(scene.materials[0].numAllocated, 80)
         XCTAssertEqual(scene.materials[0].properties[0].key, "?mat.name")
 
