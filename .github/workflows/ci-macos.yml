@@ -14,11 +14,11 @@ jobs:
         xcode: ["14.3.1", "15.0"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.6.0
+        uses: actions/checkout@v3.7.0
       - name: Select Xcode ${{ matrix.xcode }}
         run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
       - name: Restore cached Homebrew dependencies
-        uses: actions/cache@v3.3.1
+        uses: actions/cache@v3.5.0
         with:
           path: |
             ~/Library/Caches/Homebrew/assimp--*
@@ -26,7 +26,7 @@ jobs:
           key: ${{ runner.os }}-brew-assimp-${{ hashFiles('.github/brew-formulae') }}
           restore-keys: ${{ runner.os }}-brew-assimp-
       - name: Restore cached SPM dependencies
-        uses: actions/cache@v3.3.1
+        uses: actions/cache@v3.5.0
         with:
           path: |
             .build/repositories
@@ -42,7 +42,7 @@ jobs:
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
       - name: Upload test artifacts
         if: failure()
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v3.2.2
         with:
           name: test-artifacts-${{ matrix.xcode }}-${{ github.run_id }}
           path: |
@@ -54,7 +54,7 @@ jobs:
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
       - name: Upload build artifacts
         if: failure()
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v3.2.2
         with:
           name: build-artifacts-${{ matrix.xcode }}-${{ github.run_id }}
           path: |
